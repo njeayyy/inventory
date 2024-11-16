@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $password = $conn->real_escape_string($_POST['password']);
 
     // Execute the query to fetch user by email or username
-    $result = $conn->query("SELECT * FROM add_users WHERE (email = '$email' OR username = '$username') AND status = 'Active'");
+    $result = $conn->query("SELECT * FROM add_users WHERE (user_email = '$email' OR username = '$username') AND status = 'Active'");
 
     // Check if the query was successful
     if ($result === false) {
