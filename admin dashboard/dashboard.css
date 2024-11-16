@@ -267,3 +267,29 @@ select,
 button[type="submit"] {
     box-sizing: border-box;
 }
+
+/*add user*/
+a {
+    text-decoration: none;
+    padding: 8px 12px;
+    color: white;
+    border-radius: 4px;
+    margin-right: 10px;
+    font-weight: bold;
+}
+
+a.edit {
+    background-color: #28a745; /* Green for edit */
+}
+
+a.delete {
+    background-color: #dc3545; /* Red for delete */
+}
+
+a.edit:hover {
+    background-color: #218838; /* Darker green on hover */
+}
+
+a.delete:hover {
+    background-color: #c82333; /* Darker red on hover */
+}
