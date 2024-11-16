@@ -67,8 +67,8 @@ $result = $conn->query("SELECT * FROM products");
                             <td><?= $row['price'] ?></td>
                             <td><?= $row['product_added'] ?></td>
                             <td>
-                                <a href="edit_product.php?id=<?= $row['id'] ?>" class="edit">Edit</a>
-                                <a href="products.php?delete_id=<?= $row['id'] ?>" class="delete" onclick="return confirm('Are you sure?')">Delete</a>
+                                    <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a>
+                                    <a href="products.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php } ?>
