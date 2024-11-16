@@ -317,3 +317,25 @@ button {
 button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
+
+.dropdown-menu {
+    display: none;  /* Initially hidden */
+    position: absolute;
+    top: 40px;  /* Adjust to position below the icon */
+    right: 0;
+    background-color: #333;
+    padding: 10px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.dropdown-menu a {
+    color: #fff;
+    text-decoration: none;
+    padding: 10px;
+    display: block;
+}
+
+.dropdown-menu a:hover {
+    background-color: #555;
+}
