@@ -320,10 +320,10 @@ button:hover {
 
 /* Dropdown menu styling */
 .dropdown-menu {
-    display: none;
+    display: none;  /* Hidden by default */
     position: absolute;
-    top: 40px; /* Adjust as needed */
-    right: 20px; /* Align with the icon */
+    top: 40px; /* Adjust the distance from the icon */
+    right: 20px; /* Adjust the position of the menu */
     background-color: #333;
     border-radius: 8px;
     padding: 10px;
