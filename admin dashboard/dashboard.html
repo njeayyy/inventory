@@ -12,7 +12,11 @@
     <div class="dashboard">
         <header class="dashboard-header">
             <div class="settings">
-                <i class="ri-more-2-fill"></i>
+                <i class="ri-more-2-fill" onclick="toggleDropdown()"></i>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <a href="dashboard.html">Go to Inventory Page</a>
+                    <a href="tracking.html">Go to Tracking</a>
+                </div>
             </div>
             <div class="title">
                 <h1>INVENTORY MANAGEMENT SYSTEM</h1>
@@ -68,6 +72,10 @@
             </section>
         </div>
     </div>
+
+    <!-- Link to external JavaScript file -->
+    <script src="menu.js"></script>
+
 </body>
 </html>
 
