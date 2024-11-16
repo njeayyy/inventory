@@ -1,24 +1,21 @@
 document.addEventListener('DOMContentLoaded', function() {
     const menuButton = document.querySelector('.settings');
-    const dropdownMenu = document.createElement('div');
-    dropdownMenu.classList.add('dropdown-menu');
+    const dropdownMenu = document.querySelector('.dropdown-menu');
 
-    dropdownMenu.innerHTML = `
-        <ul>
-            <li><a href="admin dashboard/dashboard.html">Inventory Management System</a></li>
-            <li><a href="tracking.html">Tracking Map</a></li>
-        </ul>
-    `;
+    // Ensure the dropdown menu is hidden initially
+    dropdownMenu.style.display = 'none';
 
-    menuButton.appendChild(dropdownMenu);
-
-    // Toggle dropdown visibility on click
+    // Toggle visibility of the dropdown menu when the button is clicked
     menuButton.addEventListener('click', function(event) {
-        event.stopPropagation();  // Prevent event from bubbling to document
-        dropdownMenu.style.display = dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '' ? 'block' : 'none';
+        event.stopPropagation();  // Prevent the click event from bubbling
+        if (dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '') {
+            dropdownMenu.style.display = 'block'; // Show menu
+        } else {
+            dropdownMenu.style.display = 'none'; // Hide menu
+        }
     });
 
-    // Hide the dropdown if the user clicks outside the menu
+    // Close the dropdown if the user clicks outside of it
     document.addEventListener('click', function(event) {
         if (!menuButton.contains(event.target)) {
             dropdownMenu.style.display = 'none';

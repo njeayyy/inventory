@@ -318,23 +318,22 @@ button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
 
-/* Make sure the settings icon has a higher z-index so it's clickable */
+/* Position the settings button and make sure it's above other content */
 .settings {
-    position: relative; /* Necessary for z-index to work */
-    z-index: 10; /* Ensure it stays above other elements */
+    position: relative;
+    z-index: 10; /* Ensure the button is on top */
 }
 
-/* Dropdown menu styling */
 .dropdown-menu {
-    display: none;  /* Hidden by default */
+    display: none;  /* Initially hidden */
     position: absolute;
-    top: 40px; /* Adjust the distance from the icon */
-    right: 20px; /* Adjust the position of the menu */
+    top: 40px;  /* Position it below the icon */
+    right: 0;
     background-color: #333;
     border-radius: 8px;
     padding: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 20; /* Make sure the dropdown is above other content */
+    z-index: 20;  /* Ensure the dropdown is above everything else */
 }
 
 .dropdown-menu a {
