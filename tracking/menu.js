@@ -10,11 +10,11 @@ document.addEventListener('DOMContentLoaded', function() {
         </ul>
     `;
 
-    // No more inline styles, just append the menu
     menuButton.appendChild(dropdownMenu);
 
     // Toggle dropdown visibility on click
-    menuButton.addEventListener('click', function() {
+    menuButton.addEventListener('click', function(event) {
+        event.stopPropagation();  // Prevent event from bubbling to document
         dropdownMenu.style.display = dropdownMenu.style.display === 'none' || dropdownMenu.style.display === '' ? 'block' : 'none';
     });
 
