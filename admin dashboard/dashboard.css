@@ -269,28 +269,49 @@ button[type="submit"] {
 }
 
 
-/* Style for action buttons (Edit and Delete) */
+/* Edit and Delete Buttons Style */
 a {
     text-decoration: none;
     padding: 8px 12px;
     color: white;
-    border-radius: 4px;
+    border-radius: 5px;
     margin-right: 10px;
     font-weight: bold;
+    display: inline-block;
+    transition: background-color 0.3s;
 }
 
+/* Edit Button Style */
 a.edit {
     background-color: #28a745; /* Green for edit */
-}
-
-a.delete {
-    background-color: #dc3545; /* Red for delete */
 }
 
 a.edit:hover {
     background-color: #218838; /* Darker green on hover */
 }
 
+/* Delete Button Style */
+a.delete {
+    background-color: #dc3545; /* Red for delete */
+}
+
 a.delete:hover {
     background-color: #c82333; /* Darker red on hover */
+}
+
+/* General Button Style for better visuals */
+button {
+    background-color: #007bff; /* Blue for buttons */
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: bold;
+    transition: background-color 0.3s;
+}
+
+button:hover {
+    background-color: #0056b3; /* Darker blue on hover */
 }
