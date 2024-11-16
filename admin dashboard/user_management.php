@@ -45,7 +45,7 @@ $result = $conn->query("SELECT * FROM users");
             </aside>
 
             <section class="dashboard-content">
-                <h2>User Management</h2>
+            <div class="box">USER MANAGEMENT</div>
                 <a href="add_user.php">Add New User</a>
                 <table>
                     <tr>
