@@ -432,3 +432,13 @@ button[type="submit"] {
 }
 
 
+
+/* Margin for individual form inputs */
+form input[type="text"], form input[type="number"], form input[type="price"] {
+    margin-bottom: 15px;
+}
+
+/* Button alignment */
+form button {
+    margin-top: 10px;
+}
