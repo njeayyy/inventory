@@ -5,8 +5,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
     dropdownMenu.innerHTML = `
         <ul>
-            <li><a href="dashboard.html">Go to Inventory Page</a></li>
-            <li><a href="tracking.html">Go to Tracking</a></li>
+            <li><a href="admin dashboard/dashboard.html">Inventory Management System</a></li>
+            <li><a href="tracking.html">Tracking Map</a></li>
         </ul>
     `;
 
