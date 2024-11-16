@@ -33,6 +33,7 @@ body {
     padding: 20px;
     background-color: #333;
     color: #FFF;
+    height: 80px; /* Fixed height */
 }
 
 .settings {
@@ -83,6 +84,7 @@ body {
 .dashboard-content {
     flex-grow: 1;
     padding-left: 20px;
+    overflow: auto; /* Ensures content inside scrolls if necessary */
 }
 
 .overview {
