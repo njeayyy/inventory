@@ -317,33 +317,3 @@ button {
 button:hover {
     background-color: #0056b3; /* Darker blue on hover */
 }
-
-/* Position the settings button and make sure it's above other content */
-.settings {
-    position: relative;
-    z-index: 10; /* Ensure the button is on top */
-}
-
-.dropdown-menu {
-    display: none;  /* Initially hidden */
-    position: absolute;
-    top: 40px;  /* Position it below the icon */
-    right: 0;
-    background-color: #333;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    z-index: 20;  /* Ensure the dropdown is above everything else */
-}
-
-.dropdown-menu a {
-    display: block;
-    color: #fff;
-    padding: 8px 12px;
-    text-decoration: none;
-    font-size: 14px;
-}
-
-.dropdown-menu a:hover {
-    background-color: #555;
-}
