@@ -10,7 +10,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $status = $conn->real_escape_string($_POST['status']);
 
     // Insert data into users table
-    $conn->query("INSERT INTO users (name, username, role, status, last_login) VALUES ('$name', '$username', '$role', '$status', NOW())");
+    $conn->query("INSERT INTO add_users (name, username, role, status, last_login) VALUES ('$name', '$username', '$role', '$status', NOW())");
 
     // Redirect to user management page after adding user
     header("Location: user_management.php");
@@ -24,7 +24,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add User</title>
-    <link rel="stylesheet" href="dashboard.css"> <!-- Link to your CSS file -->
+    <link rel="stylesheet" href="dashboard.css"> 
 </head>
 <body>
     <h2>Add New User</h2>

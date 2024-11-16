@@ -4,13 +4,13 @@ include 'db.php'; // Make sure db.php is included to establish connection
 // Handle user deletion
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
-    $conn->query("DELETE FROM users WHERE id = $delete_id");
+    $conn->query("DELETE FROM add_users WHERE id = $delete_id");
     header("Location: user_management.php");
     exit; // Always call exit after a header redirect
 }
 
 // Fetch users from database
-$result = $conn->query("SELECT * FROM users");
+$result = $conn->query("SELECT * FROM add_users");
 ?>
 
 <!DOCTYPE html>

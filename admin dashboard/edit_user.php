@@ -4,7 +4,7 @@ include 'db.php'; // Make sure db.php is included to establish the connection
 // Fetch user data for editing
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
-    $result = $conn->query("SELECT * FROM users WHERE id = $user_id");
+    $result = $conn->query("SELECT * FROM add_users WHERE id = $user_id");
     $user = $result->fetch_assoc();
 }
 
@@ -16,7 +16,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $status = $_POST['status'];
 
     // Update the user in the database
-    $conn->query("UPDATE users SET name='$name', username='$username', role='$role', status='$status' WHERE id=$user_id");
+    $conn->query("UPDATE add_users SET name='$name', username='$username', role='$role', status='$status' WHERE id=$user_id");
     header("Location: user_management.php"); // Redirect to the user management page after updating
     exit;
 }
