@@ -138,7 +138,7 @@ table tr:hover {
     background-color: #f9f9f9;
 }
 
-sidebar ul li button.active {
+.sidebar ul li button.active {
     background-color: #555;
     font-weight: bold;
 }
@@ -172,7 +172,7 @@ th {
 
 .status {
     padding: 4px 8px;
-    color: white;
+    color: rgb(245, 243, 243);
     border-radius: 4px;
 }
 
@@ -267,6 +267,7 @@ select,
 button[type="submit"] {
     box-sizing: border-box;
 }
+
 
 /*add user*/
 a {
