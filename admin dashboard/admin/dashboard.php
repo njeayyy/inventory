@@ -1,22 +1,3 @@
-<?php
-session_start();
-
-// Ensure only admins can access this page
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'Admin') {
-    header("Location: login.php"); // Redirect to login if not an admin
-    exit;
-}
-
-include 'db.php'; // Include the database connection
-
-// Fetch counts for dynamic display
-$userCount = $conn->query("SELECT COUNT(*) AS count FROM users")->fetch_assoc()['count'];
-$categoryCount = $conn->query("SELECT COUNT(*) AS count FROM categories")->fetch_assoc()['count'];
-$itemCount = $conn->query("SELECT COUNT(*) AS count FROM products")->fetch_assoc()['count'];
-$saleCount = $conn->query("SELECT COUNT(*) AS count FROM sales")->fetch_assoc()['count'];
-?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
