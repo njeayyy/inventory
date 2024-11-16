@@ -1,36 +1,32 @@
 <?php
-session_start(); // Start the session
-include 'db.php'; // Database connection
+session_start();
+include 'db.php';
 
-// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $email = $conn->real_escape_string($_POST['email']);
+    $username = $conn->real_escape_string($_POST['username']);
     $password = $conn->real_escape_string($_POST['password']);
 
-    // Query to check user credentials
-    $result = $conn->query("SELECT * FROM users WHERE email = '$email' AND status = 'Active'");
+    $result = $conn->query("SELECT * FROM add_users WHERE (email = '$email' OR username = '$username') AND status = 'Active'");
     if ($result->num_rows > 0) {
         $user = $result->fetch_assoc();
 
-        // Verify password
         if (password_verify($password, $user['password'])) {
-            // Set session variables
             $_SESSION['user_id'] = $user['id'];
             $_SESSION['username'] = $user['username'];
             $_SESSION['role'] = $user['role'];
 
-            // Redirect based on role
             if ($user['role'] == 'Admin') {
                 header("Location: admin_dashboard.php");
             } else {
-                header("Location: user_landing.php");
+                header("Location: user_dashboard.php");
             }
             exit;
         } else {
             $error = "Invalid password!";
         }
     } else {
-        $error = "No account found with that email or the account is inactive!";
+        $error = "No account found with that email/username or the account is inactive!";
     }
 }
 ?>
@@ -41,7 +37,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
-    <link rel="stylesheet" href="login.css"> <!-- Link to your CSS -->
+    <link rel="stylesheet" href="login.css">
 </head>
 <body>
     <h2>Login</h2>
@@ -49,6 +45,9 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <form action="login.php" method="POST">
         <label for="email">Email:</label>
         <input type="email" name="email" id="email" required><br>
+
+        <label for="username">Username:</label>
+        <input type="text" name="username" id="username" required><br>
 
         <label for="password">Password:</label>
         <input type="password" name="password" id="password" required><br>

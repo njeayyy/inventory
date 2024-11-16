@@ -1,4 +1,4 @@
-<<?php
+<?php
 session_start();
 
 // Ensure only admins can access this page
@@ -15,6 +15,8 @@ $categoryCount = $conn->query("SELECT COUNT(*) AS count FROM categories")->fetch
 $itemCount = $conn->query("SELECT COUNT(*) AS count FROM products")->fetch_assoc()['count'];
 $saleCount = $conn->query("SELECT COUNT(*) AS count FROM sales")->fetch_assoc()['count'];
 ?>
+
+
 
 <!DOCTYPE html>
 <html lang="en">
