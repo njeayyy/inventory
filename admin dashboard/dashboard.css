@@ -269,7 +269,7 @@ button[type="submit"] {
 }
 
 
-/*add user*/
+/* Style for action buttons (Edit and Delete) */
 a {
     text-decoration: none;
     padding: 8px 12px;
