@@ -304,7 +304,7 @@ a.delete:hover {
 /* General Button Style for better visuals */
 button {
     background-color: #007bff; /* Blue for buttons */
-    color: white;
+    color: rgb(12, 11, 11);
     padding: 10px 15px;
     border-radius: 5px;
     border: none;
@@ -330,7 +330,7 @@ button:hover {
 }
 
 .dropdown-menu a {
-    color: #fff;
+    color: #0f0f0f;
     text-decoration: none;
     padding: 10px;
     display: block;
