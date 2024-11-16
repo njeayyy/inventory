@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-    <h2>Add New Product</h2>
+    <h2>ADD NEW PRODUCT</h2>
     <form action="add_product.php" method="POST">
         <label>Product Name:</label><input type="text" name="product_name" required><br>
         <label>Category:</label><input type="text" name="category" required><br>

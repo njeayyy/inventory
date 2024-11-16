@@ -72,7 +72,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="dashboard.css"> 
 </head>
 <body>
-    <h2>Edit User</h2>
+    <h2>EDIT USER</h2>
     <form action="edit_user.php?id=<?= $user_id ?>" method="POST">
         <label for="name">Name:</label>
         <input type="text" name="name" id="name" value="<?= $user['name'] ?>" required><br>

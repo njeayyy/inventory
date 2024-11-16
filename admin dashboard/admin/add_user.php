@@ -69,7 +69,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="dashboard.css"> 
 </head>
 <body>
-    <h2>Add New User</h2>
+    <h2>ADD NEW USER</h2>
     <form action="add_user.php" method="POST">
         <label for="name">Name:</label>
         <input type="text" name="name" id="name" required><br>

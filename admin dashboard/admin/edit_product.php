@@ -87,7 +87,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-    <h2>Edit Product</h2>
+    <h2>EDIT PRODUCT</h2>
     <form action="edit_product.php?id=<?= $product['id'] ?>" method="POST">
         <label>Product Name:</label><input type="text" name="product_name" value="<?= $product['product_name'] ?>" required><br>
         <label>Category:</label><input type="text" name="category" value="<?= $product['category'] ?>" required><br>
