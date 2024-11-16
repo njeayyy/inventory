@@ -70,7 +70,7 @@ body {
 .sidebar ul li button {
     width: 100%;
     padding: 12px;
-    background-color: #080808;
+    background-color: #020c22;
     border: none;
     color: #FFF;
     font-size: 16px;
@@ -78,7 +78,7 @@ body {
 }
 
 .sidebar ul li button:hover {
-    background-color: #dfe3e7;
+    background-color: #2c3e50;
 }
 
 .dashboard-content {
@@ -333,12 +333,12 @@ a[href*="delete_id"]:hover {
     display: inline-block;
 }
 
-.status:contains("Active") {
-    background-color: #27ae60;
+.status.active {
+    background-color: #27ae60; /* Green for active */
 }
 
-.status:contains("Inactive") {
-    background-color: #e67e22;
+.status.inactive {
+    background-color: #e67e22; /* Orange for inactive */
 }
 
 

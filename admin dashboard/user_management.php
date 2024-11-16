@@ -63,7 +63,7 @@ $result = $conn->query("SELECT * FROM users");
                             <td><?= $row['name'] ?></td>
                             <td><?= $row['username'] ?></td>
                             <td><?= $row['role'] ?></td>
-                            <td><span class="status"><?= $row['status'] ?></span></td>
+                            <td><span class="status <?= strtolower($row['status']) ?>"><?= $row['status'] ?></span></td>
                             <td><?= $row['last_login'] ?></td>
                             <td>
                                 <a href="edit_user.php?id=<?= $row['id'] ?>">Edit</a>
