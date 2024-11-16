@@ -1,0 +1,97 @@
+/* General Styles */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    background-color: #f4f5f7;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    color: #333;
+}
+
+a {
+    text-decoration: none;
+    color: #16a085;
+}
+
+h1 {
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+/* Login Container */
+.login-container {
+    background: #fff;
+    padding: 40px 30px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+}
+
+.login-container h1 {
+    margin-bottom: 20px;
+}
+
+.login-container form {
+    display: flex;
+    flex-direction: column;
+}
+
+/* Form Fields */
+form input {
+    margin-bottom: 15px;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 1em;
+}
+
+form input:focus {
+    border-color: #16a085;
+    outline: none;
+}
+
+/* Button */
+form button {
+    background-color: #16a085;
+    color: white;
+    font-size: 1em;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+form button:hover {
+    background-color: #13896e;
+}
+
+/* Error Message */
+.error {
+    color: #e74c3c;
+    margin-bottom: 15px;
+    font-size: 0.9em;
+}
+
+/* Footer */
+.login-container .footer {
+    margin-top: 20px;
+    font-size: 0.9em;
+    color: #7f8c8d;
+}
+
+.login-container .footer a:hover {
+    text-decoration: underline;
+}
+
+/* Responsive Design */
+@media (max-width: 480px) {
+    .login-container {
+        padding: 20px 15px;
+    }
+}
