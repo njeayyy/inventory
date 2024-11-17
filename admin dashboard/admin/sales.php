@@ -22,7 +22,7 @@
         <div class="main-content">
             <aside class="sidebar">
                 <ul>
-                    <li><button><a href="dashboard.html">DASHBOARD</a></button></li>
+                    <li><button><a href="dashboard.php">DASHBOARD</a></button></li>
                     <li><button class="active"><a href="user_management.php">USER MANAGEMENT</a></button></li>
                     <li><button><a href="categories.html">CATEGORIES</a></button></li>
                     <li><button><a href="products.php">PRODUCTS</a></button></li>

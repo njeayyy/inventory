@@ -1,3 +1,21 @@
+<?php
+// 1. Establish the database connection
+$mysqli = new mysqli("localhost", "root", "", "inventory_db");
+
+// Check for connection errors
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
+}
+
+// 2. Query to fetch low stock products (adjust the condition based on your table structure)
+$query = "SELECT product_name, in_stock FROM products WHERE in_stock <= 10"; // Replace 10 with your stock threshold
+$low_stock_products = $mysqli->query($query);
+
+// Check for query errors
+if (!$low_stock_products) {
+    die("Query failed: " . $mysqli->error);
+}
+?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,20 +44,34 @@
         <div class="main-content">
             <aside class="sidebar">
                 <ul>
-                    <li><button class="active"><a href="dashboard.html">DASHBOARD</a></button></li>
+                    <li><button class="active"><a href="dashboard.php">DASHBOARD</a></button></li>
                     <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
-                    <li><button><a href="categories.html">CATEGORIES</a></button></li>
+                    <li><button><a href="categories.php">CATEGORIES</a></button></li>
                     <li><button><a href="products.php">PRODUCTS</a></button></li>
-                    <li><button><a href="sales.html">SALES</a></button></li>
+                    <li><button><a href="sales.php">SALES</a></button></li>
                 </ul>
             </aside>
 
             <section class="dashboard-content">
                 <div class="overview">
-                    <div class="box">USERS <?= $userCount ?></div>
-                    <div class="box">CATEGORIES <?= $categoryCount ?></div>
-                    <div class="box">ITEMS <?= $itemCount ?></div>
-                    <div class="box">SALES <?= $saleCount ?></div>
+                    <div class="box"><a href="user_management.php">USER MANAGEMENT</a></div>
+                    <div class="box"><a href="categories.html">CATEGORIES</a></div>
+                    <div class="box"><a href="products.php">PRODUCTS</a></div>
+                    <div class="box"><a href="sales.html">SALES</a></div>
+                </div>
+
+                <!-- Low Stock Alerts Section -->
+                <div class="low-stock-alerts">
+                    <h3>Low Stock Alerts</h3>
+                    <?php if ($low_stock_products->num_rows > 0) { ?>
+                        <?php while ($row = $low_stock_products->fetch_assoc()) { ?>
+                            <div class="low-stock-alert">
+                                <p>Low Stock: <?= $row['product_name'] ?> - Only <?= $row['in_stock'] ?> left!</p>
+                            </div>
+                        <?php } ?>
+                    <?php } else { ?>
+                        <p>No products are currently low on stock.</p>
+                    <?php } ?>
                 </div>
 
                 <div class="tables">
@@ -71,9 +103,8 @@
             </section>
         </div>
     </div>
+
     <!-- Link to external JavaScript file -->
     <script src="menu.js"></script>
 </body>
 </html>
-
-
