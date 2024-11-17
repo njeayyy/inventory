@@ -39,11 +39,22 @@ $result = $conn->query("SELECT * FROM products $search_query ORDER BY $sort_by $
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
-            <div class="settings">
-                <i class="ri-more-2-fill"></i>
+            <div class="navbar">
+                <div class="dropdown">
+                    <button class="dropbtn"> 
+                        <i class="ri-more-2-fill"></i>
+                    </button>
+                    <div class="dropdown-content">
+                        <a href="dashboard.php">Inventory Management System</a>
+                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
+                    </div>
+                </div>
             </div>
             <div class="title">
                 <h1>INVENTORY MANAGEMENT SYSTEM</h1>
+            </div>
+            <div class="logout">
+                <a href="logout.php">Logout</a>
             </div>
         </header>
         

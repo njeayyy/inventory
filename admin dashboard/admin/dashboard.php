@@ -32,20 +32,15 @@ if (!$low_stock_products) {
         <header class="dashboard-header">
             <div class="navbar">
                 <div class="dropdown">
-
                     <button class="dropbtn"> 
                         <i class="ri-more-2-fill"></i>
                     </button>
-
                     <div class="dropdown-content">
                         <a href="dashboard.php">Inventory Management System</a>
                         <a href="../tracking/tracking.html">Vehicle Tracking</a>
                     </div>
-
                 </div>
             </div>
-
-            
             <div class="title">
                 <h1>INVENTORY MANAGEMENT SYSTEM</h1>
             </div>
