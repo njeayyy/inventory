@@ -33,7 +33,7 @@ if (!$low_stock_products) {
             <div class="navbar">
                 <div class="dropdown">
 
-                    <button class="dropbtn">More 
+                    <button class="dropbtn"> 
                         <i class="ri-more-2-fill"></i>
                     </button>
 
@@ -116,6 +116,6 @@ if (!$low_stock_products) {
             </section>
         </div>
     </div>
-    
+
 </body>
 </html>

@@ -356,7 +356,6 @@ a.cancel-btn:hover {
 .navbar {
     overflow: hidden;
     background-color: #333;
-    font-family: Arial, Helvetica, sans-serif;
 }
 
 .navbar a {
@@ -385,7 +384,7 @@ a.cancel-btn:hover {
 }
   
 .navbar a:hover, .dropdown:hover .dropbtn {
-    background-color: red;
+    background-color: #1abc9c;
 }
   
 .dropdown-content {
