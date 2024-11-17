@@ -355,32 +355,38 @@ a.cancel-btn:hover {
 
 .settings {
     position: relative;
+    display: inline-block;
 }
 
-.dropdown-menu {
+.nav-button {
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #FFF;
+    font-size: 24px;
+}
+
+.dropdown-content {
     display: none;
     position: absolute;
-    top: 30px;
     right: 0;
-    background-color: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 4px;
-    overflow: hidden;
-    z-index: 100;
-}
-
-.dropdown-menu a {
-    display: block;
-    padding: 10px 15px;
-    text-decoration: none;
-    color: #333;
-    border-bottom: 1px solid #ddd;
-}
-
-.dropdown-menu a:hover {
     background-color: #f1f1f1;
+    min-width: 160px;
+    box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
+    z-index: 1;
 }
 
-.dropdown-menu a:last-child {
-    border-bottom: none;
+.dropdown-content a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdown-content a:hover {
+    background-color: #ddd;
+}
+
+.show {
+    display: block;
 }

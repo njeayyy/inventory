@@ -1,18 +1,17 @@
 function toggleDropdown() {
-    const dropdownMenu = document.getElementById('dropdownMenu');
-    if (dropdownMenu.style.display === 'block') {
-        dropdownMenu.style.display = 'none';
-    } else {
-        dropdownMenu.style.display = 'block';
-    }
+    const dropdown = document.getElementById('navDropdown');
+    dropdown.classList.toggle('show');
 }
 
-// Close dropdown if clicked outside
+// Close the dropdown if the user clicks outside of it
 window.onclick = function(event) {
-    if (!event.target.matches('.settings-button, .settings-button *')) {
-        const dropdownMenu = document.getElementById('dropdownMenu');
-        if (dropdownMenu.style.display === 'block') {
-            dropdownMenu.style.display = 'none';
+    if (!event.target.matches('.nav-button') && !event.target.matches('.ri-more-2-fill')) {
+        const dropdowns = document.getElementsByClassName('dropdown-content');
+        for (let i = 0; i < dropdowns.length; i++) {
+            const openDropdown = dropdowns[i];
+            if (openDropdown.classList.contains('show')) {
+                openDropdown.classList.remove('show');
+            }
         }
     }
-};
+}
