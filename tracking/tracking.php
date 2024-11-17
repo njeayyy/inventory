@@ -1,7 +1,7 @@
 <?php
-    // You can include any server-side logic here if needed, like handling session or fetching data from the database
-    session_start();
+    phpinfo();
 ?>
+
 
 <!DOCTYPE html>
 <html lang="en">
