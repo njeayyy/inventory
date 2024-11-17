@@ -1,3 +1,8 @@
+<?php
+    // You can include any server-side logic here if needed, like handling session or fetching data from the database
+    session_start();
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -19,7 +24,7 @@
                     </button>
                     <div class="dropdown-content">
                         <a href="../admin dashboard/admin/dashboard.php">Inventory Management System</a>
-                        <a href="tracking.html">Vehicle Tracking</a>
+                        <a href="tracking.php">Vehicle Tracking</a>
                     </div>
                 </div>
             </div>

@@ -37,7 +37,7 @@ if (!$low_stock_products) {
                     </button>
                     <div class="dropdown-content">
                         <a href="dashboard.php">Inventory Management System</a>
-                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
+                        <a href="../tracking/tracking.php">Vehicle Tracking</a>
                     </div>
                 </div>
             </div>
