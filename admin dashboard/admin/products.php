@@ -6,11 +6,24 @@ if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
     $conn->query("DELETE FROM products WHERE id = $delete_id");
     header("Location: products.php");
-    exit; // Always call exit after a header redirect
+    exit;
 }
 
-// Fetch products from database
-$result = $conn->query("SELECT * FROM products");
+// Handle search functionality
+$search = "";
+if (isset($_GET['search'])) {
+    $search = $_GET['search'];
+    $search_query = "WHERE product_name LIKE '%$search%' OR category LIKE '%$search%'";
+} else {
+    $search_query = "";
+}
+
+// Handle sorting functionality
+$sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'id';
+$order = isset($_GET['order']) && $_GET['order'] == 'asc' ? 'asc' : 'desc';
+
+// Fetch products from database with search and sorting
+$result = $conn->query("SELECT * FROM products $search_query ORDER BY $sort_by $order");
 ?>
 
 <!DOCTYPE html>
@@ -48,6 +61,21 @@ $result = $conn->query("SELECT * FROM products");
             <section class="dashboard-content">
                 <div class="box">PRODUCTS</div>
                 <a href="add_product.php" class="add-user-btn">Add New Product</a>
+
+                <!-- Search Bar -->
+                <form method="GET" action="products.php" class="search-form">
+                    <input type="text" name="search" placeholder="Search products..." value="<?= htmlspecialchars($search) ?>" />
+                    <button type="submit">Search</button>
+                </form>
+
+                <!-- Sorting Dropdown -->
+                <div class="sort-options">
+                    <a href="products.php?sort_by=product_name&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by Name</a>
+                    <a href="products.php?sort_by=price&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by Price</a>
+                    <a href="products.php?sort_by=in_stock&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by Stock</a>
+                </div>
+
+                <!-- Products Table -->
                 <table>
                     <tr>
                         <th>#</th>
@@ -67,8 +95,8 @@ $result = $conn->query("SELECT * FROM products");
                             <td><?= $row['price'] ?></td>
                             <td><?= $row['product_added'] ?></td>
                             <td>
-                                    <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a>
-                                    <a href="products.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                                <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a>
+                                <a href="products.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php } ?>

@@ -1,36 +1,16 @@
 <?php
-include 'db.php'; // Include your database connection
+include 'db.php'; // Make sure db.php is included to establish connection
 
-// Initialize variables
-$search_query = "";
-
-// Handle search
-if (isset($_GET['search'])) {
-    $search_query = $_GET['search'];
-    $result = $conn->query("SELECT * FROM products WHERE product_name LIKE '%$search_query%'");
-} elseif (isset($_GET['id'])) {
-    // If an ID is provided, fetch the product data
-    $product_id = $_GET['id'];
-    $result = $conn->query("SELECT * FROM products WHERE id = $product_id");
-} else {
-    $result = $conn->query("SELECT * FROM products");
+// Handle user deletion
+if (isset($_GET['delete_id'])) {
+    $delete_id = $_GET['delete_id'];
+    $conn->query("DELETE FROM users WHERE id = $delete_id");
+    header("Location: user_management.php");
+    exit; // Always call exit after a header redirect
 }
 
-// Handle form submission to update the product
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $product_name = $_POST['product_name'];
-    $category = $_POST['category'];
-    $in_stock = $_POST['in_stock'];
-    $price = $_POST['price'];
-
-    $update_query = "UPDATE products SET product_name = '$product_name', category = '$category', in_stock = '$in_stock', price = '$price' WHERE id = $product_id";
-    if ($conn->query($update_query) === TRUE) {
-        header("Location: products.php"); // Redirect to products list after update
-        exit;
-    } else {
-        echo "Error updating product: " . $conn->error;
-    }
-}
+// Fetch users from database
+$result = $conn->query("SELECT * FROM users");
 ?>
 
 <!DOCTYPE html>
@@ -38,8 +18,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Edit Product</title>
+    <title>User Management</title>
     <link rel="stylesheet" href="dashboard.css">
+    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
 </head>
 <body>
     <div class="dashboard">
@@ -51,75 +32,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h1>INVENTORY MANAGEMENT SYSTEM</h1>
             </div>
         </header>
-
+        
         <div class="main-content">
             <aside class="sidebar">
                 <ul>
                     <li><button><a href="dashboard.html">DASHBOARD</a></button></li>
-                    <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
+                    <li><button class="active"><a href="user_management.php">USER MANAGEMENT</a></button></li>
                     <li><button><a href="categories.html">CATEGORIES</a></button></li>
-                    <li><button class="active"><a href="products.php">PRODUCTS</a></button></li>
+                    <li><button><a href="products.html">PRODUCTS</a></button></li>
                     <li><button><a href="sales.html">SALES</a></button></li>
                 </ul>
             </aside>
 
             <section class="dashboard-content">
-                <div class="box">
-                    <h2>Search Products</h2>
-                    <form method="GET" action="edit_product.php">
-                        <input type="text" name="search" placeholder="Search product..." value="<?= $search_query ?>">
-                        <button type="submit">Search</button>
-                    </form>
-                </div>
-
-                <div class="box">
-                    <?php if (isset($_GET['search'])): ?>
-                        <h2>Search Results</h2>
-                        <?php if ($result->num_rows > 0): ?>
-                            <table>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Product Name</th>
-                                    <th>Category</th>
-                                    <th>In Stock</th>
-                                    <th>Price</th>
-                                    <th>Actions</th>
-                                </tr>
-                                <?php while ($row = $result->fetch_assoc()): ?>
-                                    <tr>
-                                        <td><?= $row['id'] ?></td>
-                                        <td><?= $row['product_name'] ?></td>
-                                        <td><?= $row['category'] ?></td>
-                                        <td><?= $row['in_stock'] ?></td>
-                                        <td><?= $row['price'] ?></td>
-                                        <td>
-                                            <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a>
-                                        </td>
-                                    </tr>
-                                <?php endwhile; ?>
-                            </table>
-                        <?php else: ?>
-                            <p>No products found matching "<?= $search_query ?>"</p>
-                        <?php endif; ?>
-                    <?php endif; ?>
-                </div>
-
-                <?php if (isset($product)): ?>
-                <div class="box">
-                    <h2>Edit Product</h2>
-                    <form action="edit_product.php?id=<?= $product['id'] ?>" method="POST">
-                        <label>Product Name:</label>
-                        <input type="text" name="product_name" value="<?= $product['product_name'] ?>" required><br>
-                        <label>Category:</label>
-                        <input type="text" name="category" value="<?= $product['category'] ?>" required><br>
-                        <label>In Stock:</label>
-                        <input type="number" name="in_stock" value="<?= $product['in_stock'] ?>" required><br>
-                        <label>Price:</label>
-                        <input type="number" step="0.01" name="price" value="<?= $product['price'] ?>" required><br>
-                        <button type="submit">Update Product</button>
-                    </form>
-                </div>
-                <?php endif; ?>
+            <div class="box">USER MANAGEMENT</div>
+                <a href="add_user.php">Add New User</a>
+                <table>
+                    <tr>
+                        <th>#</th>
+                        <th>Name</th>
+                        <th>Username</th>
+                        <th>User Role</th>
+                        <th>Status</th>
+                        <th>Last Login</th>
+                        <th>Actions</th>
+                    </tr>
+                    <?php while ($row = $result->fetch_assoc()) { ?>
+                        <tr>
+                            <td><?= $row['id'] ?></td>
+                            <td><?= $row['name'] ?></td>
+                            <td><?= $row['username'] ?></td>
+                            <td><?= $row['role'] ?></td>
+                            <td><span class="status"><?= $row['status'] ?></span></td>
+                            <td><?= $row['last_login'] ?></td>
+                            <td>
+                                <a href="edit_user.php?id=<?= $row['id'] ?>">Edit</a>
+                                <a href="user_management.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                            </td>
+                        </tr>
+                    <?php } ?>
+                </table>
             </section>
         </div>
     </div>
