@@ -30,13 +30,18 @@ if (!$low_stock_products) {
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
-            <div class="settings">
-                <button class="nav-button" onclick="toggleDropdown()">
-                    <i class="ri-more-2-fill"></i>
-                </button>
-                <div id="navDropdown" class="dropdown-content">
-                    <a href="dashboard.php">Inventory Management System</a>
-                    <a href="../tracking/tracking.html">Vehicle Tracking</a>
+            <div class="navbar">
+                <div class="dropdown">
+
+                    <button class="dropbtn">More 
+                        <i class="ri-more-2-fill"></i>
+                    </button>
+
+                    <div class="dropdown-content">
+                        <a href="dashboard.php">Inventory Management System</a>
+                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
+                    </div>
+
                 </div>
             </div>
 
@@ -111,8 +116,6 @@ if (!$low_stock_products) {
             </section>
         </div>
     </div>
-
-    <!-- Link to external JavaScript file -->
-    <script src="../js/menu.js"></script>
+    
 </body>
 </html>
