@@ -284,7 +284,7 @@ button[type="submit"]:hover {
 a.cancel-btn {
     display: inline-block;
     padding: 10px 20px;
-    background-color: #f44336;
+    background-color: #e53935;
     color: var(--clr-light);
     border-radius: 8px;
     text-decoration: none;
