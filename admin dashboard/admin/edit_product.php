@@ -9,6 +9,13 @@ if (isset($_GET['id'])) {
     $result = $conn->query("SELECT * FROM products WHERE id = $id");
     $product = $result->fetch_assoc();
 
+    // Fetch all categories
+    $categories_result = $conn->query("SELECT * FROM categories");
+    $categories = [];
+    while ($row = $categories_result->fetch_assoc()) {
+        $categories[] = $row;
+    }
+
     // Handle form submission to update product
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         // Get data from the form
@@ -29,17 +36,7 @@ if (isset($_GET['id'])) {
     header("Location: products.php");
     exit;
 }
-
 ?>
-
-
-
-
-
-
-
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -64,7 +61,7 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
             <div class="title">
-                <h1>EDIT PRODUCTS</h1>
+                <h1>EDIT PRODUCT</h1>
             </div>
         </header>
 
@@ -75,7 +72,14 @@ if (isset($_GET['id'])) {
                     <input type="text" name="product_name" value="<?= $product['product_name'] ?>" required />
 
                     <label for="category">Category</label>
-                    <input type="text" name="category" value="<?= $product['category'] ?>" required />
+                    <select name="category" required>
+                        <?php foreach ($categories as $category) { ?>
+                            <option value="<?= $category['category_name'] ?>" 
+                                <?= $category['category_name'] == $product['category'] ? 'selected' : '' ?>>
+                                <?= $category['category_name'] ?>
+                            </option>
+                        <?php } ?>
+                    </select>
 
                     <label for="in_stock">In Stock</label>
                     <input type="number" name="in_stock" value="<?= $product['in_stock'] ?>" required />
@@ -90,4 +94,3 @@ if (isset($_GET['id'])) {
     </div>
 </body>
 </html>
-

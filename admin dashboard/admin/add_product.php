@@ -4,6 +4,7 @@ include 'db.php';
 // Fetch categories from the database
 $categories_result = $conn->query("SELECT id, category_name FROM categories");
 
+// Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $product_name = $_POST['product_name'];
     $category_id = $_POST['category']; // Store the category ID
