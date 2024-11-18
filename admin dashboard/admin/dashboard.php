@@ -63,9 +63,9 @@ if (!$low_stock_products) {
             <section class="dashboard-content">
                 <div class="overview">
                     <div class="box"><a href="user_management.php">USER MANAGEMENT</a></div>
-                    <div class="box"><a href="categories.html">CATEGORIES</a></div>
+                    <div class="box"><a href="categories.php">CATEGORIES</a></div>
                     <div class="box"><a href="products.php">PRODUCTS</a></div>
-                    <div class="box"><a href="sales.html">SALES</a></div>
+                    <div class="box"><a href="sales.php">SALES</a></div>
                 </div>
 
                 <!-- Low Stock Alerts Section -->
