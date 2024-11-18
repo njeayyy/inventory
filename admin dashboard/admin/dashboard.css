@@ -424,3 +424,41 @@ a.cancel-btn:hover {
 .edit-form a:hover {
     color: #333;
 }
+
+/* Search Bar */
+.search-form {
+    margin: 20px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.search-form input {
+    width: 75%;
+    padding: 8px 12px;
+    font-size: 1em;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+}
+
+.search-form button {
+    padding: 8px 12px;
+    font-size: 1em;
+    background-color: #1abc9c;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.search-form button:hover {
+    background-color: #16a085;
+}
+
+.add-category{
+    width: 50%;
+    padding: 8px 12px;
+    font-size: 1em;
+    border-radius: 5px;
+}
+

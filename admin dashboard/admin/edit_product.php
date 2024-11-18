@@ -45,6 +45,9 @@ if (isset($_GET['id'])) {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product</title>
     <link rel="stylesheet" href="dashboard.css">
+    <style>
+        
+    </style>
 </head>
 <body>
     <div class="dashboard">
@@ -61,9 +64,23 @@ if (isset($_GET['id'])) {
                 </div>
             </div>
             <div class="title">
-                <h1>EDIT PRODUCT</h1>
+                <h1>INVENTORY MANAGEMENT SYSTEM</h1>
+            </div>
+            <div class="logout">
+                <a href="logout.php">Logout</a>
             </div>
         </header>
+
+        <div class="main-content">
+            <aside class="sidebar">
+                <ul>
+                    <li><button><a href="dashboard.php">DASHBOARD</a></button></li>
+                    <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
+                    <li><button class="active"><a href="categories.php">CATEGORIES</a></button></li>
+                    <li><button><a href="products.php">PRODUCTS</a></button></li>
+                    <li><button><a href="sales.php">SALES</a></button></li>
+                </ul>
+            </aside>
 
         <div class="main-content">
             <section class="dashboard-content">
