@@ -1,96 +1,66 @@
 <?php
-include 'db.php'; // Make sure db.php is included to establish connection
-
-// Handle sale deletion
-if (isset($_GET['delete_id'])) {
-    $delete_id = $_GET['delete_id'];
-    $conn->query("DELETE FROM sales WHERE id = $delete_id");
-    header("Location: sales.php");
-    exit; // Always call exit after a header redirect
-}
-
-// Fetch sales from the database
-$result = $conn->query("SELECT * FROM sales");
-
-// Fetch products from the product_sale table for dropdown (for adding new sale)
-$products_result = $conn->query("SELECT id, product_sale FROM product_sale");  // Changed to product_sale
+  $page_title = 'All sale';
+  require_once('includes/load.php');
+  // Checkin What level user has permission to view this page
+   page_require_level(3);
 ?>
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales</title>
-    <link rel="stylesheet" href="dashboard.css">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="dashboard">
-        <header class="dashboard-header">
-            <div class="navbar">
-                <div class="dropdown">
-                    <button class="dropbtn"> 
-                        <i class="ri-more-2-fill"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="dashboard.php">Inventory Management System</a>
-                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
-                    </div>
-                </div>
-            </div>
-            <div class="title">
-                <h1>INVENTORY MANAGEMENT SYSTEM</h1>
-            </div>
-            <div class="logout">
-                <a href="logout.php">Logout</a>
-            </div>
-        </header>
-        
-        <div class="main-content">
-            <aside class="sidebar">
-                <ul>
-                    <li><button><a href="dashboard.php">DASHBOARD</a></button></li>
-                    <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
-                    <li><button><a href="categories.php">CATEGORIES</a></button></li>
-                    <li><button><a href="products.php">PRODUCTS</a></button></li>
-                    <li><button class="active"><a href="sales.php">SALES</a></button></li>
-                </ul>
-            </aside>
-
-            <section class="dashboard-content">
-                <div class="box">SALES</div>
-                <a href="add_sale.php" class="add-user-btn">Add New Sale</a>
-
-                <!-- Sales Table -->
-                <table>
-                    <tr>
-                        <th>#</th>
-                        <th>Product Name</th>
-                        <th>Quantity Sold</th>
-                        <th>Sale Price</th>
-                        <th>Total Amount</th>
-                        <th>Sale Date</th>
-                        <th>Actions</th>
-                    </tr>
-                    <?php while ($row = $result->fetch_assoc()) { ?>
-                        <tr>
-                            <td><?= $row['id'] ?></td>
-                            <td><?= $row['product_sale'] ?></td>  <!-- Changed to product_sale -->
-                            <td><?= $row['quantity'] ?></td>
-                            <td><?= $row['sale_price'] ?></td>
-                            <td><?= $row['total_amount'] ?></td>
-                            <td><?= $row['sale_date'] ?></td>
-                            <td>
-                                <a href="edit_sale.php?id=<?= $row['id'] ?>">Edit</a>
-                                <a href="sales.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </table>
-            </section>
+<?php
+$sales = find_all_sale();
+?>
+<?php include_once('layouts/header.php'); ?>
+<div class="row">
+  <div class="col-md-6">
+    <?php echo display_msg($msg); ?>
+  </div>
+</div>
+  <div class="row">
+    <div class="col-md-12">
+      <div class="panel panel-default">
+        <div class="panel-heading clearfix">
+          <strong>
+            <span class="glyphicon glyphicon-th"></span>
+            <span>All Sales</span>
+          </strong>
+          <div class="pull-right">
+            <a href="add_sale.php" class="btn btn-primary">Add sale</a>
+          </div>
         </div>
+        <div class="panel-body">
+          <table class="table table-bordered table-striped">
+            <thead>
+              <tr>
+                <th class="text-center" style="width: 50px;">#</th>
+                <th> Product name </th>
+                <th class="text-center" style="width: 15%;"> Quantity</th>
+                <th class="text-center" style="width: 15%;"> Total </th>
+                <th class="text-center" style="width: 15%;"> Date </th>
+                <th class="text-center" style="width: 100px;"> Actions </th>
+             </tr>
+            </thead>
+           <tbody>
+             <?php foreach ($sales as $sale):?>
+             <tr>
+               <td class="text-center"><?php echo count_id();?></td>
+               <td><?php echo remove_junk($sale['name']); ?></td>
+               <td class="text-center"><?php echo (int)$sale['qty']; ?></td>
+               <td class="text-center"><?php echo remove_junk($sale['price']); ?></td>
+               <td class="text-center"><?php echo $sale['date']; ?></td>
+               <td class="text-center">
+                  <div class="btn-group">
+                     <a href="edit_sale.php?id=<?php echo (int)$sale['id'];?>" class="btn btn-warning btn-xs"  title="Edit" data-toggle="tooltip">
+                       <span class="glyphicon glyphicon-edit"></span>
+                     </a>
+                     <a href="delete_sale.php?id=<?php echo (int)$sale['id'];?>" class="btn btn-danger btn-xs"  title="Delete" data-toggle="tooltip">
+                       <span class="glyphicon glyphicon-trash"></span>
+                     </a>
+                  </div>
+               </td>
+             </tr>
+             <?php endforeach;?>
+           </tbody>
+         </table>
+        </div>
+      </div>
     </div>
-</body>
-</html>
+  </div>
+<?php include_once('layouts/footer.php'); ?>
