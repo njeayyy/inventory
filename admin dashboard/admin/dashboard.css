@@ -469,11 +469,21 @@ a.cancel-btn:hover {
     font-size: 1em;
     border-radius: 5px;
 }
-/* sa may select sa add sale */
 
+/* Ensure the form doesn't clip dropdown */
+form {
+    position: relative; /* Allow dropdowns to appear above other content */
+    overflow: visible;
+}
 
+/* Styling for select */
+select {
+    z-index: 10; /* Ensure the dropdown appears on top */
+}
 
-
-select option {
-    padding: 5px; 
+select {
+    overflow-y: auto; /* Enable scrolling */
+    max-height: 150px; /* Set max height for dropdown */
+    z-index: 10; /* Ensure it stays above other elements */
+    position: relative;
 }

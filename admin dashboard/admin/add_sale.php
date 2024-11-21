@@ -32,19 +32,7 @@ $products_result = $conn->query("SELECT id, product_name FROM product_sale");  /
     <title>Add Sale</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <style>
-        select {
-            width: 100%; 
-            max-height: 200px; 
-            overflow-y: auto; 
-            padding: 8px; 
-            box-sizing: border-box;
-            font-size: 16px; 
-        }
-        select option {
-            padding: 5px;
-        }
-    </style>
+    
 </head>
 <body>
     <div class="dashboard">
