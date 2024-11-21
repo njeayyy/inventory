@@ -12,8 +12,8 @@ if (isset($_GET['delete_id'])) {
 // Fetch sales from the database
 $result = $conn->query("SELECT * FROM sales");
 
-// Fetch products for dropdown (for adding new sale)
-$products_result = $conn->query("SELECT id, product_name FROM products");
+// Fetch products from the product_sale table for dropdown (for adding new sale)
+$products_result = $conn->query("SELECT id, product_sale FROM product_sale");  // Changed to product_sale
 ?>
 
 <!DOCTYPE html>
@@ -77,7 +77,7 @@ $products_result = $conn->query("SELECT id, product_name FROM products");
                     <?php while ($row = $result->fetch_assoc()) { ?>
                         <tr>
                             <td><?= $row['id'] ?></td>
-                            <td><?= $row['product_name'] ?></td>
+                            <td><?= $row['product_sale'] ?></td>  <!-- Changed to product_sale -->
                             <td><?= $row['quantity'] ?></td>
                             <td><?= $row['sale_price'] ?></td>
                             <td><?= $row['total_amount'] ?></td>

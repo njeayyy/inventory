@@ -16,8 +16,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     exit;
 }
 
-// Fetch products for the product dropdown
-$products_result = $conn->query("SELECT id, product_name FROM products");
+// Fetch products from the new product_sale table
+$products_result = $conn->query("SELECT id, product_sale FROM product_sale");  // Changed to product_sale
 ?>
 
 <!DOCTYPE html>
@@ -68,7 +68,7 @@ $products_result = $conn->query("SELECT id, product_name FROM products");
                     <label for="product_id">Product:</label>
                     <select name="product_id" required>
                         <?php while ($row = $products_result->fetch_assoc()) { ?>
-                            <option value="<?= $row['id'] ?>"><?= $row['product_name'] ?></option>
+                            <option value="<?= $row['id'] ?>"><?= $row['product_sale'] ?></option> <!-- Changed to product_sale -->
                         <?php } ?>
                     </select><br><br>
                     
