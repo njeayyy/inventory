@@ -470,20 +470,29 @@ a.cancel-btn:hover {
     border-radius: 5px;
 }
 
-/* Ensure the form doesn't clip dropdown */
 form {
-    position: relative; /* Allow dropdowns to appear above other content */
-    overflow: visible;
-}
-
-/* Styling for select */
-select {
-    z-index: 10; /* Ensure the dropdown appears on top */
-}
-
-select {
-    overflow-y: auto; /* Enable scrolling */
-    max-height: 150px; /* Set max height for dropdown */
-    z-index: 10; /* Ensure it stays above other elements */
+    width: 40%;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: var(--clr-light);
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
     position: relative;
+    overflow: visible; /* Ensures dropdown isn't clipped */
+}
+
+select {
+    max-height: 200px; /* Set max height to control dropdown size */
+    overflow-y: auto; /* Enable scrolling if content exceeds */
+    z-index: 1000; /* Ensure select stays above other content */
+    position: relative; /* Ensure dropdown is positioned correctly */
+}
+
+form {
+    overflow: visible !important; /* Force visibility of dropdown */
+}
+select {
+    height: 40px; /* Add height to the select box */
+    max-height: 200px; /* Limit dropdown height */
+    overflow-y: scroll; /* Enable scrolling */
 }
