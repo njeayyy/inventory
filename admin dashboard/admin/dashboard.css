@@ -78,26 +78,34 @@ body {
     margin: 20px 0;
 }
 
+/* Change here: Ensure links inside buttons are white */
 .sidebar ul li button {
     width: 100%;
     padding: 12px;
     background-color: #020c22;
     border: none;
-    color: var(--clr-light);
+    color: var(--clr-light); /* Make button text white */
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
+/* Ensure that hover effects don't affect the text color */
 .sidebar ul li button:hover {
     background-color: #2c3e50;
 }
 
+/* Ensure that active buttons still have white text */
 .sidebar ul li button.active {
     background-color: #2c3e50;
     font-weight: var(--fw-bold);
 }
 
+/* Ensure that all links in the sidebar are white */
+.sidebar a {
+    color: var(--clr-light); /* White text for links */
+    text-decoration: none;
+}
 
 /*                   MAIN CONTENT                */
 
