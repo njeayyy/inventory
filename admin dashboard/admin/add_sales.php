@@ -1,18 +1,22 @@
 <?php
 include 'db.php'; // Make sure db.php is included to establish connection
 
-// Handle sale deletion
-if (isset($_GET['delete_id'])) {
-    $delete_id = $_GET['delete_id'];
-    $conn->query("DELETE FROM sales WHERE id = $delete_id");
+// Handle form submission
+if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+    $product_id = $_POST['product_id'];
+    $quantity = $_POST['quantity'];
+    $sale_price = $_POST['sale_price'];
+    $total_amount = $quantity * $sale_price;
+    $sale_date = date('Y-m-d H:i:s'); // Current date and time
+
+    // Insert new sale into database
+    $conn->query("INSERT INTO sales (product_id, quantity, sale_price, total_amount, sale_date) VALUES ('$product_id', '$quantity', '$sale_price', '$total_amount', '$sale_date')");
+
     header("Location: sales.php");
-    exit; // Always call exit after a header redirect
+    exit;
 }
 
-// Fetch sales from the database
-$result = $conn->query("SELECT * FROM sales");
-
-// Fetch products for dropdown (for adding new sale)
+// Fetch products for the product dropdown
 $products_result = $conn->query("SELECT id, product_name FROM products");
 ?>
 
@@ -21,10 +25,9 @@ $products_result = $conn->query("SELECT id, product_name FROM products");
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales</title>
+    <title>Add Sale</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="dashboard">
@@ -60,35 +63,23 @@ $products_result = $conn->query("SELECT id, product_name FROM products");
             </aside>
 
             <section class="dashboard-content">
-                <div class="box">SALES</div>
-                <a href="add_sale.php" class="add-user-btn">Add New Sale</a>
+                <div class="box">ADD SALE</div>
+                <form method="POST" action="add_sale.php">
+                    <label for="product_id">Product:</label>
+                    <select name="product_id" required>
+                        <?php while ($row = $products_result->fetch_assoc()) { ?>
+                            <option value="<?= $row['id'] ?>"><?= $row['product_name'] ?></option>
+                        <?php } ?>
+                    </select><br><br>
+                    
+                    <label for="quantity">Quantity Sold:</label>
+                    <input type="number" name="quantity" required><br><br>
+                    
+                    <label for="sale_price">Sale Price:</label>
+                    <input type="number" step="0.01" name="sale_price" required><br><br>
 
-                <!-- Sales Table -->
-                <table>
-                    <tr>
-                        <th>#</th>
-                        <th>Product Name</th>
-                        <th>Quantity Sold</th>
-                        <th>Sale Price</th>
-                        <th>Total Amount</th>
-                        <th>Sale Date</th>
-                        <th>Actions</th>
-                    </tr>
-                    <?php while ($row = $result->fetch_assoc()) { ?>
-                        <tr>
-                            <td><?= $row['id'] ?></td>
-                            <td><?= $row['product_name'] ?></td>
-                            <td><?= $row['quantity'] ?></td>
-                            <td><?= $row['sale_price'] ?></td>
-                            <td><?= $row['total_amount'] ?></td>
-                            <td><?= $row['sale_date'] ?></td>
-                            <td>
-                                <a href="edit_sale.php?id=<?= $row['id'] ?>">Edit</a>
-                                <a href="sales.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </table>
+                    <button type="submit">Add Sale</button>
+                </form>
             </section>
         </div>
     </div>
