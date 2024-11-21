@@ -10,14 +10,18 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $sale_date = date('Y-m-d H:i:s'); // Current date and time
 
     // Insert new sale into database
-    $conn->query("INSERT INTO sales (product_id, quantity, sale_price, total_amount, sale_date) VALUES ('$product_id', '$quantity', '$sale_price', '$total_amount', '$sale_date')");
+    if ($stmt = $conn->prepare("INSERT INTO sales (product_id, quantity, sale_price, total_amount, sale_date) VALUES (?, ?, ?, ?, ?)")) {
+        $stmt->bind_param("iiids", $product_id, $quantity, $sale_price, $total_amount, $sale_date);
+        $stmt->execute();
+        $stmt->close();
+    }
 
     header("Location: sales.php");
     exit;
 }
 
-// Fetch products from the new product_sale table
-$products_result = $conn->query("SELECT id, product_sale FROM product_sale");  // Changed to product_sale
+// Fetch products from the product_sale table
+$products_result = $conn->query("SELECT id, product_name FROM product_sale");  // Ensure product_name is correct in the table
 ?>
 
 <!DOCTYPE html>
@@ -68,7 +72,7 @@ $products_result = $conn->query("SELECT id, product_sale FROM product_sale");  /
                     <label for="product_id">Product:</label>
                     <select name="product_id" required>
                         <?php while ($row = $products_result->fetch_assoc()) { ?>
-                            <option value="<?= $row['id'] ?>"><?= $row['product_sale'] ?></option> <!-- Changed to product_sale -->
+                            <option value="<?= $row['id'] ?>"><?= $row['product_name'] ?></option>  <!-- Ensure product_name is correct in the table -->
                         <?php } ?>
                     </select><br><br>
                     

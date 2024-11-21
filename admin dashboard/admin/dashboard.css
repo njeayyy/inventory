@@ -469,4 +469,11 @@ a.cancel-btn:hover {
     font-size: 1em;
     border-radius: 5px;
 }
+/* sa may select sa add sale */
 
+
+
+
+select option {
+    padding: 5px; 
+}
