@@ -1,27 +1,24 @@
 <?php
-include 'db.php'; // Make sure db.php is included to establish connection
+include 'db.php'; // Ensure this file is included for the database connection
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
+// Handle form submission to add a sale
+if (isset($_POST['submit'])) {
     $product_id = $_POST['product_id'];
     $quantity = $_POST['quantity'];
     $sale_price = $_POST['sale_price'];
     $total_amount = $quantity * $sale_price;
-    $sale_date = date('Y-m-d H:i:s'); // Current date and time
+    $sale_date = date('Y-m-d'); // Or you can take this from the form
 
-    // Insert new sale into database
-    if ($stmt = $conn->prepare("INSERT INTO sales (product_id, quantity, sale_price, total_amount, sale_date) VALUES (?, ?, ?, ?, ?)")) {
-        $stmt->bind_param("iiids", $product_id, $quantity, $sale_price, $total_amount, $sale_date);
-        $stmt->execute();
-        $stmt->close();
-    }
-
-    header("Location: sales.php");
+    // Insert sale data into the sales table
+    $query = "INSERT INTO sales (product_sale, quantity, sale_price, total_amount, sale_date) 
+              VALUES ('$product_id', '$quantity', '$sale_price', '$total_amount', '$sale_date')";
+    $conn->query($query);
+    header("Location: sales.php"); // Redirect to sales page after successful addition
     exit;
 }
 
-// Fetch products from the product_sale table
-$products_result = $conn->query("SELECT id, product_name FROM product_sale");  // Ensure product_name is correct in the table
+// Fetch the list of products for the dropdown
+$products_result = $conn->query("SELECT * FROM product_sale");
 ?>
 
 <!DOCTYPE html>
@@ -32,7 +29,7 @@ $products_result = $conn->query("SELECT id, product_name FROM product_sale");  /
     <title>Add Sale</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
 </head>
 <body>
     <div class="dashboard">
@@ -68,22 +65,25 @@ $products_result = $conn->query("SELECT id, product_name FROM product_sale");  /
             </aside>
 
             <section class="dashboard-content">
-                <div class="box">ADD SALE</div>
-                <form method="POST" action="add_sale.php">
-                    <label for="product_id">Product:</label>
-                    <select name="product_id" required>
-                        <?php while ($row = $products_result->fetch_assoc()) { ?>
-                            <option value="<?= $row['id'] ?>"><?= $row['product_name'] ?></option>  <!-- Ensure product_name is correct in the table -->
-                        <?php } ?>
-                    </select><br><br>
-                    
-                    <label for="quantity">Quantity Sold:</label>
-                    <input type="number" name="quantity" required><br><br>
-                    
-                    <label for="sale_price">Sale Price:</label>
-                    <input type="number" step="0.01" name="sale_price" required><br><br>
+                <div class="box">Add New Sale</div>
 
-                    <button type="submit">Add Sale</button>
+                <!-- Add Sale Form -->
+                <form action="add_sale.php" method="POST">
+                    <label for="product_id">Product:</label>
+                    <select name="product_id" id="product_id" required>
+                        <option value="">Select Product</option>
+                        <?php while ($product = $products_result->fetch_assoc()) { ?>
+                            <option value="<?= $product['id'] ?>"><?= $product['product_sale'] ?></option>
+                        <?php } ?>
+                    </select>
+
+                    <label for="quantity">Quantity Sold:</label>
+                    <input type="number" name="quantity" id="quantity" required>
+
+                    <label for="sale_price">Sale Price:</label>
+                    <input type="number" name="sale_price" id="sale_price" required>
+
+                    <button type="submit" name="submit">Add Sale</button>
                 </form>
             </section>
         </div>

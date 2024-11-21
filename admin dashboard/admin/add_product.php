@@ -11,8 +11,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $in_stock = $_POST['in_stock'];
     $price = $_POST['price'];
 
-    // Insert the new product with the selected category ID
-    $conn->query("INSERT INTO products (product_name, category_id, in_stock, price) VALUES ('$product_name', '$category_id', '$in_stock', '$price')");
+    
+    if ($stmt = $conn->prepare("INSERT INTO products (product_name, category_id, in_stock, price) VALUES (?, ?, ?, ?)")) {
+        $stmt->bind_param("sidi", $product_name, $category_id, $in_stock, $price);
+        $stmt->execute();
+        $stmt->close();
+    }
+
+    
     header("Location: products.php");
     exit;
 }
@@ -64,11 +70,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 </html>
 
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Add New Product</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
