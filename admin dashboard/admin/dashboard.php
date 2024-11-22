@@ -18,7 +18,7 @@ if (!$low_stock_products) {
 
 // 3. Queries for additional dashboard data
 // Fetch the number of users
-$query_users = "SELECT COUNT(*) AS total_users FROM users";
+$query_users = "SELECT COUNT(*) AS total_users FROM add_users";
 $total_users_result = $mysqli->query($query_users);
 $total_users = ($total_users_result && $row = $total_users_result->fetch_assoc()) ? $row['total_users'] : 0;
 
