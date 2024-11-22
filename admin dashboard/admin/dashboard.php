@@ -123,31 +123,11 @@ $recent_products = $mysqli->query($query_recent_products);
                 <!-- Dashboard Overview -->
             
                 <div class="overview">
-                            <a href="user_management.php">
-                                <div class="box">
-                                    <h2><?= $total_users ?></h2>
-                                    <p>Users</p>
-                                </div>
-                            </a>
-                            <a href="categories.php">
-                                <div class="box">
-                                    <h2><?= $total_categories ?></h2>
-                                    <p>Categories</p>
-                                </div>
-                            </a>
-                            <a href="products.php">
-                                <div class="box">
-                                    <h2><?= $total_products ?></h2>
-                                    <p>Products</p>
-                                </div>
-                            </a>
-                            <a href="sales.php">
-                                <div class="box">
-                                    <h2>$<?= number_format($total_sales, 2) ?></h2>
-                                    <p>Sales</p>
-                                </div>
-                            </a>
-                    </div>
+                    <div class="box"><h2><?= $total_users ?></h2><p>Users</p></div>
+                    <div class="box"><h2><?= $total_categories ?></h2><p>Categories</p></div>
+                    <div class="box"><h2><?= $total_products ?></h2><p>Products</p></div>
+                    <div class="box"><h2>₱<?= number_format($total_sales, 2) ?></h2><p>Sales</p></div>
+                </div>
 
                 <!-- Low Stock Alerts Section -->
                 <div class="low-stock-alerts">
