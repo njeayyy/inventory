@@ -496,3 +496,43 @@ select {
     max-height: 200px; /* Limit dropdown height */
     overflow-y: scroll; /* Enable scrolling */
 }
+
+
+
+
+
+/* Styles for the Overview Section */
+.overview a {
+    text-decoration: none;        /* Removes underline from links */
+    color: inherit;               /* Ensures text color is inherited from parent */
+}
+
+.overview .box {
+    cursor: pointer;             /* Makes the boxes look clickable */
+    transition: transform 0.2s;   /* Adds smooth transition for hover effect */
+    display: inline-block;        /* Ensures the boxes are aligned next to each other */
+    padding: 20px;                /* Adds space inside the boxes */
+    margin: 10px;                 /* Adds space between the boxes */
+    border-radius: 10px;          /* Rounds the corners of the boxes */
+    background-color: #f4f4f4;    /* Light background color for the boxes */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adds a subtle shadow */
+    text-align: center;           /* Centers the text inside the box */
+}
+
+.overview .box:hover {
+    transform: scale(1.05);       /* Slightly enlarges the box on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+    background-color: #e0e0e0;    /* Slightly darkens the background on hover */
+}
+
+.overview .box h2 {
+    font-size: 2rem;              /* Larger text for the numbers */
+    font-weight: bold;            /* Makes the number bold */
+    color: #333;                  /* Dark color for the text */
+    margin-bottom: 10px;          /* Adds space below the number */
+}
+
+.overview .box p {
+    font-size: 1rem;              /* Smaller font for description */
+    color: #666;                  /* Lighter text color for description */
+}
