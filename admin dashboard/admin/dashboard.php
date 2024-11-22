@@ -1,19 +1,11 @@
 <?php
-session_start();
+// 1. Establish the database connection
+$mysqli = new mysqli("localhost", "root", "", "inventory_db");
 
-// Check if the user is logged in and is an admin
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'admin') {
-    header("Location: login.php"); // Redirect to login if not logged in or not an admin
-    exit;
+// Check for connection errors
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
 }
-
-// Fetch user details (optional)
-include 'db.php';
-$user_id = $_SESSION['user_id'];
-$query = "SELECT * FROM users WHERE id = $user_id";
-$result = $conn->query($query);
-$user = $result->fetch_assoc();
-
 
 // 2. Query to fetch low stock products (adjust the condition based on your table structure)
 $query = "SELECT product_name, in_stock FROM products WHERE in_stock <= 10"; // Replace 10 with your stock threshold
@@ -22,9 +14,7 @@ $low_stock_products = $mysqli->query($query);
 // Check for query errors
 if (!$low_stock_products) {
     die("Query failed: " . $mysqli->error);
-
 }
-
 ?>
 
 <!DOCTYPE html>
