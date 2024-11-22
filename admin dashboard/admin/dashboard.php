@@ -8,15 +8,39 @@ if ($mysqli->connect_error) {
 }
 
 // 2. Query to fetch low stock products (adjust the condition based on your table structure)
-$query = "SELECT product_name, in_stock FROM products WHERE in_stock <= 10"; // Replace 10 with your stock threshold
-$low_stock_products = $mysqli->query($query);
+$query_low_stock = "SELECT product_name, in_stock FROM products WHERE in_stock <= 10"; // Replace 10 with your stock threshold
+$low_stock_products = $mysqli->query($query_low_stock);
 
 // Check for query errors
 if (!$low_stock_products) {
     die("Query failed: " . $mysqli->error);
 }
-?>
 
+// 3. Queries for additional dashboard data
+// Fetch the number of users
+$query_users = "SELECT COUNT(*) AS total_users FROM users";
+$total_users_result = $mysqli->query($query_users);
+$total_users = ($total_users_result && $row = $total_users_result->fetch_assoc()) ? $row['total_users'] : 0;
+
+// Fetch the number of categories
+$query_categories = "SELECT COUNT(*) AS total_categories FROM categories";
+$total_categories_result = $mysqli->query($query_categories);
+$total_categories = ($total_categories_result && $row = $total_categories_result->fetch_assoc()) ? $row['total_categories'] : 0;
+
+// Fetch the number of products
+$query_products = "SELECT COUNT(*) AS total_products FROM products";
+$total_products_result = $mysqli->query($query_products);
+$total_products = ($total_products_result && $row = $total_products_result->fetch_assoc()) ? $row['total_products'] : 0;
+
+// Fetch the total sales
+$query_sales = "SELECT SUM(total_amount) AS total_sales FROM sales";
+$total_sales_result = $mysqli->query($query_sales);
+$total_sales = ($total_sales_result && $row = $total_sales_result->fetch_assoc()) ? $row['total_sales'] : 0;
+
+// Fetch recently added products
+$query_recent_products = "SELECT product_name, price, category FROM products ORDER BY created_at DESC LIMIT 5";
+$recent_products = $mysqli->query($query_recent_products);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,11 +85,12 @@ if (!$low_stock_products) {
             </aside>
 
             <section class="dashboard-content">
+                <!-- Dashboard Overview -->
                 <div class="overview">
-                    <div class="box"><a href="user_management.php">USER MANAGEMENT</a></div>
-                    <div class="box"><a href="categories.php">CATEGORIES</a></div>
-                    <div class="box"><a href="products.php">PRODUCTS</a></div>
-                    <div class="box"><a href="sales.php">SALES</a></div>
+                    <div class="box"><h2><?= $total_users ?></h2><p>Users</p></div>
+                    <div class="box"><h2><?= $total_categories ?></h2><p>Categories</p></div>
+                    <div class="box"><h2><?= $total_products ?></h2><p>Products</p></div>
+                    <div class="box"><h2>$<?= number_format($total_sales, 2) ?></h2><p>Sales</p></div>
                 </div>
 
                 <!-- Low Stock Alerts Section -->
@@ -82,6 +107,7 @@ if (!$low_stock_products) {
                     <?php } ?>
                 </div>
 
+                <!-- Data Tables -->
                 <div class="tables">
                     <div class="table">
                         <h3>HIGHEST SELLING ITEMS</h3>
@@ -102,15 +128,23 @@ if (!$low_stock_products) {
                     <div class="table">
                         <h3>RECENTLY ADDED PRODUCTS</h3>
                         <table>
-                            <tr><th>Product</th><th>Price</th></tr>
-                            <tr><td>Product A</td><td>$20</td></tr>
-                            <tr><td>Product B</td><td>$40</td></tr>
+                            <tr><th>Product</th><th>Price</th><th>Category</th></tr>
+                            <?php if ($recent_products && $recent_products->num_rows > 0) { ?>
+                                <?php while ($product = $recent_products->fetch_assoc()) { ?>
+                                    <tr>
+                                        <td><?= $product['product_name'] ?></td>
+                                        <td>$<?= number_format($product['price'], 2) ?></td>
+                                        <td><?= $product['category'] ?></td>
+                                    </tr>
+                                <?php } ?>
+                            <?php } else { ?>
+                                <tr><td colspan="3">No recent products added.</td></tr>
+                            <?php } ?>
                         </table>
                     </div>
                 </div>
             </section>
         </div>
     </div>
-
 </body>
 </html>
