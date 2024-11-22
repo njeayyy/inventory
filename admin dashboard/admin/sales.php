@@ -1,18 +1,32 @@
 <?php
-include 'db.php'; // Include your DB connection
+include 'db.php'; // Database connection
 
-// Handle sale deletion
-if (isset($_GET['delete_id'])) {
-    $delete_id = $_GET['delete_id'];
-    $conn->query("DELETE FROM sales WHERE id = $delete_id");
-    header("Location: sales.php");
-    exit;
+// Fetch products for the dropdown
+$result = $conn->query("SELECT id, product_name FROM products");
+
+if (!$result) {
+    die("Query failed: " . $conn->error);
 }
 
-// Fetch sales from the database
-$result = $conn->query("SELECT sales.id, products.product_name, sales.quantity, sales.sale_price, sales.total_amount, sales.sale_date
-                        FROM sales
-                        JOIN products ON sales.product_id = products.id");
+// Handle sale addition
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $product_id = $_POST['product_id'];
+    $quantity = $_POST['quantity'];
+    $sale_price = $_POST['sale_price'];
+    $total_amount = $quantity * $sale_price;
+    $sale_date = date('Y-m-d H:i:s'); // Current timestamp
+
+    // Insert into sales table
+    $stmt = $conn->prepare("INSERT INTO sales (product_id, quantity, sale_price, total_amount, sale_date) VALUES (?, ?, ?, ?, ?)");
+    $stmt->bind_param("iiids", $product_id, $quantity, $sale_price, $total_amount, $sale_date);
+
+    if ($stmt->execute()) {
+        header("Location: sales.php");
+        exit();
+    } else {
+        die("Failed to add sale: " . $stmt->error);
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -20,76 +34,26 @@ $result = $conn->query("SELECT sales.id, products.product_name, sales.quantity, 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sales</title>
-    <link rel="stylesheet" href="dashboard.css">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <title>Add Sale</title>
 </head>
 <body>
-    <div class="dashboard">
-        <header class="dashboard-header">
-            <div class="navbar">
-                <div class="dropdown">
-                    <button class="dropbtn"> 
-                        <i class="ri-more-2-fill"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="dashboard.php">Inventory Management System</a>
-                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
-                    </div>
-                </div>
-            </div>
-            <div class="title">
-                <h1>INVENTORY MANAGEMENT SYSTEM</h1>
-            </div>
-            <div class="logout">
-                <a href="logout.php">Logout</a>
-            </div>
-        </header>
-        
-        <div class="main-content">
-            <aside class="sidebar">
-                <ul>
-                    <li><button><a href="dashboard.php">DASHBOARD</a></button></li>
-                    <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
-                    <li><button><a href="categories.php">CATEGORIES</a></button></li>
-                    <li><button><a href="products.php">PRODUCTS</a></button></li>
-                    <li><button class="active"><a href="sales.php">SALES</a></button></li>
-                </ul>
-            </aside>
+    <h2>Add New Sale</h2>
+    <form method="POST" action="add_sale.php">
+        <label for="product_id">Product:</label>
+        <select name="product_id" required>
+            <option value="">Select a product</option>
+            <?php while ($row = $result->fetch_assoc()) { ?>
+                <option value="<?= $row['id'] ?>"><?= $row['product_name'] ?></option>
+            <?php } ?>
+        </select><br><br>
 
-            <section class="dashboard-content">
-                <div class="box">SALES</div>
-                <a href="add_sale.php" class="add-user-btn">Add New Sale</a>
+        <label for="quantity">Quantity:</label>
+        <input type="number" name="quantity" required><br><br>
 
-                <!-- Sales Table -->
-                <table>
-                    <tr>
-                        <th>#</th>
-                        <th>Product Name</th>
-                        <th>Quantity Sold</th>
-                        <th>Sale Price</th>
-                        <th>Total Amount</th>
-                        <th>Sale Date</th>
-                        <th>Actions</th>
-                    </tr>
-                    <?php while ($row = $result->fetch_assoc()) { ?>
-                        <tr>
-                            <td><?= $row['id'] ?></td>
-                            <td><?= $row['product_name'] ?></td>
-                            <td><?= $row['quantity'] ?></td>
-                            <td><?= $row['sale_price'] ?></td>
-                            <td><?= $row['total_amount'] ?></td>
-                            <td><?= $row['sale_date'] ?></td>
-                            <td>
-                                <a href="edit_sale.php?id=<?= $row['id'] ?>">Edit</a>
-                                <a href="sales.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                </table>
-            </section>
-        </div>
-    </div>
+        <label for="sale_price">Sale Price:</label>
+        <input type="number" step="0.01" name="sale_price" required><br><br>
+
+        <button type="submit">Add Sale</button>
+    </form>
 </body>
 </html>
