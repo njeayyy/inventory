@@ -227,3 +227,4 @@ $recent_products = $mysqli->query($query_recent_products);
     </div>
 </body>
 </html>
+// 3. Queries for dashboard data
