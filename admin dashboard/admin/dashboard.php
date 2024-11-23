@@ -71,7 +71,7 @@ $query_recent_products = "
     LEFT JOIN categories c ON p.category_id = c.id
     ORDER BY p.created_at DESC 
     LIMIT 5";
-$recent_products = $mysqli->query($query_recent_products);
+
 
 
 
@@ -120,8 +120,8 @@ $recent_products = $mysqli->query($query_recent_products);
             </aside>
 
             <section class="dashboard-content">
+                
                 <!-- Dashboard Overview -->
-            
                 <div class="overview">
                     <div class="box"><h2><?= $total_users ?></h2><p>Users</p></div>
                     <div class="box"><h2><?= $total_categories ?></h2><p>Categories</p></div>
