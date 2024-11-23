@@ -120,6 +120,7 @@ $query_recent_products = "
             </aside>
 
             <section class="dashboard-content">
+                
                 <!-- Dashboard Overview -->
                 <div class="overview">
                     <div class="box"><h2><?= $total_users ?></h2><p>Users</p></div>
@@ -206,4 +207,3 @@ $query_recent_products = "
     </div>
 </body>
 </html>
-// 3. Queries for dashboard data
