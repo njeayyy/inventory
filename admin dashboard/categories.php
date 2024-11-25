@@ -100,7 +100,7 @@ $categories = $mysqli->query("SELECT * FROM categories");
                                             <td><?= $row['category_name'] ?></td>
                                             <td>
                                                 <a href="edit_category.php?edit_id=<?= $row['id'] ?>" class="edit-button">Edit</a>
-                                                <a href="delete_category.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')"><i class="ri-delete-bin-6-line"></i></a>
+                                                <a href="categories.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')"><i class="ri-delete-bin-6-line"></i></a>
                                             </td>
                                         </tr>
                                     <?php endwhile; ?>
