@@ -1,4 +1,14 @@
 <?php
+// Start the session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to the login page if not logged in
+    header("Location: login.php");
+    exit();
+}
+
 // 1. Establish the database connection
 $mysqli = new mysqli("localhost", "root", "", "inventory_db");
 
@@ -71,10 +81,6 @@ $query_recent_products = "
     LEFT JOIN categories c ON p.category_id = c.id
     ORDER BY p.created_at DESC 
     LIMIT 5";
-
-
-
-
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -85,6 +91,14 @@ $query_recent_products = "
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "login.php"; // Redirect to logout page
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="dashboard">
@@ -104,7 +118,7 @@ $query_recent_products = "
                 <h1>INVENTORY MANAGEMENT SYSTEM</h1>
             </div>
             <div class="logout">
-                <a href="logout.php">Logout</a>
+                <a href="#" onclick="confirmLogout(event)">Logout</a>
             </div>
         </header>
 
