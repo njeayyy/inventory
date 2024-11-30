@@ -1,27 +1,46 @@
 <?php
-include 'db.php'; // Make sure db.php is included to establish the connection
+include 'db.php'; // Make sure db.php is included to establish connection
 
 // Fetch user data for editing
 if (isset($_GET['id'])) {
     $user_id = $_GET['id'];
-    $result = $conn->query("SELECT * FROM add_users WHERE id = $user_id");
+
+    // Validate user ID is numeric (security precaution)
+    if (!is_numeric($user_id)) {
+        die("Invalid user ID");
+    }
+
+    $result = $conn->query("SELECT * FROM users WHERE id = $user_id");
     $user = $result->fetch_assoc();
+    if (!$user) {
+        die("User not found.");
+    }
+} else {
+    die("No user ID provided.");
 }
 
 // Handle the form submission for updating user
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $name = $_POST['name'];
+    $email = $_POST['email'];
     $username = $_POST['username'];
     $role = $_POST['role'];
     $status = $_POST['status'];
 
+    // Validate inputs (security precaution)
+    if (empty($email) || empty($username) || empty($role) || empty($status)) {
+        die("All fields are required.");
+    }
+
     // Update the user in the database
-    $conn->query("UPDATE add_users SET name='$name', username='$username', role='$role', status='$status' WHERE id=$user_id");
+    $stmt = $conn->prepare("UPDATE users SET email=?, username=?, role=?, status=? WHERE id=?");
+    $stmt->bind_param("ssssi", $email, $username, $role, $status, $user_id);
+    $stmt->execute();
+    $stmt->close();
+
     header("Location: user_management.php"); // Redirect to the user management page after updating
     exit;
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -69,8 +88,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </body>
 </html>
 
-
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -82,11 +99,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 <body>
     <h2>EDIT USER</h2>
     <form action="edit_user.php?id=<?= $user_id ?>" method="POST">
-        <label for="name">Name:</label>
-        <input type="text" name="name" id="name" value="<?= $user['name'] ?>" required><br>
+        <label for="email">Email:</label>
+        <input type="text" name="email" id="email" value="<?= htmlspecialchars($user['email']) ?>" required><br>
 
         <label for="username">Username:</label>
-        <input type="text" name="username" id="username" value="<?= $user['username'] ?>" required><br>
+        <input type="text" name="username" id="username" value="<?= htmlspecialchars($user['username']) ?>" required><br>
 
         <label for="role">Role:</label>
         <select name="role" id="role">

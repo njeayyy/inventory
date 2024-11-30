@@ -4,47 +4,87 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Hash the password
     $role = 'User'; // Default role for new accounts
     $status = 'Active'; // Default status
-    $name = 'Default Name'; // Placeholder for the name
-    $username = explode('@', $email)[0]; // Use the part before '@' as the username
 
-    // Connect to `login_db` for storing login credentials
-    $loginDb = new mysqli('localhost', 'root', '', 'login_db');
-    if ($loginDb->connect_error) {
-        die("Connection to login_db failed: " . $loginDb->connect_error);
+    // Connect to `inventory_db` to check if the email exists
+    $inventoryDb = new mysqli('localhost', 'root', '', 'inventory_db');
+    if ($inventoryDb->connect_error) {
+        die("Connection to inventory_db failed: " . $inventoryDb->connect_error);
     }
 
-    // Insert into `login_db`
-    $stmtLogin = $loginDb->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
-    $stmtLogin->bind_param("ss", $email, $password);
+    // Check if the email already exists in `inventory_db`
+    $stmtInventoryCheck = $inventoryDb->prepare("SELECT password FROM users WHERE email = ?");
+    $stmtInventoryCheck->bind_param("s", $email);
+    $stmtInventoryCheck->execute();
+    $stmtInventoryCheck->store_result();
 
-    if ($stmtLogin->execute()) {
-        // Successfully added to login_db, now add to inventory_db
-        $inventoryDb = new mysqli('localhost', 'root', '', 'inventory_db');
-        if ($inventoryDb->connect_error) {
-            die("Connection to inventory_db failed: " . $inventoryDb->connect_error);
+    if ($stmtInventoryCheck->num_rows > 0) {
+        // Email exists, check if the user already has a password
+        $stmtInventoryCheck->bind_result($existingPassword);
+        $stmtInventoryCheck->fetch();
+
+        if (!empty($existingPassword)) {
+            // If password already exists, show the error
+            $error = "Email account already exists.";
+        } else {
+            // If password is empty, update the password in inventory_db
+            $stmtUpdatePassword = $inventoryDb->prepare("UPDATE users SET password = ? WHERE email = ?");
+            $stmtUpdatePassword->bind_param("ss", $password, $email);
+            if ($stmtUpdatePassword->execute()) {
+                // Successfully updated the password in inventory_db, now insert into login_db
+                $loginDb = new mysqli('localhost', 'root', '', 'login_db');
+                if ($loginDb->connect_error) {
+                    die("Connection to login_db failed: " . $loginDb->connect_error);
+                }
+
+                // Insert into `login_db`
+                $stmtLoginInsert = $loginDb->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
+                $stmtLoginInsert->bind_param("ss", $email, $password);
+                if ($stmtLoginInsert->execute()) {
+                    $success = "Password updated successfully in inventory_db and account added to login_db. You can now log in.";
+                } else {
+                    $error = "Failed to insert data into login_db.";
+                }
+
+                $stmtLoginInsert->close();
+                $loginDb->close();
+            } else {
+                $error = "Failed to update password in inventory_db.";
+            }
+            $stmtUpdatePassword->close();
         }
+    } else {
+        // Email doesn't exist, proceed with creating the account
+        // Insert into `inventory_db`
+        $stmtInventoryInsert = $inventoryDb->prepare("INSERT INTO users (email, password, role, status) VALUES (?, ?, ?, ?)");
+        $stmtInventoryInsert->bind_param("ssss", $email, $password, $role, $status);
 
-        // Insert into `inventory_db` users table
-        $stmtInventory = $inventoryDb->prepare("
-            INSERT INTO users (name, email, username, password, role, status) 
-            VALUES (?, ?, ?, ?, ?, ?)
-        ");
-        $stmtInventory->bind_param("ssssss", $name, $email, $username, $password, $role, $status);
+        if ($stmtInventoryInsert->execute()) {
+            // Successfully added to inventory_db, now insert into login_db
+            $loginDb = new mysqli('localhost', 'root', '', 'login_db');
+            if ($loginDb->connect_error) {
+                die("Connection to login_db failed: " . $loginDb->connect_error);
+            }
 
-        if ($stmtInventory->execute()) {
-            $success = "Account created successfully in both databases! You can now log in.";
+            // Insert into `login_db`
+            $stmtLoginInsert = $loginDb->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
+            $stmtLoginInsert->bind_param("ss", $email, $password);
+            if ($stmtLoginInsert->execute()) {
+                $success = "Account created successfully in both databases! You can now log in.";
+            } else {
+                $error = "Failed to insert data into login_db.";
+            }
+
+            $stmtLoginInsert->close();
+            $loginDb->close();
         } else {
             $error = "Failed to insert into inventory_db: " . $inventoryDb->error;
         }
 
-        $stmtInventory->close();
-        $inventoryDb->close();
-    } else {
-        $error = "Failed to insert into login_db: " . $loginDb->error;
+        $stmtInventoryInsert->close();
     }
 
-    $stmtLogin->close();
-    $loginDb->close();
+    $stmtInventoryCheck->close();
+    $inventoryDb->close();
 }
 ?>
 

@@ -12,13 +12,32 @@ if (!isset($_SESSION['user_id'])) {
 // Handle user deletion
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
-    $conn->query("DELETE FROM add_users WHERE id = $delete_id");
+    
+    // Connect to inventory_db to delete from the users table
+    $mysqli = new mysqli("localhost", "root", "", "inventory_db");
+    if ($mysqli->connect_error) {
+        die("Connection failed: " . $mysqli->connect_error);
+    }
+
+    // Delete user from inventory_db
+    $stmt = $mysqli->prepare("DELETE FROM users WHERE id = ?");
+    $stmt->bind_param("i", $delete_id);
+    $stmt->execute();
+    $stmt->close();
+
+    // Redirect back to the user management page
     header("Location: user_management.php");
     exit; // Always call exit after a header redirect
 }
 
-// Fetch users from database
-$result = $conn->query("SELECT * FROM add_users");
+// Fetch users from inventory_db
+$mysqli = new mysqli("localhost", "root", "", "inventory_db");
+if ($mysqli->connect_error) {
+    die("Connection failed: " . $mysqli->connect_error);
+}
+
+$query = "SELECT * FROM users";
+$result = $mysqli->query($query);
 ?>
 
 <!DOCTYPE html>
@@ -73,12 +92,12 @@ $result = $conn->query("SELECT * FROM add_users");
             </aside>
 
             <section class="dashboard-content">
-            <div class="box">USER MANAGEMENT</div>
+                <div class="box">USER MANAGEMENT</div>
                 <a href="add_user.php">Add New User</a>
                 <table>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
+                        <th>Email</th>
                         <th>Username</th>
                         <th>User Role</th>
                         <th>Status</th>
@@ -88,7 +107,7 @@ $result = $conn->query("SELECT * FROM add_users");
                     <?php while ($row = $result->fetch_assoc()) { ?>
                         <tr>
                             <td><?= $row['id'] ?></td>
-                            <td><?= $row['name'] ?></td>
+                            <td><?= $row['email'] ?></td>
                             <td><?= $row['username'] ?></td>
                             <td><?= $row['role'] ?></td>
                             <td><span class="status <?= strtolower($row['status']) ?>"><?= $row['status'] ?></span></td>
