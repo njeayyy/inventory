@@ -1,6 +1,14 @@
 <?php
 include 'db.php'; // Make sure db.php is included to establish connection
 
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to the login page if not logged in
+    header("Location: login.php");
+    exit();
+}
+
 // Handle user deletion
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
@@ -21,6 +29,14 @@ $result = $conn->query("SELECT * FROM add_users");
     <title>User Management</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "login.php"; // Redirect to logout page
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="dashboard">
@@ -40,7 +56,8 @@ $result = $conn->query("SELECT * FROM add_users");
                 <h1>INVENTORY MANAGEMENT SYSTEM</h1>
             </div>
             <div class="logout">
-                <a href="logout.php">Logout</a>
+                <!-- Display the logged-in user's username -->
+                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
         

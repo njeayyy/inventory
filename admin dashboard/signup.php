@@ -1,46 +1,50 @@
 <?php
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
-    $password = $_POST['password'];
+    $password = password_hash($_POST['password'], PASSWORD_BCRYPT); // Hash the password
+    $role = 'User'; // Default role for new accounts
+    $status = 'Active'; // Default status
+    $name = 'Default Name'; // Placeholder for the name
+    $username = explode('@', $email)[0]; // Use the part before '@' as the username
 
-    // Validate email and password
-    if (filter_var($email, FILTER_VALIDATE_EMAIL) && !empty($password)) {
-        // Hash the password for security
-        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
-
-        // Connect to the database
-        $conn = new mysqli('localhost', 'root', '', 'login_db');
-
-        // Check connection
-        if ($conn->connect_error) {
-            die("Connection failed: " . $conn->connect_error);
-        }
-
-        // Check if the email already exists
-        $stmt = $conn->prepare("SELECT id FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
-        $stmt->execute();
-        $stmt->store_result();
-
-        if ($stmt->num_rows > 0) {
-            $error = "An account with this email already exists.";
-        } else {
-            // Insert user into the database
-            $stmt = $conn->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
-            $stmt->bind_param("ss", $email, $hashedPassword);
-
-            if ($stmt->execute()) {
-                $success = "Registration successful! You can now <a href='login.php'>log in</a>.";
-            } else {
-                $error = "Error: " . $stmt->error;
-            }
-        }
-
-        $stmt->close();
-        $conn->close();
-    } else {
-        $error = "Invalid input. Please provide a valid email and password.";
+    // Connect to `login_db` for storing login credentials
+    $loginDb = new mysqli('localhost', 'root', '', 'login_db');
+    if ($loginDb->connect_error) {
+        die("Connection to login_db failed: " . $loginDb->connect_error);
     }
+
+    // Insert into `login_db`
+    $stmtLogin = $loginDb->prepare("INSERT INTO users (email, password) VALUES (?, ?)");
+    $stmtLogin->bind_param("ss", $email, $password);
+
+    if ($stmtLogin->execute()) {
+        // Successfully added to login_db, now add to inventory_db
+        $inventoryDb = new mysqli('localhost', 'root', '', 'inventory_db');
+        if ($inventoryDb->connect_error) {
+            die("Connection to inventory_db failed: " . $inventoryDb->connect_error);
+        }
+
+        // Insert into `inventory_db` users table
+        $stmtInventory = $inventoryDb->prepare("
+            INSERT INTO users (name, email, username, password, role, status) 
+            VALUES (?, ?, ?, ?, ?, ?)
+        ");
+        $stmtInventory->bind_param("ssssss", $name, $email, $username, $password, $role, $status);
+
+        if ($stmtInventory->execute()) {
+            $success = "Account created successfully in both databases! You can now log in.";
+        } else {
+            $error = "Failed to insert into inventory_db: " . $inventoryDb->error;
+        }
+
+        $stmtInventory->close();
+        $inventoryDb->close();
+    } else {
+        $error = "Failed to insert into login_db: " . $loginDb->error;
+    }
+
+    $stmtLogin->close();
+    $loginDb->close();
 }
 ?>
 
@@ -100,17 +104,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: green;
             margin-bottom: 10px;
         }
-        a {
-            color: #6c63ff;
-            text-decoration: none;
-        }
-        a:hover {
-            text-decoration: underline;
-        }
     </style>
 </head>
 <body>
-    <form action="signup.php" method="POST">
+    <form method="POST" action="signup.php">
         <h2>Sign Up</h2>
         <?php if (isset($error)): ?>
             <p class="error"><?= $error ?></p>

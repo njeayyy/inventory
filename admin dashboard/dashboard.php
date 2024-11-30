@@ -117,8 +117,10 @@ $query_recent_products = "
             <div class="title">
                 <h1>INVENTORY MANAGEMENT SYSTEM</h1>
             </div>
+            
             <div class="logout">
-                <a href="#" onclick="confirmLogout(event)">Logout</a>
+                <!-- Display the logged-in user's username -->
+                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
 

@@ -1,4 +1,12 @@
 <?php
+
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to the login page if not logged in
+    header("Location: login.php");
+    exit();
+}
 // Database connection
 $mysqli = new mysqli("localhost", "root", "", "inventory_db");
 
@@ -34,6 +42,14 @@ $categories = $mysqli->query("SELECT * FROM categories");
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "login.php"; // Redirect to logout page
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="dashboard">
@@ -53,7 +69,8 @@ $categories = $mysqli->query("SELECT * FROM categories");
                 <h1>INVENTORY MANAGEMENT SYSTEM</h1>
             </div>
             <div class="logout">
-                <a href="logout.php">Logout</a>
+                <!-- Display the logged-in user's username -->
+                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
 

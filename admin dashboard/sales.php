@@ -1,6 +1,14 @@
 <?php
 include 'db.php'; // Include your DB connection
 
+session_start();
+
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to the login page if not logged in
+    header("Location: login.php");
+    exit();
+}
+
 // Handle sale deletion
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
@@ -24,6 +32,14 @@ $result = $conn->query("SELECT sales.id, products.product_name, sales.quantity, 
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "login.php"; // Redirect to logout page
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="dashboard">
@@ -43,7 +59,8 @@ $result = $conn->query("SELECT sales.id, products.product_name, sales.quantity, 
                 <h1>INVENTORY MANAGEMENT SYSTEM</h1>
             </div>
             <div class="logout">
-                <a href="logout.php">Logout</a>
+                <!-- Display the logged-in user's username -->
+                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
         
