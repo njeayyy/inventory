@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         // Verify the password
         if (password_verify($password, $hashedPassword)) {
-            // After successful login, connect to the inventory_db to get the username based on email
+            // After successful login, connect to the inventory_db to get the username and id based on email
             $conn_inventory = new mysqli('localhost', 'root', '', 'inventory_db');
 
             // Check connection to inventory_db
@@ -33,19 +33,20 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 die("Connection failed: " . $conn_inventory->connect_error);
             }
 
-            // Query to get the username from the inventory_db based on email
-            $stmt_inventory = $conn_inventory->prepare("SELECT username FROM users WHERE email = ?");
+            // Updated query (using 'id' instead of 'user_id')
+            $stmt_inventory = $conn_inventory->prepare("SELECT username, id FROM users WHERE email = ?");
             $stmt_inventory->bind_param("s", $email);
             $stmt_inventory->execute();
             $stmt_inventory->store_result();
 
             if ($stmt_inventory->num_rows > 0) {
-                $stmt_inventory->bind_result($username);
+                $stmt_inventory->bind_result($username, $id);
                 $stmt_inventory->fetch();
 
                 // Store user data in session
                 $_SESSION['email'] = $email;
                 $_SESSION['username'] = $username;  // Store username from inventory_db in session
+                $_SESSION['user_id'] = $id;         // Store id from inventory_db in session
             }
 
             // Close inventory_db query statement

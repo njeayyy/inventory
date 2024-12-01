@@ -1,6 +1,17 @@
 <?php
 include 'db.php'; // Include the database connection
 
+// Start the session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to the login page if not logged in
+    header("Location: login.php");
+    exit();
+}
+
+
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Escape user input to prevent SQL injection
@@ -34,6 +45,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        function confirmLogout(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "login.php"; // Redirect to logout page
+            }
+        }
+    </script>
 </head>
 <body>
     <div class="dashboard">
@@ -53,7 +72,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <h1>INVENTORY MANAGEMENT SYSTEM</h1>
             </div>
             <div class="logout">
-                <a href="logout.php">Logout</a>
+                <!-- Display the logged-in user's username -->
+                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
 
@@ -80,28 +100,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-    <h2>ADD NEW USER</h2>
-    <form action="add_user.php" method="POST">
 
-        <label for="email">Email:</label>
-        <input type="text" name="email" id="email" required><br>
+    <div class="add-category">
+        <h3>ADD NEW USER</h3>
+    
+        <form action="add_user.php" method="POST">
 
-        <label for="username">Username:</label>
-        <input type="text" name="username" id="username" required><br>
+            <label for="email">Email:</label>
+            <input type="text" name="email" id="email" required><br>
 
-        <label for="role">Role:</label>
-        <select name="role" id="role">
-            <option value="Admin">Admin</option>
-            <option value="User">User</option>
-        </select><br>
+            <label for="username">Username:</label>
+            <input type="text" name="username" id="username" required><br>
 
-        <label for="status">Status:</label>
-        <select name="status" id="status">
-            <option value="Active">Active</option>
-            <option value="Inactive">Inactive</option>
-        </select><br>
+            <label for="role">Role:</label>
+            <select name="role" id="role">
+                <option value="Admin">Admin</option>
+                <option value="User">User</option>
+            </select><br>
 
-        <button type="submit">Add User</button>
-    </form>
+            <label for="status">Status:</label>
+            <select name="status" id="status">
+                <option value="Active">Active</option>
+                <option value="Inactive">Inactive</option>
+            </select><br>
+
+            <button type="submit">Add User</button>
+        </form>
+    </div>
 </body>
 </html>
