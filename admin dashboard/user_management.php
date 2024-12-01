@@ -30,21 +30,8 @@ if (isset($_GET['delete_id'])) {
     $stmt->execute();
     $stmt->close();
 
-    // Connect to login_db to delete the same user
-    $mysqli_login = new mysqli("localhost", "root", "", "login_db");
-    if ($mysqli_login->connect_error) {
-        die("Connection failed: " . $mysqli_login->connect_error);
-    }
-
-    // Delete user from login_db
-    $stmt_login = $mysqli_login->prepare("DELETE FROM users WHERE id = ?");
-    $stmt_login->bind_param("i", $delete_id);
-    $stmt_login->execute();
-    $stmt_login->close();
-
-    // Close both database connections
+    // Close database connection
     $mysqli->close();
-    $mysqli_login->close();
 
     // Redirect back to the user management page
     header("Location: user_management.php");

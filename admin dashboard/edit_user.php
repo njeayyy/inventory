@@ -31,23 +31,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("All fields are required.");
     }
 
-    // Update the user in the inventory_db
+    // Update the user in the inventory_db (no need to update login_db anymore)
     $stmt = $conn->prepare("UPDATE users SET email=?, username=?, role=?, status=? WHERE id=?");
     $stmt->bind_param("ssssi", $email, $username, $role, $status, $user_id);
     $stmt->execute();
     $stmt->close();
-
-    // Now update the role in login_db
-    $conn_login = new mysqli('localhost', 'root', '', 'login_db');
-    if ($conn_login->connect_error) {
-        die("Connection failed: " . $conn_login->connect_error);
-    }
-
-    $update_login_stmt = $conn_login->prepare("UPDATE users SET role = ? WHERE id = ?");
-    $update_login_stmt->bind_param("si", $role, $user_id);
-    $update_login_stmt->execute();
-    $update_login_stmt->close();
-    $conn_login->close();
 
     // Redirect to the user management page after updating
     header("Location: user_management.php"); 

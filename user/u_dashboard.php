@@ -15,7 +15,6 @@ if (!isset($_SESSION['user_id']) || $_SESSION['role'] != 'User') {
 }
 ?>
 
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>

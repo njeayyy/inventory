@@ -32,23 +32,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $update_stmt->execute();
             $update_stmt->close();
 
-            // Now insert the user into login_db (only email, password, role, and id)
-            $conn_login = new mysqli('localhost', 'root', '', 'login_db');
-            if ($conn_login->connect_error) {
-                die("Connection failed: " . $conn_login->connect_error);
-            }
-
-            // Insert into login_db (id, email, password, role)
-            $insert_stmt = $conn_login->prepare("INSERT INTO users (id, email, password, role) VALUES (?, ?, ?, ?)");
-            $insert_stmt->bind_param("isss", $user_id, $email, $hashed_password, $role); // Insert id, email, password, and role
-            $insert_stmt->execute();
-            $insert_stmt->close();
-            $conn_login->close();
-
-            $success = "User has been updated, and the password is now added to the login database!";
+            $success = "User has been updated with the password!";
         }
     } else {
-        // Email doesn't exist, insert a new user into both databases
+        // Email doesn't exist, insert a new user into inventory_db
         $hashed_password = password_hash($password, PASSWORD_DEFAULT);
         $role = "User";  // Default role
 
@@ -57,26 +44,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $insert_inventory_stmt->bind_param("ssss", $email, $username, $hashed_password, $role);
         $insert_inventory_stmt->execute();
 
-        // Retrieve the id and role after insertion into inventory_db
-        $stmt_inventory = $conn_inventory->prepare("SELECT id, role FROM users WHERE email = ?");
-        $stmt_inventory->bind_param("s", $email);
-        $stmt_inventory->execute();
-        $stmt_inventory->bind_result($user_id, $role);
-        $stmt_inventory->fetch();
-
-        // Insert into login_db (id, email, password, role)
-        $conn_login = new mysqli('localhost', 'root', '', 'login_db');
-        if ($conn_login->connect_error) {
-            die("Connection failed: " . $conn_login->connect_error);
-        }
-
-        $insert_login_stmt = $conn_login->prepare("INSERT INTO users (id, email, password, role) VALUES (?, ?, ?, ?)");
-        $insert_login_stmt->bind_param("isss", $user_id, $email, $hashed_password, $role); // Insert id, email, password, and role
-        $insert_login_stmt->execute();
-        $insert_login_stmt->close();
-        $conn_login->close();
-
-        $success = "User has been successfully registered and added to both the inventory and login databases!";
+        $success = "User has been successfully registered!";
     }
 
     // Close the connection to inventory_db
