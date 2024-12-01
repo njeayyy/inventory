@@ -14,13 +14,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     }
 
     // Check user in the login_db database
-    $stmt = $conn->prepare("SELECT password FROM users WHERE email = ?");
+    $stmt = $conn->prepare("SELECT password, role FROM users WHERE email = ?");
     $stmt->bind_param("s", $email);
     $stmt->execute();
     $stmt->store_result();
 
     if ($stmt->num_rows > 0) {
-        $stmt->bind_result($hashedPassword);
+        $stmt->bind_result($hashedPassword, $role);
         $stmt->fetch();
 
         // Verify the password
@@ -47,15 +47,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 $_SESSION['email'] = $email;
                 $_SESSION['username'] = $username;  // Store username from inventory_db in session
                 $_SESSION['user_id'] = $id;         // Store id from inventory_db in session
+                $_SESSION['role'] = $role;          // Store the user's role in session
             }
 
             // Close inventory_db query statement
             $stmt_inventory->close();
             $conn_inventory->close();
             
-            // Redirect to dashboard
-            header("Location: dashboard.php");
-            exit();
+            // Redirect based on the user role
+        if ($role == 'Admin') {
+            header("Location: ../admin dashboard/dashboard.php"); // For admin, go to dashboard.php
+        } else {
+            // Redirect to u_dashboard.php inside the 'user' folder
+            header("Location: ../user/u_dashboard.php"); // For user, go to u_dashboard.php
+        }
+        exit();
+
         } else {
             $error = "Invalid email or password.";
         }

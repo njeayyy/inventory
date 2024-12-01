@@ -1,4 +1,4 @@
-<?php
+<?php 
 include 'db.php'; // Make sure db.php is included to establish connection
 
 // Fetch user data for editing
@@ -31,13 +31,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         die("All fields are required.");
     }
 
-    // Update the user in the database
+    // Update the user in the inventory_db
     $stmt = $conn->prepare("UPDATE users SET email=?, username=?, role=?, status=? WHERE id=?");
     $stmt->bind_param("ssssi", $email, $username, $role, $status, $user_id);
     $stmt->execute();
     $stmt->close();
 
-    header("Location: user_management.php"); // Redirect to the user management page after updating
+    // Now update the role in login_db
+    $conn_login = new mysqli('localhost', 'root', '', 'login_db');
+    if ($conn_login->connect_error) {
+        die("Connection failed: " . $conn_login->connect_error);
+    }
+
+    $update_login_stmt = $conn_login->prepare("UPDATE users SET role = ? WHERE id = ?");
+    $update_login_stmt->bind_param("si", $role, $user_id);
+    $update_login_stmt->execute();
+    $update_login_stmt->close();
+    $conn_login->close();
+
+    // Redirect to the user management page after updating
+    header("Location: user_management.php"); 
     exit;
 }
 ?>
@@ -94,10 +107,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User</title>
-    <link rel="stylesheet" href="dashboard.css"> 
+    <link rel="stylesheet" href="dashboard.css">
 </head>
 <body>
-    <h2>EDIT USER</h2>
+    <h2>Edit User</h2>
     <form action="edit_user.php?id=<?= $user_id ?>" method="POST">
         <label for="email">Email:</label>
         <input type="text" name="email" id="email" value="<?= htmlspecialchars($user['email']) ?>" required><br>
@@ -106,13 +119,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="text" name="username" id="username" value="<?= htmlspecialchars($user['username']) ?>" required><br>
 
         <label for="role">Role:</label>
-        <select name="role" id="role">
+        <select name="role" id="role" required>
             <option value="Admin" <?= $user['role'] == 'Admin' ? 'selected' : '' ?>>Admin</option>
             <option value="User" <?= $user['role'] == 'User' ? 'selected' : '' ?>>User</option>
         </select><br>
 
         <label for="status">Status:</label>
-        <select name="status" id="status">
+        <select name="status" id="status" required>
             <option value="Active" <?= $user['status'] == 'Active' ? 'selected' : '' ?>>Active</option>
             <option value="Inactive" <?= $user['status'] == 'Inactive' ? 'selected' : '' ?>>Inactive</option>
         </select><br>
