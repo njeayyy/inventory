@@ -12,7 +12,12 @@ if (!isset($_SESSION['user_id'])) {
 // Handle user deletion
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
-    
+
+    // Validate the delete_id
+    if (!is_numeric($delete_id)) {
+        die("Invalid user ID");
+    }
+
     // Connect to inventory_db to delete from the users table
     $mysqli = new mysqli("localhost", "root", "", "inventory_db");
     if ($mysqli->connect_error) {
@@ -24,6 +29,22 @@ if (isset($_GET['delete_id'])) {
     $stmt->bind_param("i", $delete_id);
     $stmt->execute();
     $stmt->close();
+
+    // Connect to login_db to delete the same user
+    $mysqli_login = new mysqli("localhost", "root", "", "login_db");
+    if ($mysqli_login->connect_error) {
+        die("Connection failed: " . $mysqli_login->connect_error);
+    }
+
+    // Delete user from login_db
+    $stmt_login = $mysqli_login->prepare("DELETE FROM users WHERE id = ?");
+    $stmt_login->bind_param("i", $delete_id);
+    $stmt_login->execute();
+    $stmt_login->close();
+
+    // Close both database connections
+    $mysqli->close();
+    $mysqli_login->close();
 
     // Redirect back to the user management page
     header("Location: user_management.php");

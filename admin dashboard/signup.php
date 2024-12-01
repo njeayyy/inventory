@@ -107,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 350px;
+            width: 400px;
             text-align: center;
         }
         h2 {
@@ -115,14 +115,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             color: #333;
         }
         input {
-            width: 100%;
+            width: 75%;
             padding: 10px;
             margin: 10px 0;
             border: 1px solid #ccc;
             border-radius: 5px;
         }
         button {
-            width: 100%;
+            width: 50%;
             padding: 10px;
             background-color: #6c63ff;
             color: white;
