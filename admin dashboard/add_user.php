@@ -11,21 +11,15 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
-
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Escape user input to prevent SQL injection
-    $email = $conn->real_escape_string($_POST['email']);  // Changed 'name' to 'email'
+    $email = $conn->real_escape_string($_POST['email']);
     $username = $conn->real_escape_string($_POST['username']);
     $role = $conn->real_escape_string($_POST['role']);
     $status = $conn->real_escape_string($_POST['status']);
     
-    // Insert data into inventory_db (add_users table)
-    $conn->query("INSERT INTO add_users (email, username, role, status, last_login) 
-                  VALUES ('$email', '$username', '$role', '$status', NOW())");
-
-    // Insert data into login_db (users table)
-    // Assuming login_db has a users table with columns: email, username, role, and status
+    // Insert data directly into the users table (no need for add_users table)
     $conn->query("INSERT INTO users (email, username, role, status) 
                   VALUES ('$email', '$username', '$role', '$status')");
 
@@ -34,7 +28,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit; // Ensure the script stops after the header redirection
 }
 ?>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -87,45 +80,35 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <li><button><a href="sales.php">SALES</a></button></li>
                 </ul>
             </aside>
+            
+            <section class="dashboard-content">
+                <div class="add-category">
+                    <h3>ADD NEW USER</h3>
+                
+                    <form action="add_user.php" method="POST">
+                        <label for="email">Email:</label>
+                        <input type="text" name="email" id="email" required><br>
 
-</body>
-</html>
+                        <label for="username">Username:</label>
+                        <input type="text" name="username" id="username" required><br>
 
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Add User</title>
-    <link rel="stylesheet" href="dashboard.css">
-</head>
-<body>
+                        <label for="role">Role:</label>
+                        <select name="role" id="role">
+                            <option value="Admin">Admin</option>
+                            <option value="User">User</option>
+                        </select><br>
 
-    <div class="add-category">
-        <h3>ADD NEW USER</h3>
-    
-        <form action="add_user.php" method="POST">
+                        <label for="status">Status:</label>
+                        <select name="status" id="status">
+                            <option value="Active">Active</option>
+                            <option value="Inactive">Inactive</option>
+                        </select><br>
 
-            <label for="email">Email:</label>
-            <input type="text" name="email" id="email" required><br>
-
-            <label for="username">Username:</label>
-            <input type="text" name="username" id="username" required><br>
-
-            <label for="role">Role:</label>
-            <select name="role" id="role">
-                <option value="Admin">Admin</option>
-                <option value="User">User</option>
-            </select><br>
-
-            <label for="status">Status:</label>
-            <select name="status" id="status">
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-            </select><br>
-
-            <button type="submit">Add User</button>
-        </form>
+                        <button type="submit">Add User</button>
+                    </form>
+                </div>
+            </section>
+        </div>
     </div>
 </body>
 </html>
