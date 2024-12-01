@@ -31,6 +31,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $_SESSION['user_id'] = $user_id;    // Store id from inventory_db in session
             $_SESSION['role'] = $role;          // Store the user's role in session
 
+            // Update the last_login field in inventory_db
+            $current_date = date('Y-m-d H:i:s'); // Current date and time
+            $stmt_update_login = $conn_inventory->prepare("UPDATE users SET last_login = ? WHERE email = ?");
+            $stmt_update_login->bind_param("ss", $current_date, $email);
+            $stmt_update_login->execute();
+            $stmt_update_login->close();
+
             // Redirect based on the user role
             if ($role == 'Admin') {
                 header("Location: ../admin dashboard/dashboard.php"); // For admin, go to dashboard.php

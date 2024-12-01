@@ -119,7 +119,7 @@ $result = $mysqli->query($query);
                             <td><?= $row['username'] ?></td>
                             <td><?= $row['role'] ?></td>
                             <td><span class="status <?= strtolower($row['status']) ?>"><?= $row['status'] ?></span></td>
-                            <td><?= $row['last_login'] ?></td>
+                            <td><?= $row['last_login'] ? $row['last_login'] : 'Never logged in' ?></td> <!-- Display 'Never logged in' if last_login is empty -->
                             <td>
                                 <a href="edit_user.php?id=<?= $row['id'] ?>">Edit</a>
                                 <a href="user_management.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
