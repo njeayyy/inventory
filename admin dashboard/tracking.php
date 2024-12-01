@@ -18,7 +18,7 @@
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
-                        <a href="../admin dashboard/admin/dashboard.php">Inventory Management System</a>
+                        <a href="dashboard.php">Inventory Management System</a>
                         <a href="tracking.php">Vehicle Tracking</a>
                     </div>
                 </div>

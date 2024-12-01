@@ -7,6 +7,7 @@ if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
+
 // Database connection
 $mysqli = new mysqli("localhost", "root", "", "inventory_db");
 
@@ -15,17 +16,30 @@ if ($mysqli->connect_error) {
     die("Connection failed: " . $mysqli->connect_error);
 }
 
+// Handle category deletion
 if (isset($_GET['id'])) {
-    $id = intval($_GET['id']);
-    $mysqli->query("DELETE FROM categories WHERE id = $id");
-    header("Location: categories.php");
-    exit();
+    $category_id = intval($_GET['id']);
+
+    // Check if the category exists
+    $checkCategory = $mysqli->query("SELECT * FROM categories WHERE id = $category_id");
+    if ($checkCategory->num_rows > 0) {
+        // Reassign products with the deleted category to "No Category"
+        $mysqli->query("UPDATE products SET category_id = NULL WHERE category_id = $category_id");
+
+        // Delete the category
+        $mysqli->query("DELETE FROM categories WHERE id = $category_id");
+
+        header("Location: categories.php");
+        exit();
+    } else {
+        echo "Category not found.";
+    }
 }
 
 // Handle adding a new category
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category_name'])) {
-    $category_name = $mysqli->real_escape_string($_POST['category_name']);
-    $mysqli->query("INSERT INTO categories (category_name) VALUES ('$category_name')");
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category'])) {
+    $category = $mysqli->real_escape_string($_POST['category']);
+    $mysqli->query("INSERT INTO categories (category) VALUES ('$category')");
     header("Location: categories.php"); // Refresh the page to display the new category
     exit();
 }
@@ -49,6 +63,12 @@ $categories = $mysqli->query("SELECT * FROM categories");
                 window.location.href = "login.php"; // Redirect to logout page
             }
         }
+        function confirmDelete(event, id) {
+            event.preventDefault();
+            if (confirm("Are you sure you want to delete this category? All products under this category will be reassigned to 'No Category'.")) {
+                window.location.href = `categories.php?id=${id}`;
+            }
+        }
     </script>
 </head>
 <body>
@@ -61,7 +81,7 @@ $categories = $mysqli->query("SELECT * FROM categories");
                     </button>
                     <div class="dropdown-content">
                         <a href="dashboard.php">Inventory Management System</a>
-                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
+                        <a href="tracking.php">Vehicle Tracking</a>
                     </div>
                 </div>
             </div>
@@ -93,7 +113,7 @@ $categories = $mysqli->query("SELECT * FROM categories");
                     <div class="add-category">
                         <h3>ADD NEW CATEGORY</h3>
                         <form method="POST" action="">
-                            <input type="text" name="category_name" placeholder="Category Name" required>
+                            <input type="text" name="category" placeholder="Category Name" required>
                             <button type="submit">Add Category</button>
                         </form>
                     </div>
@@ -105,7 +125,7 @@ $categories = $mysqli->query("SELECT * FROM categories");
                             <thead>
                                 <tr>
                                     <th>#</th>
-                                    <th>Categories</th>
+                                    <th>Category</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
@@ -114,10 +134,10 @@ $categories = $mysqli->query("SELECT * FROM categories");
                                     <?php while ($row = $categories->fetch_assoc()): ?>
                                         <tr>
                                             <td><?= $row['id'] ?></td>
-                                            <td><?= $row['category_name'] ?></td>
+                                            <td><?= $row['category'] ?></td>
                                             <td>
                                                 <a href="edit_category.php?edit_id=<?= $row['id'] ?>" class="edit-button">Edit</a>
-                                                <a href="categories.php?id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')"><i class="ri-delete-bin-6-line"></i></a>
+                                                <a href="#" onclick="confirmDelete(event, <?= $row['id'] ?>)"><i class="ri-delete-bin-6-line"></i></a>
                                             </td>
                                         </tr>
                                     <?php endwhile; ?>

@@ -1,116 +1,44 @@
 <?php
-include 'db.php'; // Make sure db.php is included to establish connection
-
-use PhpOffice\PhpSpreadsheet\Spreadsheet;
-use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
+// Include database connection file
+include 'db.php'; 
 
 session_start();
 
+// Check if the user is logged in
 if (!isset($_SESSION['user_id'])) {
-    // Redirect to the login page if not logged in
     header("Location: login.php");
     exit();
 }
 
-include '../vendor/autoload.php'; // Ensure correct path to autoload.php
-
-// Handle product deletion
-if (isset($_GET['delete_id'])) {
-    $delete_id = $_GET['delete_id'];
-    $conn->query("DELETE FROM products WHERE id = $delete_id");
-    header("Location: products.php");
-    exit;
-}
-
 // Handle search functionality
 $search = "";
+$search_query = "";
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
     $search_query = "WHERE product_name LIKE '%$search%' OR category LIKE '%$search%'";
-} else {
-    $search_query = "";
 }
 
 // Handle sorting functionality
 $sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'id';
 $order = isset($_GET['order']) && $_GET['order'] == 'asc' ? 'asc' : 'desc';
 
-// Fetch products from database with search and sorting
-$result = $conn->query("SELECT * FROM products $search_query ORDER BY $sort_by $order");
+// Fetch products from the database, including category information
+$query = "
+    SELECT products.id, products.product_name, categories.category, products.in_stock, products.price, products.product_added 
+    FROM products
+    LEFT JOIN categories ON products.category = categories.id
+    $search_query
+    ORDER BY $sort_by $order
+";
 
-// Handle export action
-if (isset($_POST['export']) && $_POST['export'] != '') {
-    $exportType = $_POST['export'];
+$result = $conn->query($query);
 
-    if ($exportType === 'excel') {
-        // Create Excel file
-        $spreadsheet = new Spreadsheet();
-        $sheet = $spreadsheet->getActiveSheet();
-
-        // Set header row
-        $sheet->setCellValue('A1', 'Product ID');
-        $sheet->setCellValue('B1', 'Product Name');
-        $sheet->setCellValue('C1', 'Category');
-        $sheet->setCellValue('D1', 'In Stock');
-        $sheet->setCellValue('E1', 'Price');
-        $sheet->setCellValue('F1', 'Product Added');
-
-        // Fetch product data and populate Excel sheet
-        $rowNum = 2;
-        while ($row = $result->fetch_assoc()) {
-            $sheet->setCellValue('A' . $rowNum, $row['id']);
-            $sheet->setCellValue('B' . $rowNum, $row['product_name']);
-            $sheet->setCellValue('C' . $rowNum, $row['category']);
-            $sheet->setCellValue('D' . $rowNum, $row['in_stock']);
-            $sheet->setCellValue('E' . $rowNum, $row['price']);
-            $sheet->setCellValue('F' . $rowNum, $row['product_added']);
-            $rowNum++;
-        }
-
-        // Write Excel file to output
-        $writer = new Xlsx($spreadsheet);
-        $filename = "products_report_" . date('Y-m-d') . ".xlsx";
-        header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-        header('Content-Disposition: attachment;filename="' . $filename . '"');
-        header('Cache-Control: max-age=0');
-        $writer->save('php://output');
-        exit();
-    } elseif ($exportType === 'pdf') {
-        // Create PDF file
-        $pdf = new TCPDF();
-        $pdf->AddPage();
-
-        // Set PDF metadata
-        $pdf->SetFont('helvetica', 'B', 12);
-        $pdf->Cell(0, 10, 'Product Report', 0, 1, 'C');
-        $pdf->Ln(5);
-        
-        // Table header
-        $pdf->SetFont('helvetica', 'B', 10);
-        $pdf->Cell(40, 10, 'Product ID', 1);
-        $pdf->Cell(60, 10, 'Product Name', 1);
-        $pdf->Cell(40, 10, 'Category', 1);
-        $pdf->Cell(30, 10, 'In Stock', 1);
-        $pdf->Cell(30, 10, 'Price', 1);
-        $pdf->Cell(40, 10, 'Product Added', 1);
-        $pdf->Ln();
-
-        // Table content
-        $pdf->SetFont('helvetica', '', 10);
-        while ($row = $result->fetch_assoc()) {
-            $pdf->Cell(40, 10, $row['id'], 1);
-            $pdf->Cell(60, 10, $row['product_name'], 1);
-            $pdf->Cell(40, 10, $row['category'], 1);
-            $pdf->Cell(30, 10, $row['in_stock'], 1);
-            $pdf->Cell(30, 10, $row['price'], 1);
-            $pdf->Cell(40, 10, $row['product_added'], 1);
-            $pdf->Ln();
-        }
-
-        // Output the PDF
-        $pdf->Output('products_report_' . date('Y-m-d') . '.pdf', 'D');
-        exit();
-    }
+// Handle product deletion
+if (isset($_GET['delete_id'])) {
+    $delete_id = $_GET['delete_id'];
+    $conn->query("DELETE FROM products WHERE id = $delete_id");
+    header("Location: products.php"); // Redirect back to the product list page
+    exit();
 }
 ?>
 
@@ -135,14 +63,14 @@ if (isset($_POST['export']) && $_POST['export'] != '') {
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
-            <div class="navbar">
+        <div class="navbar">
                 <div class="dropdown">
                     <button class="dropbtn"> 
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
                         <a href="dashboard.php">Inventory Management System</a>
-                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
+                        <a href="tracking.php">Vehicle Tracking</a>
                     </div>
                 </div>
             </div>
@@ -154,7 +82,7 @@ if (isset($_POST['export']) && $_POST['export'] != '') {
                 <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
-        
+
         <div class="main-content">
             <aside class="sidebar">
                 <ul>
@@ -187,12 +115,17 @@ if (isset($_POST['export']) && $_POST['export'] != '') {
                     <button type="submit">Search</button>
                 </form>
 
-                <!-- Sorting Dropdown -->
+                <!-- Sorting Options -->
                 <div class="sort-options">
+                    <a href="products.php?sort_by=id&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by ID</a>
                     <a href="products.php?sort_by=product_name&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by Name</a>
                     <a href="products.php?sort_by=price&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by Price</a>
                     <a href="products.php?sort_by=in_stock&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by Stock</a>
                 </div>
+
+
+                <!-- Add New Product Button -->
+                <a href="add_product.php" class="add-product-btn">Add New Product</a>
 
                 <!-- Products Table -->
                 <table>
@@ -209,12 +142,12 @@ if (isset($_POST['export']) && $_POST['export'] != '') {
                         <tr>
                             <td><?= $row['id'] ?></td>
                             <td><?= $row['product_name'] ?></td>
-                            <td><?= $row['category'] ?></td>
+                            <td><?= $row['category'] ?: 'No Category' ?></td>
                             <td><?= $row['in_stock'] ?></td>
                             <td><?= $row['price'] ?></td>
                             <td><?= $row['product_added'] ?></td>
                             <td>
-                                <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a>
+                                <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a> |
                                 <a href="products.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>

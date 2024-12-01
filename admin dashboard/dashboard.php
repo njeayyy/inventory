@@ -109,8 +109,8 @@ $query_recent_products = "
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
-                        <a href="dashboard.php">Inventory Management System</a>
-                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
+                        <a href="../admin dashboard/dashboard.php">Inventory Management System</a>
+                        <a href="tracking.php">Vehicle Tracking</a>
                     </div>
                 </div>
             </div>
