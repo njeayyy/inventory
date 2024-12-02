@@ -1,6 +1,6 @@
 <?php
 // Include database connection file
-include 'db.php'; 
+include 'db.php';
 
 session_start();
 
@@ -24,9 +24,9 @@ $order = isset($_GET['order']) && $_GET['order'] == 'asc' ? 'asc' : 'desc';
 
 // Fetch products from the database, including category information
 $query = "
-    SELECT products.id, products.product_name, categories.category, products.in_stock, products.price, products.product_added 
+    SELECT products.id, products.product_name, categories.category, products.in_stock, products.price, products.product_added , products.category_id
     FROM products
-    LEFT JOIN categories ON products.category = categories.id
+    LEFT JOIN categories ON products.category_id = categories.id
     $search_query
     ORDER BY $sort_by $order
 ";
@@ -44,28 +44,31 @@ if (isset($_GET['delete_id'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Products</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <script>
-        function confirmLogout(event) {
-            event.preventDefault(); // Prevent the default link behavior
-            if (confirm("Are you sure you want to log out?")) {
-                window.location.href = "login.php"; // Redirect to logout page
-            }
+    function confirmLogout(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = "login.php"; // Redirect to logout page
         }
+    }
     </script>
 </head>
+
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
-        <div class="navbar">
+            <div class="navbar">
                 <div class="dropdown">
-                    <button class="dropbtn"> 
+                    <button class="dropbtn">
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
@@ -79,7 +82,8 @@ if (isset($_GET['delete_id'])) {
             </div>
             <div class="logout">
                 <!-- Display the logged-in user's username -->
-                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
+                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#"
+                        onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
 
@@ -96,31 +100,39 @@ if (isset($_GET['delete_id'])) {
 
             <section class="dashboard-content">
                 <div class="box">PRODUCTS</div>
-                <a href="add_product.php" class="add-user-btn">Add New Product</a>
+
+                <div class="add-category">
+                    <a href="add_product.php" class="add-user-btn">Add New Product</a>
+                </div>
 
                 <!-- Export Options Form -->
-                <form method="POST" action="products.php" class="export-form">
+
+                <!-- Search Bar -->
+                <form method="GET" action="products.php" class="search-form">
+
+                    <input type="text" name="search" placeholder="Search products..."
+                        value="<?= htmlspecialchars($search) ?>" />
+                    <button type="submit">Search</button>
+
+
                     <label for="export">Export Report as:</label>
-                    <select name="export" required>
+                    <select name="export">
                         <option value="">Select Format</option>
                         <option value="excel">Excel</option>
                         <option value="pdf">PDF</option>
                     </select><br><br>
                     <button type="submit">Generate Report</button>
-                </form>
 
-                <!-- Search Bar -->
-                <form method="GET" action="products.php" class="search-form">
-                    <input type="text" name="search" placeholder="Search products..." value="<?= htmlspecialchars($search) ?>" />
-                    <button type="submit">Search</button>
                 </form>
 
                 <!-- Sorting Options -->
                 <div class="sort-options">
                     <a href="products.php?sort_by=id&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by ID</a>
-                    <a href="products.php?sort_by=product_name&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by Name</a>
+                    <a href="products.php?sort_by=product_name&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by
+                        Name</a>
                     <a href="products.php?sort_by=price&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by Price</a>
-                    <a href="products.php?sort_by=in_stock&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by Stock</a>
+                    <a href="products.php?sort_by=in_stock&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>">Sort by
+                        Stock</a>
                 </div>
 
 
@@ -139,22 +151,24 @@ if (isset($_GET['delete_id'])) {
                         <th>Actions</th>
                     </tr>
                     <?php while ($row = $result->fetch_assoc()) { ?>
-                        <tr>
-                            <td><?= $row['id'] ?></td>
-                            <td><?= $row['product_name'] ?></td>
-                            <td><?= $row['category'] ?: 'No Category' ?></td>
-                            <td><?= $row['in_stock'] ?></td>
-                            <td><?= $row['price'] ?></td>
-                            <td><?= $row['product_added'] ?></td>
-                            <td>
-                                <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a> |
-                                <a href="products.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td><?= $row['id'] ?></td>
+                        <td><?= $row['product_name'] ?></td>
+                        <td><?= $row['category'] ?: 'No Category' ?></td>
+                        <td><?= $row['in_stock'] ?></td>
+                        <td><?= $row['price'] ?></td>
+                        <td><?= $row['product_added'] ?></td>
+                        <td>
+                            <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a> |
+                            <a href="products.php?delete_id=<?= $row['id'] ?>"
+                                onclick="return confirm('Are you sure?')">Delete</a>
+                        </td>
+                    </tr>
                     <?php } ?>
                 </table>
             </section>
         </div>
     </div>
 </body>
+
 </html>
