@@ -71,14 +71,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Sale</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
@@ -127,7 +130,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <input type="number" name="quantity" value="<?= $sale['quantity'] ?>" min="1" required><br><br>
 
                     <label for="sale_price">Sale Price:</label>
-                    <input type="number" step="0.01" name="sale_price" value="<?= $sale['sale_price'] ?>" required><br><br>
+                    <input type="number" step="0.01" name="sale_price" value="<?= $sale['sale_price'] ?>"
+                        required><br><br>
 
                     <button type="submit">Update Sale</button>
                 </form>
@@ -135,4 +139,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
     </div>
 </body>
+
 </html>

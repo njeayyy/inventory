@@ -50,6 +50,7 @@ $result = $mysqli->query($query);
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -65,12 +66,13 @@ $result = $mysqli->query($query);
         }
     </script>
 </head>
+
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
             <div class="navbar">
                 <div class="dropdown">
-                    <button class="dropbtn"> 
+                    <button class="dropbtn">
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
@@ -84,10 +86,11 @@ $result = $mysqli->query($query);
             </div>
             <div class="logout">
                 <!-- Display the logged-in user's username -->
-                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
+                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#"
+                        onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
-        
+
         <div class="main-content">
             <aside class="sidebar">
                 <ul>
@@ -119,10 +122,12 @@ $result = $mysqli->query($query);
                             <td><?= $row['username'] ?></td>
                             <td><?= $row['role'] ?></td>
                             <td><span class="status <?= strtolower($row['status']) ?>"><?= $row['status'] ?></span></td>
-                            <td><?= $row['last_login'] ? $row['last_login'] : 'Never logged in' ?></td> <!-- Display 'Never logged in' if last_login is empty -->
+                            <td><?= $row['last_login'] ? $row['last_login'] : 'Never logged in' ?></td>
+                            <!-- Display 'Never logged in' if last_login is empty -->
                             <td>
                                 <a href="edit_user.php?id=<?= $row['id'] ?>">Edit</a>
-                                <a href="user_management.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                                <a href="user_management.php?delete_id=<?= $row['id'] ?>"
+                                    onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -131,4 +136,5 @@ $result = $mysqli->query($query);
         </div>
     </div>
 </body>
+
 </html>

@@ -49,13 +49,15 @@ $categories = $mysqli->query("SELECT * FROM categories");
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Categories</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <script>
         function confirmLogout(event) {
             event.preventDefault(); // Prevent the default link behavior
@@ -63,14 +65,18 @@ $categories = $mysqli->query("SELECT * FROM categories");
                 window.location.href = "login.php"; // Redirect to logout page
             }
         }
+
         function confirmDelete(event, id) {
             event.preventDefault();
-            if (confirm("Are you sure you want to delete this category? All products under this category will be reassigned to 'No Category'.")) {
+            if (confirm(
+                    "Are you sure you want to delete this category? All products under this category will be reassigned to 'No Category'."
+                )) {
                 window.location.href = `categories.php?id=${id}`;
             }
         }
     </script>
 </head>
+
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
@@ -90,7 +96,8 @@ $categories = $mysqli->query("SELECT * FROM categories");
             </div>
             <div class="logout">
                 <!-- Display the logged-in user's username -->
-                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
+                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#"
+                        onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
 
@@ -107,7 +114,7 @@ $categories = $mysqli->query("SELECT * FROM categories");
 
             <section class="dashboard-content">
                 <div class="box">CATEGORIES</div>
-                
+
                 <div class="categories-container">
                     <!-- Add New Category -->
                     <div class="add-category">
@@ -136,8 +143,10 @@ $categories = $mysqli->query("SELECT * FROM categories");
                                             <td><?= $row['id'] ?></td>
                                             <td><?= $row['category'] ?></td>
                                             <td>
-                                                <a href="edit_category.php?edit_id=<?= $row['id'] ?>" class="edit-button">Edit</a>
-                                                <a href="#" onclick="confirmDelete(event, <?= $row['id'] ?>)"><i class="ri-delete-bin-6-line"></i></a>
+                                                <a href="edit_category.php?edit_id=<?= $row['id'] ?>"
+                                                    class="edit-button">Edit</a>
+                                                <a href="#" onclick="confirmDelete(event, <?= $row['id'] ?>)"><i
+                                                        class="ri-delete-bin-6-line"></i></a>
                                             </td>
                                         </tr>
                                     <?php endwhile; ?>
@@ -154,4 +163,5 @@ $categories = $mysqli->query("SELECT * FROM categories");
         </div>
     </div>
 </body>
+
 </html>

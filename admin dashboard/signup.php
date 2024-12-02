@@ -4,10 +4,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $email = $_POST['email'];
     $password = $_POST['password'];
     $username = $_POST['username'];
-    
+
     // Connect to the inventory_db database
     $conn_inventory = new mysqli('localhost', 'root', '', 'inventory_db');
-    
+
     // Check connection
     if ($conn_inventory->connect_error) {
         die("Connection failed: " . $conn_inventory->connect_error);
@@ -56,6 +56,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -70,6 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             height: 100vh;
             margin: 0;
         }
+
         form {
             background: #fff;
             padding: 20px;
@@ -78,10 +80,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             width: 400px;
             text-align: center;
         }
+
         h2 {
             margin-bottom: 20px;
             color: #333;
         }
+
         input {
             width: 75%;
             padding: 10px;
@@ -89,6 +93,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         button {
             width: 50%;
             padding: 10px;
@@ -99,21 +104,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 16px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #5750d4;
         }
+
         .error {
             color: red;
             margin-bottom: 10px;
         }
+
         .success {
             color: green;
             margin-bottom: 10px;
         }
     </style>
 </head>
+
 <body>
-<form method="POST" action="signup.php">
+    <form method="POST" action="signup.php">
         <h2>Sign Up</h2>
         <?php if (isset($error)): ?>
             <p class="error"><?= $error ?></p>
@@ -128,4 +137,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>Already have an account? <a href="login.php">Login Now</a></p>
     </form>
 </body>
+
 </html>

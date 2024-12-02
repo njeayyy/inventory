@@ -1,4 +1,4 @@
-<?php 
+<?php
 include 'db.php'; // Make sure db.php is included to establish connection
 
 // Fetch user data for editing
@@ -38,27 +38,30 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $stmt->close();
 
     // Redirect to the user management page after updating
-    header("Location: user_management.php"); 
+    header("Location: user_management.php");
     exit;
 }
 ?>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
             <div class="navbar">
                 <div class="dropdown">
-                    <button class="dropbtn"> 
+                    <button class="dropbtn">
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
@@ -87,16 +90,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             </aside>
 
 </body>
+
 </html>
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit User</title>
     <link rel="stylesheet" href="dashboard.css">
 </head>
+
 <body>
     <h2>Edit User</h2>
     <form action="edit_user.php?id=<?= $user_id ?>" method="POST">
@@ -104,7 +110,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <input type="text" name="email" id="email" value="<?= htmlspecialchars($user['email']) ?>" required><br>
 
         <label for="username">Username:</label>
-        <input type="text" name="username" id="username" value="<?= htmlspecialchars($user['username']) ?>" required><br>
+        <input type="text" name="username" id="username" value="<?= htmlspecialchars($user['username']) ?>"
+            required><br>
 
         <label for="role">Role:</label>
         <select name="role" id="role" required>
@@ -121,4 +128,5 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <button type="submit">Update User</button>
     </form>
 </body>
+
 </html>

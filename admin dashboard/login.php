@@ -46,7 +46,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 header("Location: ../user/u_dashboard.php"); // For user, go to u_dashboard.php
             }
             exit();
-
         } else {
             $error = "Invalid email or password.";
         }
@@ -62,6 +61,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -76,18 +76,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             height: 100vh;
             margin: 0;
         }
+
         form {
             background: #fff;
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width:  400px;
+            width: 400px;
             text-align: center;
         }
+
         h2 {
             margin-bottom: 20px;
             color: #333;
         }
+
         input {
             width: 75%;
             padding: 10px;
@@ -95,6 +98,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             border: 1px solid #ccc;
             border-radius: 5px;
         }
+
         button {
             width: 50%;
             padding: 10px;
@@ -105,22 +109,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             font-size: 16px;
             cursor: pointer;
         }
+
         button:hover {
             background-color: #5750d4;
         }
+
         .error {
             color: red;
             margin-bottom: 10px;
         }
+
         a {
             color: #6c63ff;
             text-decoration: none;
         }
+
         a:hover {
             text-decoration: underline;
         }
     </style>
 </head>
+
 <body>
     <form action="login.php" method="POST">
         <h2>Login</h2>
@@ -133,4 +142,5 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         <p>Don't have an account? <a href="signup.php">Sign Up Now</a></p>
     </form>
 </body>
+
 </html>

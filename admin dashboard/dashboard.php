@@ -95,12 +95,12 @@ $query_recent_products = "
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script>
-    function confirmLogout(event) {
-        event.preventDefault(); // Prevent the default link behavior
-        if (confirm("Are you sure you want to log out?")) {
-            window.location.href = "login.php"; // Redirect to logout page
+        function confirmLogout(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "login.php"; // Redirect to logout page
+            }
         }
-    }
     </script>
 </head>
 
@@ -166,13 +166,13 @@ $query_recent_products = "
                 <div class="low-stock-alerts">
                     <h3>Low Stock Alerts</h3>
                     <?php if ($low_stock_products->num_rows > 0) { ?>
-                    <?php while ($row = $low_stock_products->fetch_assoc()) { ?>
-                    <div class="low-stock-alert">
-                        <p>Low Stock: <?= $row['product_name'] ?> - Only <?= $row['in_stock'] ?> left!</p>
-                    </div>
-                    <?php } ?>
+                        <?php while ($row = $low_stock_products->fetch_assoc()) { ?>
+                            <div class="low-stock-alert">
+                                <p>Low Stock: <?= $row['product_name'] ?> - Only <?= $row['in_stock'] ?> left!</p>
+                            </div>
+                        <?php } ?>
                     <?php } else { ?>
-                    <p>No products are currently low on stock.</p>
+                        <p>No products are currently low on stock.</p>
                     <?php } ?>
                 </div>
 
@@ -187,16 +187,16 @@ $query_recent_products = "
                                 <th>Sold Quantity</th>
                             </tr>
                             <?php if ($highest_selling_products && $highest_selling_products->num_rows > 0) { ?>
-                            <?php while ($row = $highest_selling_products->fetch_assoc()) { ?>
-                            <tr>
-                                <td><?= $row['product_name'] ?></td>
-                                <td><?= $row['total_quantity_sold'] ?></td>
-                            </tr>
-                            <?php } ?>
+                                <?php while ($row = $highest_selling_products->fetch_assoc()) { ?>
+                                    <tr>
+                                        <td><?= $row['product_name'] ?></td>
+                                        <td><?= $row['total_quantity_sold'] ?></td>
+                                    </tr>
+                                <?php } ?>
                             <?php } else { ?>
-                            <tr>
-                                <td colspan="2">No data available.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="2">No data available.</td>
+                                </tr>
                             <?php } ?>
                         </table>
                     </div>
@@ -212,18 +212,18 @@ $query_recent_products = "
                                 <th>Date</th>
                             </tr>
                             <?php if ($latest_sales && $latest_sales->num_rows > 0) { ?>
-                            <?php while ($row = $latest_sales->fetch_assoc()) { ?>
-                            <tr>
-                                <td>#<?= $row['sale_id'] ?></td>
-                                <td><?= $row['product_name'] ?></td>
-                                <td>₱<?= number_format($row['total_amount'], 2) ?></td>
-                                <td><?= $row['sale_date'] ?></td>
-                            </tr>
-                            <?php } ?>
+                                <?php while ($row = $latest_sales->fetch_assoc()) { ?>
+                                    <tr>
+                                        <td>#<?= $row['sale_id'] ?></td>
+                                        <td><?= $row['product_name'] ?></td>
+                                        <td>₱<?= number_format($row['total_amount'], 2) ?></td>
+                                        <td><?= $row['sale_date'] ?></td>
+                                    </tr>
+                                <?php } ?>
                             <?php } else { ?>
-                            <tr>
-                                <td colspan="4">No sales data available.</td>
-                            </tr>
+                                <tr>
+                                    <td colspan="4">No sales data available.</td>
+                                </tr>
                             <?php } ?>
                         </table>
                     </div>

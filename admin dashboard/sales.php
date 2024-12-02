@@ -25,13 +25,15 @@ $result = $conn->query("SELECT sales.id, products.product_name, sales.quantity, 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sales</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <script>
         function confirmLogout(event) {
             event.preventDefault(); // Prevent the default link behavior
@@ -41,12 +43,13 @@ $result = $conn->query("SELECT sales.id, products.product_name, sales.quantity, 
         }
     </script>
 </head>
+
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
             <div class="navbar">
                 <div class="dropdown">
-                    <button class="dropbtn"> 
+                    <button class="dropbtn">
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
@@ -60,10 +63,11 @@ $result = $conn->query("SELECT sales.id, products.product_name, sales.quantity, 
             </div>
             <div class="logout">
                 <!-- Display the logged-in user's username -->
-                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
+                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#"
+                        onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
-        
+
         <div class="main-content">
             <aside class="sidebar">
                 <ul>
@@ -100,7 +104,8 @@ $result = $conn->query("SELECT sales.id, products.product_name, sales.quantity, 
                             <td><?= $row['sale_date'] ?></td>
                             <td>
                                 <a href="edit_sale.php?id=<?= $row['id'] ?>">Edit</a>
-                                <a href="sales.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')">Delete</a>
+                                <a href="sales.php?delete_id=<?= $row['id'] ?>"
+                                    onclick="return confirm('Are you sure?')">Delete</a>
                             </td>
                         </tr>
                     <?php } ?>
@@ -109,4 +114,5 @@ $result = $conn->query("SELECT sales.id, products.product_name, sales.quantity, 
         </div>
     </div>
 </body>
+
 </html>
