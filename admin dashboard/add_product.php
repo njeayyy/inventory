@@ -2,7 +2,7 @@
 include 'db.php';
 
 // Fetch categories from the database
-$categories_result = $conn->query("SELECT id, category_name FROM categories");
+$categories_result = $conn->query("SELECT id, category FROM categories");
 
 // Handle form submission
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -11,14 +11,14 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $in_stock = $_POST['in_stock'];
     $price = $_POST['price'];
 
-    
+
     if ($stmt = $conn->prepare("INSERT INTO products (product_name, category_id, in_stock, price) VALUES (?, ?, ?, ?)")) {
         $stmt->bind_param("sidi", $product_name, $category_id, $in_stock, $price);
         $stmt->execute();
         $stmt->close();
     }
 
-    
+
     header("Location: products.php");
     exit;
 }
@@ -26,20 +26,23 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
 </head>
+
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
             <div class="navbar">
                 <div class="dropdown">
-                    <button class="dropbtn"> 
+                    <button class="dropbtn">
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
@@ -68,17 +71,20 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </aside>
 
 </body>
+
 </html>
 
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
 </head>
+
 <body>
     <h2>ADD NEW PRODUCT</h2>
     <form action="add_product.php" method="POST">
@@ -91,7 +97,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <?php
             if ($categories_result->num_rows > 0) {
                 while ($row = $categories_result->fetch_assoc()) {
-                    echo "<option value='" . $row['id'] . "'>" . $row['category_name'] . "</option>";
+                    echo "<option value='" . $row['id'] . "'>" . $row['category'] . "</option>";
                 }
             } else {
                 echo "<option value='' disabled>No categories available</option>";
@@ -100,12 +106,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </select><br>
 
         <label>In Stock:</label>
-        <input type="number" name="in_stock" required><br>
+        <input type="text" name="in_stock" required><br>
 
         <label>Price:</label>
-        <input type="number" step="0.01" name="price" required><br>
+        <input type="text" step="0.01" name="price" required><br>
 
         <button type="submit">Add Product</button>
     </form>
 </body>
+
 </html>

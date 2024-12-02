@@ -24,21 +24,23 @@ $categories_result = $conn->query("SELECT * FROM categories");
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Categories</title>
     <link rel="stylesheet" href="dashboard.css">
     <style>
-        
+
     </style>
 </head>
+
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
             <div class="navbar">
                 <div class="dropdown">
-                    <button class="dropbtn"> 
+                    <button class="dropbtn">
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
@@ -69,19 +71,19 @@ $categories_result = $conn->query("SELECT * FROM categories");
             <section class="dashboard-content">
                 <div class="box">
                     <h2>Edit Categories</h2>
-                    
+
                     <!-- Centered Form -->
                     <div class="edit-form-container">
                         <?php if (isset($category)) { ?>
-                            <form class="edit-form" action="edit_category.php" method="POST">
-                                <h3>Edit Category</h3>
-                                <input type="hidden" name="category_id" value="<?= $category['id'] ?>">
-                                <input type="text" name="category_name" value="<?= $category['category_name'] ?>" required>
-                                <button type="submit" name="update_category">Update Category</button>
-                                <a href="categories.php">Back to Categories</a>
-                            </form>
+                        <form class="edit-form" action="edit_category.php" method="POST">
+                            <h3>Edit Category</h3>
+                            <input type="hidden" name="category_id" value="<?= $category['id'] ?>">
+                            <input type="text" name="category_name" value="<?= $category['category_name'] ?>" required>
+                            <button type="submit" name="update_category">Update Category</button>
+                            <a href="categories.php">Back to Categories</a>
+                        </form>
                         <?php } else { ?>
-                            <p>No category selected for editing. <a href="categories.php">Back to Categories</a></p>
+                        <p>No category selected for editing. <a href="categories.php">Back to Categories</a></p>
                         <?php } ?>
                     </div>
                 </div>
@@ -89,4 +91,5 @@ $categories_result = $conn->query("SELECT * FROM categories");
         </div>
     </div>
 </body>
+
 </html>
