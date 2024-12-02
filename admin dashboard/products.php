@@ -54,12 +54,12 @@ if (isset($_GET['delete_id'])) {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script>
-        function confirmLogout(event) {
-            event.preventDefault(); // Prevent the default link behavior
-            if (confirm("Are you sure you want to log out?")) {
-                window.location.href = "login.php"; // Redirect to logout page
-            }
+    function confirmLogout(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = "login.php"; // Redirect to logout page
         }
+    }
     </script>
 </head>
 
@@ -151,19 +151,19 @@ if (isset($_GET['delete_id'])) {
                         <th>Actions</th>
                     </tr>
                     <?php while ($row = $result->fetch_assoc()) { ?>
-                        <tr>
-                            <td><?= $row['id'] ?></td>
-                            <td><?= $row['product_name'] ?></td>
-                            <td><?= $row['category'] ?: 'No Category' ?></td>
-                            <td><?= $row['in_stock'] ?></td>
-                            <td><?= $row['price'] ?></td>
-                            <td><?= $row['product_added'] ?></td>
-                            <td>
-                                <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a> |
-                                <a href="products.php?delete_id=<?= $row['id'] ?>"
-                                    onclick="return confirm('Are you sure?')">Delete</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td><?= $row['id'] ?></td>
+                        <td><?= $row['product_name'] ?></td>
+                        <td><?= $row['category'] ?: 'No Category' ?></td>
+                        <td><?= $row['in_stock'] ?></td>
+                        <td><?= $row['price'] ?></td>
+                        <td><?= $row['product_added'] ?></td>
+                        <td>
+                            <a href="edit_product.php?id=<?= $row['id'] ?>">Edit</a> |
+                            <a href="products.php?delete_id=<?= $row['id'] ?>"
+                                onclick="return confirm('Are you sure?')">Delete</a>
+                        </td>
+                    </tr>
                     <?php } ?>
                 </table>
             </section>

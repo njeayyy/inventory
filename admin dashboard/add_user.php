@@ -41,12 +41,12 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script>
-        function confirmLogout(event) {
-            event.preventDefault(); // Prevent the default link behavior
-            if (confirm("Are you sure you want to log out?")) {
-                window.location.href = "login.php"; // Redirect to logout page
-            }
+    function confirmLogout(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = "login.php"; // Redirect to logout page
         }
+    }
     </script>
 </head>
 

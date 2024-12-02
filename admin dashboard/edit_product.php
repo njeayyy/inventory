@@ -93,10 +93,10 @@ if (isset($_GET['id'])) {
                         <label for="category">Category</label>
                         <select name="category" required>
                             <?php foreach ($categories as $category) { ?>
-                                <option value="<?= $category['id'] ?>"
-                                    <?= $category['category'] == $product['category'] ? 'selected' : '' ?>>
-                                    <?= $category['category'] ?>
-                                </option>
+                            <option value="<?= $category['id'] ?>"
+                                <?= $category['category'] == $product['category'] ? 'selected' : '' ?>>
+                                <?= $category['category'] ?>
+                            </option>
                             <?php } ?>
                         </select>
 

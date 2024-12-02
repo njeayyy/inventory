@@ -58,12 +58,12 @@ $result = $mysqli->query($query);
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
     <script>
-        function confirmLogout(event) {
-            event.preventDefault(); // Prevent the default link behavior
-            if (confirm("Are you sure you want to log out?")) {
-                window.location.href = "login.php"; // Redirect to logout page
-            }
+    function confirmLogout(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = "login.php"; // Redirect to logout page
         }
+    }
     </script>
 </head>
 
@@ -116,20 +116,20 @@ $result = $mysqli->query($query);
                         <th>Actions</th>
                     </tr>
                     <?php while ($row = $result->fetch_assoc()) { ?>
-                        <tr>
-                            <td><?= $row['id'] ?></td>
-                            <td><?= $row['email'] ?></td>
-                            <td><?= $row['username'] ?></td>
-                            <td><?= $row['role'] ?></td>
-                            <td><span class="status <?= strtolower($row['status']) ?>"><?= $row['status'] ?></span></td>
-                            <td><?= $row['last_login'] ? $row['last_login'] : 'Never logged in' ?></td>
-                            <!-- Display 'Never logged in' if last_login is empty -->
-                            <td>
-                                <a href="edit_user.php?id=<?= $row['id'] ?>">Edit</a>
-                                <a href="user_management.php?delete_id=<?= $row['id'] ?>"
-                                    onclick="return confirm('Are you sure?')">Delete</a>
-                            </td>
-                        </tr>
+                    <tr>
+                        <td><?= $row['id'] ?></td>
+                        <td><?= $row['email'] ?></td>
+                        <td><?= $row['username'] ?></td>
+                        <td><?= $row['role'] ?></td>
+                        <td><span class="status <?= strtolower($row['status']) ?>"><?= $row['status'] ?></span></td>
+                        <td><?= $row['last_login'] ? $row['last_login'] : 'Never logged in' ?></td>
+                        <!-- Display 'Never logged in' if last_login is empty -->
+                        <td>
+                            <a href="edit_user.php?id=<?= $row['id'] ?>">Edit</a>
+                            <a href="user_management.php?delete_id=<?= $row['id'] ?>"
+                                onclick="return confirm('Are you sure?')">Delete</a>
+                        </td>
+                    </tr>
                     <?php } ?>
                 </table>
             </section>

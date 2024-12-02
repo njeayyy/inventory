@@ -59,21 +59,21 @@ $categories = $mysqli->query("SELECT * FROM categories");
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script>
-        function confirmLogout(event) {
-            event.preventDefault(); // Prevent the default link behavior
-            if (confirm("Are you sure you want to log out?")) {
-                window.location.href = "login.php"; // Redirect to logout page
-            }
+    function confirmLogout(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = "login.php"; // Redirect to logout page
         }
+    }
 
-        function confirmDelete(event, id) {
-            event.preventDefault();
-            if (confirm(
-                    "Are you sure you want to delete this category? All products under this category will be reassigned to 'No Category'."
-                )) {
-                window.location.href = `categories.php?id=${id}`;
-            }
+    function confirmDelete(event, id) {
+        event.preventDefault();
+        if (confirm(
+                "Are you sure you want to delete this category? All products under this category will be reassigned to 'No Category'."
+            )) {
+            window.location.href = `categories.php?id=${id}`;
         }
+    }
     </script>
 </head>
 
@@ -138,22 +138,22 @@ $categories = $mysqli->query("SELECT * FROM categories");
                             </thead>
                             <tbody>
                                 <?php if ($categories->num_rows > 0): ?>
-                                    <?php while ($row = $categories->fetch_assoc()): ?>
-                                        <tr>
-                                            <td><?= $row['id'] ?></td>
-                                            <td><?= $row['category'] ?></td>
-                                            <td>
-                                                <a href="edit_category.php?edit_id=<?= $row['id'] ?>"
-                                                    class="edit-button">Edit</a>
-                                                <a href="#" onclick="confirmDelete(event, <?= $row['id'] ?>)"><i
-                                                        class="ri-delete-bin-6-line"></i></a>
-                                            </td>
-                                        </tr>
-                                    <?php endwhile; ?>
+                                <?php while ($row = $categories->fetch_assoc()): ?>
+                                <tr>
+                                    <td><?= $row['id'] ?></td>
+                                    <td><?= $row['category'] ?></td>
+                                    <td>
+                                        <a href="edit_category.php?edit_id=<?= $row['id'] ?>"
+                                            class="edit-button">Edit</a>
+                                        <a href="#" onclick="confirmDelete(event, <?= $row['id'] ?>)"><i
+                                                class="ri-delete-bin-6-line"></i></a>
+                                    </td>
+                                </tr>
+                                <?php endwhile; ?>
                                 <?php else: ?>
-                                    <tr>
-                                        <td colspan="3">No categories found.</td>
-                                    </tr>
+                                <tr>
+                                    <td colspan="3">No categories found.</td>
+                                </tr>
                                 <?php endif; ?>
                             </tbody>
                         </table>

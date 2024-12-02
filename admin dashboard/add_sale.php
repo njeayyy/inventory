@@ -80,34 +80,34 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
         rel="stylesheet">
     <script>
-        function updateSalePrice() {
-            var productId = document.getElementById('product_id').value;
-            var quantity = document.getElementById('quantity').value;
+    function updateSalePrice() {
+        var productId = document.getElementById('product_id').value;
+        var quantity = document.getElementById('quantity').value;
 
-            if (productId && quantity) {
-                // Fetch the price of the selected product via AJAX
-                var xhr = new XMLHttpRequest();
-                xhr.open('GET', 'get_product_price.php?id=' + productId, true);
-                xhr.onload = function() {
-                    if (xhr.status == 200) {
-                        var product = JSON.parse(xhr.responseText);
-                        var price = product.price;
-                        var totalAmount = price * quantity;
-                        document.getElementById('total_amount').value = totalAmount.toFixed(
-                            2); // Display the total amount
-                    }
-                };
-                xhr.send();
-            }
+        if (productId && quantity) {
+            // Fetch the price of the selected product via AJAX
+            var xhr = new XMLHttpRequest();
+            xhr.open('GET', 'get_product_price.php?id=' + productId, true);
+            xhr.onload = function() {
+                if (xhr.status == 200) {
+                    var product = JSON.parse(xhr.responseText);
+                    var price = product.price;
+                    var totalAmount = price * quantity;
+                    document.getElementById('total_amount').value = totalAmount.toFixed(
+                        2); // Display the total amount
+                }
+            };
+            xhr.send();
         }
+    }
 
-        function updateQuantity() {
-            updateSalePrice();
-        }
+    function updateQuantity() {
+        updateSalePrice();
+    }
 
-        function updateProduct() {
-            updateSalePrice();
-        }
+    function updateProduct() {
+        updateSalePrice();
+    }
     </script>
 </head>
 
@@ -151,9 +151,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <select id="product_id" name="product_id" required onchange="updateProduct()">
                         <option value="">Select a product</option>
                         <?php while ($row = $result->fetch_assoc()) { ?>
-                            <option value="<?= $row['id'] ?>">
-                                <?= $row['product_name'] ?> (Stock: <?= $row['in_stock'] ?>)
-                            </option>
+                        <option value="<?= $row['id'] ?>">
+                            <?= $row['product_name'] ?> (Stock: <?= $row['in_stock'] ?>)
+                        </option>
                         <?php } ?>
                     </select><br><br>
 

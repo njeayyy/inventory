@@ -62,62 +62,62 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sign Up</title>
     <style>
-        body {
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0;
-        }
+    body {
+        font-family: 'Poppins', sans-serif;
+        background-color: #f4f4f4;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        margin: 0;
+    }
 
-        form {
-            background: #fff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            text-align: center;
-        }
+    form {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        width: 400px;
+        text-align: center;
+    }
 
-        h2 {
-            margin-bottom: 20px;
-            color: #333;
-        }
+    h2 {
+        margin-bottom: 20px;
+        color: #333;
+    }
 
-        input {
-            width: 75%;
-            padding: 10px;
-            margin: 10px 0;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
+    input {
+        width: 75%;
+        padding: 10px;
+        margin: 10px 0;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
 
-        button {
-            width: 50%;
-            padding: 10px;
-            background-color: #6c63ff;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            font-size: 16px;
-            cursor: pointer;
-        }
+    button {
+        width: 50%;
+        padding: 10px;
+        background-color: #6c63ff;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-size: 16px;
+        cursor: pointer;
+    }
 
-        button:hover {
-            background-color: #5750d4;
-        }
+    button:hover {
+        background-color: #5750d4;
+    }
 
-        .error {
-            color: red;
-            margin-bottom: 10px;
-        }
+    .error {
+        color: red;
+        margin-bottom: 10px;
+    }
 
-        .success {
-            color: green;
-            margin-bottom: 10px;
-        }
+    .success {
+        color: green;
+        margin-bottom: 10px;
+    }
     </style>
 </head>
 
@@ -125,10 +125,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <form method="POST" action="signup.php">
         <h2>Sign Up</h2>
         <?php if (isset($error)): ?>
-            <p class="error"><?= $error ?></p>
+        <p class="error"><?= $error ?></p>
         <?php endif; ?>
         <?php if (isset($success)): ?>
-            <p class="success"><?= $success ?></p>
+        <p class="success"><?= $success ?></p>
         <?php endif; ?>
         <input type="email" name="email" placeholder="Email" required>
         <input type="text" name="username" placeholder="Username" required>

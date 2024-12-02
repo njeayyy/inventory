@@ -75,15 +75,15 @@ $categories_result = $conn->query("SELECT * FROM categories");
                     <!-- Centered Form -->
                     <div class="edit-form-container">
                         <?php if (isset($category)) { ?>
-                            <form class="edit-form" action="edit_category.php" method="POST">
-                                <h3>Edit Category</h3>
-                                <input type="hidden" name="category_id" value="<?= $category['id'] ?>">
-                                <input type="text" name="category_name" value="<?= $category['category_name'] ?>" required>
-                                <button type="submit" name="update_category">Update Category</button>
-                                <a href="categories.php">Back to Categories</a>
-                            </form>
+                        <form class="edit-form" action="edit_category.php" method="POST">
+                            <h3>Edit Category</h3>
+                            <input type="hidden" name="category_id" value="<?= $category['id'] ?>">
+                            <input type="text" name="category_name" value="<?= $category['category_name'] ?>" required>
+                            <button type="submit" name="update_category">Update Category</button>
+                            <a href="categories.php">Back to Categories</a>
+                        </form>
                         <?php } else { ?>
-                            <p>No category selected for editing. <a href="categories.php">Back to Categories</a></p>
+                        <p>No category selected for editing. <a href="categories.php">Back to Categories</a></p>
                         <?php } ?>
                     </div>
                 </div>

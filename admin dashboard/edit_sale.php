@@ -120,9 +120,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <label for="product_id">Product:</label>
                     <select name="product_id" required>
                         <?php while ($row = $product_result->fetch_assoc()) { ?>
-                            <option value="<?= $row['id'] ?>" <?= $row['id'] == $sale['product_id'] ? 'selected' : '' ?>>
-                                <?= $row['product_name'] ?> (Stock: <?= $row['in_stock'] ?>)
-                            </option>
+                        <option value="<?= $row['id'] ?>" <?= $row['id'] == $sale['product_id'] ? 'selected' : '' ?>>
+                            <?= $row['product_name'] ?> (Stock: <?= $row['in_stock'] ?>)
+                        </option>
                         <?php } ?>
                     </select><br><br>
 
