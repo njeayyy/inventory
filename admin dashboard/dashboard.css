@@ -84,7 +84,7 @@ body {
     padding: 12px;
     background-color: #020c22;
     border: none;
-    color: var(--clr-light); /* Make button text white */
+    color: var(--clr-light); 
     font-size: 16px;
     cursor: pointer;
     transition: background-color 0.3s ease;
@@ -103,7 +103,7 @@ body {
 
 /* Ensure that all links in the sidebar are white */
 .sidebar a {
-    color: var(--clr-light); /* White text for links */
+    color: var(--clr-light); 
     text-decoration: none;
 }
 
@@ -230,11 +230,11 @@ table a:hover {
 }
 
 .status.active {
-    background-color: #27ae60; /* Green */
+    background-color: #27ae60; 
 }
 
 .status.inactive {
-    background-color: #e67e22; /* Orange */
+    background-color: #e67e22; 
 }
 
 
