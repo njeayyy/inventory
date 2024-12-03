@@ -18,7 +18,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $conn->real_escape_string($_POST['username']);
     $role = $conn->real_escape_string($_POST['role']);
     $status = $conn->real_escape_string($_POST['status']);
-    
+
     // Insert data directly into the users table (no need for add_users table)
     $conn->query("INSERT INTO users (email, username, role, status) 
                   VALUES ('$email', '$username', '$role', '$status')");
@@ -31,28 +31,31 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
     <link rel="stylesheet" href="dashboard.css">
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
     <script>
-        function confirmLogout(event) {
-            event.preventDefault(); // Prevent the default link behavior
-            if (confirm("Are you sure you want to log out?")) {
-                window.location.href = "login.php"; // Redirect to logout page
-            }
+    function confirmLogout(event) {
+        event.preventDefault(); // Prevent the default link behavior
+        if (confirm("Are you sure you want to log out?")) {
+            window.location.href = "login.php"; // Redirect to logout page
         }
+    }
     </script>
 </head>
+
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
             <div class="navbar">
                 <div class="dropdown">
-                    <button class="dropbtn"> 
+                    <button class="dropbtn">
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
@@ -66,7 +69,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             </div>
             <div class="logout">
                 <!-- Display the logged-in user's username -->
-                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#" onclick="confirmLogout(event)">Logout</a></p>
+                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#"
+                        onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
 
@@ -80,11 +84,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     <li><button><a href="sales.php">SALES</a></button></li>
                 </ul>
             </aside>
-            
+
             <section class="dashboard-content">
                 <div class="add-category">
                     <h3>ADD NEW USER</h3>
-                
+
                     <form action="add_user.php" method="POST">
                         <label for="email">Email:</label>
                         <input type="text" name="email" id="email" required><br>
@@ -111,4 +115,5 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </div>
     </div>
 </body>
+
 </html>

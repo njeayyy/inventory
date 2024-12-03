@@ -40,21 +40,23 @@ if (isset($_GET['id'])) {
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Edit Product</title>
     <link rel="stylesheet" href="dashboard.css">
     <style>
-        
+
     </style>
 </head>
+
 <body>
     <div class="dashboard">
         <header class="dashboard-header">
             <div class="navbar">
                 <div class="dropdown">
-                    <button class="dropbtn"> 
+                    <button class="dropbtn">
                         <i class="ri-more-2-fill"></i>
                     </button>
                     <div class="dropdown-content">
@@ -82,32 +84,33 @@ if (isset($_GET['id'])) {
                 </ul>
             </aside>
 
-        <div class="main-content">
-            <section class="dashboard-content">
-                <form method="POST" action="edit_product.php?id=<?= $product['id'] ?>">
-                    <label for="product_name">Product Name</label>
-                    <input type="text" name="product_name" value="<?= $product['product_name'] ?>" required />
+            <div class="main-content">
+                <section class="dashboard-content">
+                    <form method="POST" action="edit_product.php?id=<?= $product['id'] ?>">
+                        <label for="product_name">Product Name</label>
+                        <input type="text" name="product_name" value="<?= $product['product_name'] ?>" required />
 
-                    <label for="category">Category</label>
-                    <select name="category" required>
-                        <?php foreach ($categories as $category) { ?>
-                            <option value="<?= $category['category_name'] ?>" 
-                                <?= $category['category_name'] == $product['category'] ? 'selected' : '' ?>>
-                                <?= $category['category_name'] ?>
+                        <label for="category">Category</label>
+                        <select name="category" required>
+                            <?php foreach ($categories as $category) { ?>
+                            <option value="<?= $category['id'] ?>"
+                                <?= $category['category'] == $product['category'] ? 'selected' : '' ?>>
+                                <?= $category['category'] ?>
                             </option>
-                        <?php } ?>
-                    </select>
+                            <?php } ?>
+                        </select>
 
-                    <label for="in_stock">In Stock</label>
-                    <input type="number" name="in_stock" value="<?= $product['in_stock'] ?>" required />
+                        <label for="in_stock">In Stock</label>
+                        <input type="text" name="in_stock" value="<?= $product['in_stock'] ?>" required />
 
-                    <label for="price">Price</label>
-                    <input type="text" name="price" value="<?= $product['price'] ?>" required />
+                        <label for="price">Price</label>
+                        <input type="text" name="price" value="<?= $product['price'] ?>" required />
 
-                    <button type="submit">Update Product</button>
-                </form>
-            </section>
+                        <button type="submit">Update Product</button>
+                    </form>
+                </section>
+            </div>
         </div>
-    </div>
 </body>
+
 </html>
