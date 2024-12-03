@@ -123,9 +123,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                         </select>
                     </div>
 
-                    <!-- In Stock -->
+                    <!-- Quantity -->
                     <div>
-                        <label class="block font-medium mb-2">In Stock</label>
+                        <label class="block font-medium mb-2">Quantity</label>
                         <input type="number" name="in_stock" required
                             class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
                     </div>
@@ -151,4 +151,3 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 </body>
 
 </html>
-pwede na
