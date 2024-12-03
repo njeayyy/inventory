@@ -11,14 +11,38 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $in_stock = $_POST['in_stock'];
     $price = $_POST['price'];
 
+    // Check if the product already exists
+    $check_query = "SELECT * FROM products WHERE product_name = ? AND category_id = ?";
+    $stmt_check = $conn->prepare($check_query);
+    $stmt_check->bind_param("si", $product_name, $category_id);
+    $stmt_check->execute();
+    $result = $stmt_check->get_result();
 
-    if ($stmt = $conn->prepare("INSERT INTO products (product_name, category_id, in_stock, price) VALUES (?, ?, ?, ?)")) {
-        $stmt->bind_param("sidi", $product_name, $category_id, $in_stock, $price);
-        $stmt->execute();
-        $stmt->close();
+    if ($result->num_rows > 0) {
+        // Product exists, update the quantity
+        $product = $result->fetch_assoc();
+        $new_quantity = $product['in_stock'] + $in_stock;  // Add the new quantity to the existing stock
+        
+        // Update the stock quantity for the existing product
+        $update_query = "UPDATE products SET in_stock = ? WHERE id = ?";
+        $stmt_update = $conn->prepare($update_query);
+        $stmt_update->bind_param("ii", $new_quantity, $product['id']);
+        $stmt_update->execute();
+        $stmt_update->close();
+
+        $message = "Product stock updated successfully.";
+    } else {
+        // Product doesn't exist, insert a new product
+        if ($stmt = $conn->prepare("INSERT INTO products (product_name, category_id, in_stock, price) VALUES (?, ?, ?, ?)")) {
+            $stmt->bind_param("sidi", $product_name, $category_id, $in_stock, $price);
+            $stmt->execute();
+            $stmt->close();
+        }
+
+        $message = "New product added successfully.";
     }
 
-
+    // Redirect to products page after insertion or update
     header("Location: products.php");
     exit;
 }
@@ -30,89 +54,100 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css">
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <title>Add New Product</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 
-<body>
-    <div class="dashboard">
-        <header class="dashboard-header">
-            <div class="navbar">
-                <div class="dropdown">
-                    <button class="dropbtn">
-                        <i class="ri-more-2-fill"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="dashboard.php">Inventory Management System</a>
-                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
-                    </div>
-                </div>
-            </div>
-            <div class="title">
-                <h1>INVENTORY MANAGEMENT SYSTEM</h1>
-            </div>
-            <div class="logout">
-                <a href="logout.php">Logout</a>
+<body class="bg-gray-100 text-gray-800">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-blue-600 text-white">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
+                <a href="logout.php" class="underline">Logout</a>
             </div>
         </header>
 
-        <div class="main-content">
-            <aside class="sidebar">
-                <ul>
-                    <li><button class="active"><a href="dashboard.php">DASHBOARD</a></button></li>
-                    <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
-                    <li><button><a href="categories.php">CATEGORIES</a></button></li>
-                    <li><button><a href="products.php">PRODUCTS</a></button></li>
-                    <li><button><a href="sales.php">SALES</a></button></li>
+        <div class="flex flex-1">
+            <!-- Sidebar -->
+            <aside class="w-1/4 bg-white shadow-lg p-6 h-screen">
+                <ul class="space-y-4">
+                    <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-gray-100">Dashboard</a></li>
+                    <li><a href="user_management.php" class="block py-2 px-4 rounded hover:bg-gray-100">User Management</a></li>
+                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Categories</a></li>
+                    <li><a href="products.php" class="block py-2 px-4 rounded hover:bg-gray-100">Products</a></li>
+                    <li><a href="sales.php" class="block py-2 px-4 bg-blue-600 text-white rounded">Sales</a></li>
                 </ul>
             </aside>
 
-</body>
+            <!-- Main Content (Form) -->
+            <main class="flex-1 p-8 bg-gray-50">
+                <h2 class="text-2xl font-semibold mb-6">Add New Product</h2>
 
-</html>
+                <!-- Display success or error message -->
+                <?php if (isset($message)) : ?>
+                    <div class="bg-green-500 text-white p-4 rounded mb-6">
+                        <?= $message; ?>
+                    </div>
+                <?php endif; ?>
 
+                <form action="add_product.php" method="POST" class="space-y-6">
+                    <!-- Product Name -->
+                    <div>
+                        <label class="block font-medium mb-2">Product Name</label>
+                        <input type="text" name="product_name" required
+                            class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
 
-<!DOCTYPE html>
-<html lang="en">
+                    <!-- Category -->
+                    <div>
+                        <label class="block font-medium mb-2">Category</label>
+                        <select name="category" required
+                            class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                            <option value="" disabled selected>-- Select a Category --</option>
+                            <?php
+                            if ($categories_result->num_rows > 0) {
+                                while ($row = $categories_result->fetch_assoc()) {
+                                    echo "<option value='" . $row['id'] . "'>" . $row['category'] . "</option>";
+                                }
+                            } else {
+                                echo "<option value='' disabled>No categories available</option>";
+                            }
+                            ?>
+                        </select>
+                    </div>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css">
-</head>
+                    <!-- In Stock -->
+                    <div>
+                        <label class="block font-medium mb-2">In Stock</label>
+                        <input type="number" name="in_stock" required
+                            class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
 
-<body>
-    <h2>ADD NEW PRODUCT</h2>
-    <form action="add_product.php" method="POST">
-        <label>Product Name:</label>
-        <input type="text" name="product_name" required><br>
+                    <!-- Price -->
+                    <div>
+                        <label class="block font-medium mb-2">Price</label>
+                        <input type="number" step="0.01" name="price" required
+                            class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
 
-        <label>Category:</label>
-        <select name="category" required>
-            <option value="" disabled selected>-- Select a Category --</option>
-            <?php
-            if ($categories_result->num_rows > 0) {
-                while ($row = $categories_result->fetch_assoc()) {
-                    echo "<option value='" . $row['id'] . "'>" . $row['category'] . "</option>";
-                }
-            } else {
-                echo "<option value='' disabled>No categories available</option>";
-            }
-            ?>
-        </select><br>
-
-        <label>In Stock:</label>
-        <input type="text" name="in_stock" required><br>
-
-        <label>Price:</label>
-        <input type="text" step="0.01" name="price" required><br>
-
-        <button type="submit">Add Product</button>
-    </form>
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit"
+                            class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-600">
+                            Add Product
+                        </button>
+                    </div>
+                </form>
+            </main>
+        </div>
+    </div>
 </body>
 
 </html>

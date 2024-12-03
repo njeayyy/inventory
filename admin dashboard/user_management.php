@@ -55,84 +55,94 @@ $result = $mysqli->query($query);
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>User Management</title>
-    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script>
-    function confirmLogout(event) {
-        event.preventDefault(); // Prevent the default link behavior
-        if (confirm("Are you sure you want to log out?")) {
-            window.location.href = "login.php"; // Redirect to logout page
+        function confirmLogout(event) {
+            event.preventDefault();
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "login.php";
+            }
         }
-    }
     </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 
-<body>
-    <div class="dashboard">
-        <header class="dashboard-header">
-            <div class="navbar">
-                <div class="dropdown">
-                    <button class="dropbtn">
-                        <i class="ri-more-2-fill"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="dashboard.php">Inventory Management System</a>
-                        <a href="tracking.php">Vehicle Tracking</a>
-                    </div>
+<body class="bg-gray-50 text-gray-800">
+    <div class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="bg-blue-600 text-white shadow-md">
+            <div class="container mx-auto flex items-center justify-between px-6 py-4">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
                 </div>
-            </div>
-            <div class="title">
-                <h1>INVENTORY MANAGEMENT SYSTEM</h1>
-            </div>
-            <div class="logout">
-                <!-- Display the logged-in user's username -->
-                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#"
-                        onclick="confirmLogout(event)">Logout</a></p>
+                <div>
+                    <p>
+                        Welcome, <?php echo $_SESSION['username']; ?>! |
+                        <a href="#" onclick="confirmLogout(event)" class="text-white underline">Logout</a>
+                    </p>
+                </div>
             </div>
         </header>
 
-        <div class="main-content">
-            <aside class="sidebar">
-                <ul>
-                    <li><button><a href="dashboard.php">DASHBOARD</a></button></li>
-                    <li><button class="active"><a href="user_management.php">USER MANAGEMENT</a></button></li>
-                    <li><button><a href="categories.php">CATEGORIES</a></button></li>
-                    <li><button><a href="products.php">PRODUCTS</a></button></li>
-                    <li><button><a href="sales.php">SALES</a></button></li>
+        <!-- Main Content -->
+        <div class="flex flex-1">
+            <!-- Sidebar -->
+            <aside class="w-1/4 bg-gray-100 shadow-md p-4">
+                <ul class="space-y-2">
+                    <li><a href="dashboard.php" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
+                    <li><a href="user_management.php" class="block px-4 py-2 bg-blue-600 text-white rounded">User Management</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Categories</a></li>
+                    <li><a href="products.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Products</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Sales</a></li>
                 </ul>
             </aside>
 
-            <section class="dashboard-content">
-                <div class="box">USER MANAGEMENT</div>
-                <a href="add_user.php">Add New User</a>
-                <table>
-                    <tr>
-                        <th>#</th>
-                        <th>Email</th>
-                        <th>Username</th>
-                        <th>User Role</th>
-                        <th>Status</th>
-                        <th>Last Login</th>
-                        <th>Actions</th>
-                    </tr>
-                    <?php while ($row = $result->fetch_assoc()) { ?>
-                    <tr>
-                        <td><?= $row['id'] ?></td>
-                        <td><?= $row['email'] ?></td>
-                        <td><?= $row['username'] ?></td>
-                        <td><?= $row['role'] ?></td>
-                        <td><span class="status <?= strtolower($row['status']) ?>"><?= $row['status'] ?></span></td>
-                        <td><?= $row['last_login'] ? $row['last_login'] : 'Never logged in' ?></td>
-                        <!-- Display 'Never logged in' if last_login is empty -->
-                        <td>
-                            <a href="edit_user.php?id=<?= $row['id'] ?>">Edit</a>
-                            <a href="user_management.php?delete_id=<?= $row['id'] ?>"
-                                onclick="return confirm('Are you sure?')">Delete</a>
-                        </td>
-                    </tr>
-                    <?php } ?>
+            <!-- Content Section -->
+            <main class="flex-1 p-6 bg-white">
+                <h2 class="text-2xl font-semibold mb-4">User Management</h2>
+                <a href="add_user.php" class="inline-block bg-green-500 text-white px-4 py-2 rounded mb-4">Add New User</a>
+
+                <table class="w-full border-collapse border border-gray-200 text-left">
+                    <thead>
+                        <tr>
+                            <th class="border border-gray-200 px-4 py-2">#</th>
+                            <th class="border border-gray-200 px-4 py-2">Email</th>
+                            <th class="border border-gray-200 px-4 py-2">Username</th>
+                            <th class="border border-gray-200 px-4 py-2">User Role</th>
+                            <th class="border border-gray-200 px-4 py-2">Status</th>
+                            <th class="border border-gray-200 px-4 py-2">Last Login</th>
+                            <th class="border border-gray-200 px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()) { ?>
+                        <tr>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['id'] ?></td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['email'] ?></td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['username'] ?></td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['role'] ?></td>
+                            <td class="border border-gray-200 px-4 py-2">
+                                <span class="px-2 py-1 rounded text-xs 
+                                <?= strtolower($row['status']) === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' ?>">
+                                    <?= $row['status'] ?>
+                                </span>
+                            </td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['last_login'] ? $row['last_login'] : 'Never logged in' ?></td>
+                            <td class="border border-gray-200 px-4 py-2">
+                                <a href="edit_user.php?id=<?= $row['id'] ?>" class="text-blue-500 hover:underline">Edit</a> |
+                                <a href="user_management.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')" class="text-red-500 hover:underline">Delete</a>
+                            </td>
+                        </tr>
+                        <?php } ?>
+                    </tbody>
                 </table>
-            </section>
+            </main>
         </div>
     </div>
 </body>

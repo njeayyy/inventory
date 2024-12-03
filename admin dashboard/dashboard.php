@@ -85,181 +85,180 @@ $query_recent_products = "
 ?>
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
-    function confirmLogout(event) {
-        event.preventDefault(); // Prevent the default link behavior
-        if (confirm("Are you sure you want to log out?")) {
-            window.location.href = "login.php"; // Redirect to logout page
+        function confirmLogout(event) {
+            event.preventDefault();
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "login.php";
+            }
         }
-    }
     </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
+<body class="bg-gray-50 text-gray-800">
 
-<body>
-    <div class="dashboard">
-        <header class="dashboard-header">
-            <div class="navbar">
-                <div class="dropdown">
-                    <button class="dropbtn">
-                        <i class="ri-more-2-fill"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="../admin dashboard/dashboard.php">Inventory Management System</a>
-                        <a href="tracking.php">Vehicle Tracking</a>
-                    </div>
+    <div class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="bg-blue-600 text-white shadow-md">
+            <div class="container mx-auto flex items-center justify-between px-6 py-4">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
                 </div>
-            </div>
-            <div class="title">
-                <h1>INVENTORY MANAGEMENT SYSTEM</h1>
-            </div>
-
-            <div class="logout">
-                <!-- Display the logged-in user's username -->
-                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#"
-                        onclick="confirmLogout(event)">Logout</a></p>
+                <div class="text-sm">
+                    Welcome, <?php echo $_SESSION['username']; ?>! | 
+                    <a href="#" onclick="confirmLogout(event)" class="text-white underline">Logout</a>
+                </div>
             </div>
         </header>
 
-        <div class="main-content">
-            <aside class="sidebar">
-                <ul>
-                    <li><button class="active"><a href="dashboard.php">DASHBOARD</a></button></li>
-                    <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
-                    <li><button><a href="categories.php">CATEGORIES</a></button></li>
-                    <li><button><a href="products.php">PRODUCTS</a></button></li>
-                    <li><button><a href="sales.php">SALES</a></button></li>
+        <!-- Main Content -->
+        <div class="flex flex-1">
+            <!-- Sidebar -->
+            <aside class="w-1/4 bg-gray-100 shadow-md">
+                <ul class="space-y-2 p-4">
+                    <li><a href="dashboard.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Dashboard</a></li>
+                    <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200 rounded">User Management</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Categories</a></li>
+                    <li><a href="products.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Products</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Sales</a></li>
                 </ul>
             </aside>
 
-            <section class="dashboard-content">
-
-                <!-- Dashboard Overview -->
-                <div class="overview">
-                    <div class="box">
-                        <h2><?= $total_users ?></h2>
+            <!-- Dashboard Content -->
+            <main class="flex-1 bg-white p-6">
+                <!-- Overview Section -->
+                <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                    <div class="bg-blue-500 text-white p-4 rounded shadow">
+                        <h2 class="text-2xl font-bold"><?= $total_users ?></h2>
                         <p>Users</p>
                     </div>
-                    <div class="box">
-                        <h2><?= $total_categories ?></h2>
+                    <div class="bg-green-500 text-white p-4 rounded shadow">
+                        <h2 class="text-2xl font-bold"><?= $total_categories ?></h2>
                         <p>Categories</p>
                     </div>
-                    <div class="box">
-                        <h2><?= $total_products ?></h2>
+                    <div class="bg-teal-500 text-white p-4 rounded shadow">
+                        <h2 class="text-2xl font-bold"><?= $total_products ?></h2>
                         <p>Products</p>
                     </div>
-                    <div class="box">
-                        <h2>₱<?= number_format($total_sales, 2) ?></h2>
+                    <div class="bg-purple-500 text-white p-4 rounded shadow">
+                        <h2 class="text-2xl font-bold">₱<?= number_format($total_sales, 2) ?></h2>
                         <p>Sales</p>
                     </div>
                 </div>
 
-                <!-- Low Stock Alerts Section -->
-                <div class="low-stock-alerts">
-                    <h3>Low Stock Alerts</h3>
-                    <?php if ($low_stock_products->num_rows > 0) { ?>
-                    <?php while ($row = $low_stock_products->fetch_assoc()) { ?>
-                    <div class="low-stock-alert">
-                        <p>Low Stock: <?= $row['product_name'] ?> - Only <?= $row['in_stock'] ?> left!</p>
+                <!-- Low Stock Alerts -->
+                <div class="mb-6">
+                    <h3 class="text-lg font-semibold mb-2">Low Stock Alerts</h3>
+                    <div class="space-y-2">
+                        <?php if ($low_stock_products->num_rows > 0) { ?>
+                            <?php while ($row = $low_stock_products->fetch_assoc()) { ?>
+                                <div class="bg-red-100 border-l-4 border-red-500 text-red-700 p-4">
+                                    Low Stock: <?= $row['product_name'] ?> - Only <?= $row['in_stock'] ?> left!
+                                </div>
+                            <?php } ?>
+                        <?php } else { ?>
+                            <p class="text-gray-600">No products are currently low on stock.</p>
+                        <?php } ?>
                     </div>
-                    <?php } ?>
-                    <?php } else { ?>
-                    <p>No products are currently low on stock.</p>
-                    <?php } ?>
                 </div>
 
-                <!-- Data Tables -->
-                <div class="tables">
-                    <!-- Highest Selling Products -->
-                    <div class="table">
-                        <h3>HIGHEST SELLING ITEMS</h3>
-                        <table>
-                            <tr>
-                                <th>Product</th>
-                                <th>Sold Quantity</th>
-                            </tr>
-                            <?php if ($highest_selling_products && $highest_selling_products->num_rows > 0) { ?>
-                            <?php while ($row = $highest_selling_products->fetch_assoc()) { ?>
-                            <tr>
-                                <td><?= $row['product_name'] ?></td>
-                                <td><?= $row['total_quantity_sold'] ?></td>
-                            </tr>
-                            <?php } ?>
-                            <?php } else { ?>
-                            <tr>
-                                <td colspan="2">No data available.</td>
-                            </tr>
-                            <?php } ?>
+                <!-- Tables -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Highest Selling Items -->
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Highest Selling Items</h3>
+                        <table class="table-auto w-full border-collapse border border-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="border border-gray-200 px-4 py-2">Product</th>
+                                    <th class="border border-gray-200 px-4 py-2">Sold Quantity</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($highest_selling_products && $highest_selling_products->num_rows > 0) { ?>
+                                    <?php while ($row = $highest_selling_products->fetch_assoc()) { ?>
+                                        <tr>
+                                            <td class="border border-gray-200 px-4 py-2"><?= $row['product_name'] ?></td>
+                                            <td class="border border-gray-200 px-4 py-2"><?= $row['total_quantity_sold'] ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                <?php } else { ?>
+                                    <tr><td colspan="2" class="border border-gray-200 px-4 py-2 text-center">No data available.</td></tr>
+                                <?php } ?>
+                            </tbody>
                         </table>
                     </div>
 
                     <!-- Latest Sales -->
-                    <div class="table">
-                        <h3>LATEST SALES</h3>
-                        <table>
-                            <tr>
-                                <th>Sale ID</th>
-                                <th>Product</th>
-                                <th>Amount</th>
-                                <th>Date</th>
-                            </tr>
-                            <?php if ($latest_sales && $latest_sales->num_rows > 0) { ?>
-                            <?php while ($row = $latest_sales->fetch_assoc()) { ?>
-                            <tr>
-                                <td>#<?= $row['sale_id'] ?></td>
-                                <td><?= $row['product_name'] ?></td>
-                                <td>₱<?= number_format($row['total_amount'], 2) ?></td>
-                                <td><?= $row['sale_date'] ?></td>
-                            </tr>
-                            <?php } ?>
-                            <?php } else { ?>
-                            <tr>
-                                <td colspan="4">No sales data available.</td>
-                            </tr>
-                            <?php } ?>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Latest Sales</h3>
+                        <table class="table-auto w-full border-collapse border border-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="border border-gray-200 px-4 py-2">Sale ID</th>
+                                    <th class="border border-gray-200 px-4 py-2">Product</th>
+                                    <th class="border border-gray-200 px-4 py-2">Amount</th>
+                                    <th class="border border-gray-200 px-4 py-2">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($latest_sales && $latest_sales->num_rows > 0) { ?>
+                                    <?php while ($row = $latest_sales->fetch_assoc()) { ?>
+                                        <tr>
+                                            <td class="border border-gray-200 px-4 py-2">#<?= $row['sale_id'] ?></td>
+                                            <td class="border border-gray-200 px-4 py-2"><?= $row['product_name'] ?></td>
+                                            <td class="border border-gray-200 px-4 py-2">₱<?= number_format($row['total_amount'], 2) ?></td>
+                                            <td class="border border-gray-200 px-4 py-2"><?= $row['sale_date'] ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                <?php } else { ?>
+                                    <tr><td colspan="4" class="border border-gray-200 px-4 py-2 text-center">No sales data available.</td></tr>
+                                <?php } ?>
+                            </tbody>
                         </table>
                     </div>
 
                     <!-- Recently Added Products -->
-                    <div class="table">
-                        <h3>RECENTLY ADDED PRODUCTS</h3>
-                        <table>
-                            <tr>
-                                <th>Product</th>
-                                <th>Price</th>
-                                <th>Category</th>
-                            </tr>
-                            <tr>
-                                <td>
-                                    <? //= $product['product_name'] 
-                                    ?>
-                                </td>
-                                <td>
-                                    <? //= number_format($product['price'], 2) 
-                                    ?>
-                                </td>
-                                <td>
-                                    <? //= $product['category'] 
-                                    ?>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td colspan="3">No recent products added.</td>
-                            </tr>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Recently Added Products</h3>
+                        <table class="table-auto w-full border-collapse border border-gray-200">
+                            <thead>
+                                <tr>
+                                    <th class="border border-gray-200 px-4 py-2">Product</th>
+                                    <th class="border border-gray-200 px-4 py-2">Price</th>
+                                    <th class="border border-gray-200 px-4 py-2">Category</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php if ($recent_products && $recent_products->num_rows > 0) { ?>
+                                    <?php while ($product = $recent_products->fetch_assoc()) { ?>
+                                        <tr>
+                                            <td class="border border-gray-200 px-4 py-2"><?= $product['product_name'] ?></td>
+                                            <td class="border border-gray-200 px-4 py-2">₱<?= number_format($product['price'], 2) ?></td>
+                                            <td class="border border-gray-200 px-4 py-2"><?= $product['category'] ?></td>
+                                        </tr>
+                                    <?php } ?>
+                                <?php } else { ?>
+                                    <tr><td colspan="3" class="border border-gray-200 px-4 py-2 text-center">No recent products added.</td></tr>
+                                <?php } ?>
+                            </tbody>
                         </table>
                     </div>
                 </div>
-            </section>
+            </main>
         </div>
     </div>
-</body>
 
+</body>
 </html>

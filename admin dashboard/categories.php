@@ -47,6 +47,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category'])) {
 // Fetch all categories
 $categories = $mysqli->query("SELECT * FROM categories");
 ?>
+
+
+
 <!DOCTYPE html>
 <html lang="en">
 
@@ -54,112 +57,109 @@ $categories = $mysqli->query("SELECT * FROM categories");
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Categories</title>
-    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script>
-    function confirmLogout(event) {
-        event.preventDefault(); // Prevent the default link behavior
-        if (confirm("Are you sure you want to log out?")) {
-            window.location.href = "login.php"; // Redirect to logout page
+        function confirmLogout(event) {
+            event.preventDefault();
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "login.php";
+            }
         }
-    }
 
-    function confirmDelete(event, id) {
-        event.preventDefault();
-        if (confirm(
-                "Are you sure you want to delete this category? All products under this category will be reassigned to 'No Category'."
-            )) {
-            window.location.href = `categories.php?id=${id}`;
+        function confirmDelete(event, id) {
+            event.preventDefault();
+            if (confirm("Are you sure you want to delete this category? All products under this category will be reassigned to 'No Category'.")) {
+                window.location.href = `categories.php?id=${id}`;
+            }
         }
-    }
     </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 
-<body>
-    <div class="dashboard">
-        <header class="dashboard-header">
-            <div class="navbar">
-                <div class="dropdown">
-                    <button class="dropbtn">
-                        <i class="ri-more-2-fill"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="dashboard.php">Inventory Management System</a>
-                        <a href="tracking.php">Vehicle Tracking</a>
-                    </div>
+<body class="bg-gray-50 text-gray-800">
+    <div class="flex flex-col min-h-screen">
+        <!-- Header -->
+        <header class="bg-blue-600 text-white shadow-md">
+            <div class="container mx-auto flex items-center justify-between px-6 py-4">
+                <div class="flex items-center space-x-4">
+                    
+                    <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
+                    
                 </div>
-            </div>
-            <div class="title">
-                <h1>INVENTORY MANAGEMENT SYSTEM</h1>
-            </div>
-            <div class="logout">
-                <!-- Display the logged-in user's username -->
-                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#"
-                        onclick="confirmLogout(event)">Logout</a></p>
+                <div>
+                    <p>
+                        Welcome, <?php echo $_SESSION['username']; ?>! |
+                        <a href="#" onclick="confirmLogout(event)" class="text-white underline">Logout</a>
+                    </p>
+                </div>
             </div>
         </header>
 
-        <div class="main-content">
-            <aside class="sidebar">
-                <ul>
-                    <li><button><a href="dashboard.php">DASHBOARD</a></button></li>
-                    <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
-                    <li><button class="active"><a href="categories.php">CATEGORIES</a></button></li>
-                    <li><button><a href="products.php">PRODUCTS</a></button></li>
-                    <li><button><a href="sales.php">SALES</a></button></li>
+        <!-- Main Content -->
+        <div class="flex flex-1">
+            <!-- Sidebar -->
+            <aside class="w-1/4 bg-gray-100 shadow-md p-4">
+                <ul class="space-y-2">
+                    <li><a href="dashboard.php" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
+                    <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200">User Management</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Categories</a></li>
+                    <li><a href="products.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Products</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Sales</a></li>
                 </ul>
             </aside>
 
-            <section class="dashboard-content">
-                <div class="box">CATEGORIES</div>
+            <!-- Content Section -->
+            <main class="flex-1 p-6 bg-white">
+                <h2 class="text-2xl font-semibold mb-6">Categories</h2>
 
-                <div class="categories-container">
-                    <!-- Add New Category -->
-                    <div class="add-category">
-                        <h3>ADD NEW CATEGORY</h3>
-                        <form method="POST" action="">
-                            <input type="text" name="category" placeholder="Category Name" required>
-                            <button type="submit">Add Category</button>
-                        </form>
-                    </div>
-
-                    <!-- List All Categories -->
-                    <div class="all-categories">
-                        <h3>ALL CATEGORIES</h3>
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th>Category</th>
-                                    <th>Actions</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <?php if ($categories->num_rows > 0): ?>
-                                <?php while ($row = $categories->fetch_assoc()): ?>
-                                <tr>
-                                    <td><?= $row['id'] ?></td>
-                                    <td><?= $row['category'] ?></td>
-                                    <td>
-                                        <a href="edit_category.php?edit_id=<?= $row['id'] ?>"
-                                            class="edit-button">Edit</a>
-                                        <a href="#" onclick="confirmDelete(event, <?= $row['id'] ?>)"><i
-                                                class="ri-delete-bin-6-line"></i></a>
-                                    </td>
-                                </tr>
-                                <?php endwhile; ?>
-                                <?php else: ?>
-                                <tr>
-                                    <td colspan="3">No categories found.</td>
-                                </tr>
-                                <?php endif; ?>
-                            </tbody>
-                        </table>
-                    </div>
+                <!-- Add New Category -->
+                <div class="bg-gray-100 p-6 rounded shadow-md mb-6">
+                    <h3 class="text-lg font-semibold mb-4">Add New Category</h3>
+                    <form method="POST" action="" class="space-y-4">
+                        <input type="text" name="category" placeholder="Category Name" required
+                            class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Category</button>
+                    </form>
                 </div>
-            </section>
+
+                <!-- List All Categories -->
+                <div class="bg-gray-100 p-6 rounded shadow-md">
+                    <h3 class="text-lg font-semibold mb-4">All Categories</h3>
+                    <table class="w-full border-collapse border border-gray-200 text-left">
+                        <thead>
+                            <tr>
+                                <th class="border border-gray-200 px-4 py-2">#</th>
+                                <th class="border border-gray-200 px-4 py-2">Category</th>
+                                <th class="border border-gray-200 px-4 py-2">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php if ($categories->num_rows > 0): ?>
+                            <?php while ($row = $categories->fetch_assoc()): ?>
+                            <tr>
+                                <td class="border border-gray-200 px-4 py-2"><?= $row['id'] ?></td>
+                                <td class="border border-gray-200 px-4 py-2"><?= $row['category'] ?></td>
+                                <td class="border border-gray-200 px-4 py-2">
+                                    <a href="edit_category.php?edit_id=<?= $row['id'] ?>" class="text-blue-500 hover:underline">Edit</a> |
+                                    <a href="#" onclick="confirmDelete(event, <?= $row['id'] ?>)" class="text-red-500 hover:underline">Delete</a>
+                                </td>
+                            </tr>
+                            <?php endwhile; ?>
+                            <?php else: ?>
+                            <tr>
+                                <td colspan="3" class="border border-gray-200 px-4 py-2 text-center">No categories found.</td>
+                            </tr>
+                            <?php endif; ?>
+                        </tbody>
+                    </table>
+                </div>
+            </main>
         </div>
     </div>
 </body>

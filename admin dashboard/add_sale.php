@@ -75,98 +75,100 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Sale</title>
-    <link rel="stylesheet" href="dashboard.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
     <script>
-    function updateSalePrice() {
-        var productId = document.getElementById('product_id').value;
-        var quantity = document.getElementById('quantity').value;
+        function updateSalePrice() {
+            var productId = document.getElementById('product_id').value;
+            var quantity = document.getElementById('quantity').value;
 
-        if (productId && quantity) {
-            // Fetch the price of the selected product via AJAX
-            var xhr = new XMLHttpRequest();
-            xhr.open('GET', 'get_product_price.php?id=' + productId, true);
-            xhr.onload = function() {
-                if (xhr.status == 200) {
-                    var product = JSON.parse(xhr.responseText);
-                    var price = product.price;
-                    var totalAmount = price * quantity;
-                    document.getElementById('total_amount').value = totalAmount.toFixed(
-                        2); // Display the total amount
-                }
-            };
-            xhr.send();
+            if (productId && quantity) {
+                // Fetch the price of the selected product via AJAX
+                var xhr = new XMLHttpRequest();
+                xhr.open('GET', 'get_product_price.php?id=' + productId, true);
+                xhr.onload = function () {
+                    if (xhr.status == 200) {
+                        var product = JSON.parse(xhr.responseText);
+                        var price = product.price;
+                        var totalAmount = price * quantity;
+                        document.getElementById('total_amount').value = totalAmount.toFixed(2);
+                    }
+                };
+                xhr.send();
+            }
         }
-    }
-
-    function updateQuantity() {
-        updateSalePrice();
-    }
-
-    function updateProduct() {
-        updateSalePrice();
-    }
     </script>
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+    </style>
 </head>
 
-<body>
-    <div class="dashboard">
-        <header class="dashboard-header">
-            <div class="navbar">
-                <div class="dropdown">
-                    <button class="dropbtn">
-                        <i class="ri-more-2-fill"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="dashboard.php">Inventory Management System</a>
-                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
-                    </div>
-                </div>
-            </div>
-            <div class="title">
-                <h1>INVENTORY MANAGEMENT SYSTEM</h1>
-            </div>
-            <div class="logout">
-                <a href="logout.php">Logout</a>
+<body class="bg-gray-100 text-gray-800">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-blue-600 text-white">
+            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+                <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
+                <a href="logout.php" class="underline">Logout</a>
             </div>
         </header>
 
-        <div class="main-content">
-            <aside class="sidebar">
-                <ul>
-                    <li><button><a href="dashboard.php">DASHBOARD</a></button></li>
-                    <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
-                    <li><button><a href="categories.php">CATEGORIES</a></button></li>
-                    <li><button><a href="products.php">PRODUCTS</a></button></li>
-                    <li><button><a href="sales.php">SALES</a></button></li>
+        <div class="flex flex-1">
+            <!-- Sidebar -->
+            <aside class="w-1/4 bg-white shadow-lg p-6">
+                <ul class="space-y-4">
+                    <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-gray-100">Dashboard</a></li>
+                    <li><a href="user_management.php" class="block py-2 px-4 rounded hover:bg-gray-100">User Management</a></li>
+                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Categories</a></li>
+                    <li><a href="products.php" class="block py-2 px-4 rounded hover:bg-gray-100">Products</a></li>
+                    <li><a href="sales.php" class="block py-2 px-4 bg-blue-600 text-white rounded">Sales</a></li>
                 </ul>
             </aside>
 
-            <section class="dashboard-content">
-                <h2>Add New Sale</h2>
-                <form method="POST" action="add_sale.php">
-                    <label for="product_id">Product:</label>
-                    <select id="product_id" name="product_id" required onchange="updateProduct()">
-                        <option value="">Select a product</option>
-                        <?php while ($row = $result->fetch_assoc()) { ?>
-                        <option value="<?= $row['id'] ?>">
-                            <?= $row['product_name'] ?> (Stock: <?= $row['in_stock'] ?>)
-                        </option>
-                        <?php } ?>
-                    </select><br><br>
+            <!-- Content -->
+            <main class="flex-1 p-8 bg-gray-50">
+                <h2 class="text-2xl font-semibold mb-6">Add New Sale</h2>
 
-                    <label for="quantity">Quantity:</label>
-                    <input type="number" id="quantity" name="quantity" min="1" required
-                        oninput="updateQuantity()"><br><br>
+                <form method="POST" action="add_sale.php" class="space-y-6 bg-white p-6 rounded shadow">
+                    <!-- Product Selection -->
+                    <div>
+                        <label for="product_id" class="block font-medium mb-2">Product</label>
+                        <select id="product_id" name="product_id" required onchange="updateSalePrice()"
+                            class="w-full border rounded px-4 py-2">
+                            <option value="">Select a product</option>
+                            <?php while ($row = $result->fetch_assoc()): ?>
+                                <option value="<?= $row['id'] ?>">
+                                    <?= $row['product_name'] ?> (Stock: <?= $row['in_stock'] ?>)
+                                </option>
+                            <?php endwhile; ?>
+                        </select>
+                    </div>
 
-                    <label for="total_amount">Total Amount:</label>
-                    <input type="text" id="total_amount" name="total_amount" readonly><br><br>
+                    <!-- Quantity Input -->
+                    <div>
+                        <label for="quantity" class="block font-medium mb-2">Quantity</label>
+                        <input type="number" id="quantity" name="quantity" min="1" required oninput="updateSalePrice()"
+                            class="w-full border rounded px-4 py-2">
+                    </div>
 
-                    <button type="submit">Add Sale</button>
+                    <!-- Total Amount -->
+                    <div>
+                        <label for="total_amount" class="block font-medium mb-2">Total Amount</label>
+                        <input type="text" id="total_amount" name="total_amount" readonly
+                            class="w-full border rounded px-4 py-2 bg-gray-100">
+                    </div>
+
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
+                            Add Sale
+                        </button>
+                    </div>
                 </form>
-            </section>
+            </main>
         </div>
     </div>
 </body>

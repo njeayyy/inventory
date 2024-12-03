@@ -35,82 +35,86 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
-    <link rel="stylesheet" href="dashboard.css">
+    <title>Add User</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap"
-        rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@100;200;300;400;500;600;700;800&display=swap" rel="stylesheet">
     <script>
-    function confirmLogout(event) {
-        event.preventDefault(); // Prevent the default link behavior
-        if (confirm("Are you sure you want to log out?")) {
-            window.location.href = "login.php"; // Redirect to logout page
+        function confirmLogout(event) {
+            event.preventDefault(); // Prevent the default link behavior
+            if (confirm("Are you sure you want to log out?")) {
+                window.location.href = "login.php"; // Redirect to logout page
+            }
         }
-    }
     </script>
 </head>
 
-<body>
-    <div class="dashboard">
-        <header class="dashboard-header">
-            <div class="navbar">
-                <div class="dropdown">
-                    <button class="dropbtn">
-                        <i class="ri-more-2-fill"></i>
-                    </button>
-                    <div class="dropdown-content">
-                        <a href="dashboard.php">Inventory Management System</a>
-                        <a href="../tracking/tracking.html">Vehicle Tracking</a>
-                    </div>
+<body class="bg-gray-100 text-gray-800 font-poppins">
+    <div class="min-h-screen flex flex-col">
+        <!-- Header -->
+        <header class="bg-blue-600 text-white">
+            <div class="container mx-auto px-6 py-4 flex justify-between items-center">
+                <h1 class="text-xl font-semibold">INVENTORY MANAGEMENT SYSTEM</h1>
+                <div class="flex items-center">
+                    <p class="mr-4">Welcome, <?php echo $_SESSION['username']; ?>!</p>
+                    <a href="#" onclick="confirmLogout(event)" class="underline">Logout</a>
                 </div>
-            </div>
-            <div class="title">
-                <h1>INVENTORY MANAGEMENT SYSTEM</h1>
-            </div>
-            <div class="logout">
-                <!-- Display the logged-in user's username -->
-                <p>Welcome, <?php echo $_SESSION['username']; ?>! | <a href="#"
-                        onclick="confirmLogout(event)">Logout</a></p>
             </div>
         </header>
 
-        <div class="main-content">
-            <aside class="sidebar">
-                <ul>
-                    <li><button class="active"><a href="dashboard.php">DASHBOARD</a></button></li>
-                    <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
-                    <li><button><a href="categories.php">CATEGORIES</a></button></li>
-                    <li><button><a href="products.php">PRODUCTS</a></button></li>
-                    <li><button><a href="sales.php">SALES</a></button></li>
+        <!-- Main Content -->
+        <div class="flex flex-1">
+            <!-- Sidebar -->
+            <aside class="w-1/4 bg-white shadow-lg p-6 h-screen">
+                <ul class="space-y-4">
+                    <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-gray-100">Dashboard</a></li>
+                    <li><a href="user_management.php" class="block py-2 px-4 rounded hover:bg-gray-100">User Management</a></li>
+                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Categories</a></li>
+                    <li><a href="products.php" class="block py-2 px-4 rounded hover:bg-gray-100">Products</a></li>
+                    <li><a href="sales.php" class="block py-2 px-4 rounded hover:bg-gray-100">Sales</a></li>
                 </ul>
             </aside>
 
-            <section class="dashboard-content">
-                <div class="add-category">
-                    <h3>ADD NEW USER</h3>
+            <!-- Form Content -->
+            <section class="flex-1 p-8 bg-gray-50">
+                <h2 class="text-2xl font-semibold mb-6">Add New User</h2>
 
-                    <form action="add_user.php" method="POST">
-                        <label for="email">Email:</label>
-                        <input type="text" name="email" id="email" required><br>
+                <form action="add_user.php" method="POST" class="space-y-6">
+                    <!-- Email -->
+                    <div>
+                        <label for="email" class="block font-medium">Email:</label>
+                        <input type="email" name="email" id="email" required class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
 
-                        <label for="username">Username:</label>
-                        <input type="text" name="username" id="username" required><br>
+                    <!-- Username -->
+                    <div>
+                        <label for="username" class="block font-medium">Username:</label>
+                        <input type="text" name="username" id="username" required class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
 
-                        <label for="role">Role:</label>
-                        <select name="role" id="role">
+                    <!-- Role -->
+                    <div>
+                        <label for="role" class="block font-medium">Role:</label>
+                        <select name="role" id="role" class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
                             <option value="Admin">Admin</option>
                             <option value="User">User</option>
-                        </select><br>
+                        </select>
+                    </div>
 
-                        <label for="status">Status:</label>
-                        <select name="status" id="status">
+                    <!-- Status -->
+                    <div>
+                        <label for="status" class="block font-medium">Status:</label>
+                        <select name="status" id="status" class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
                             <option value="Active">Active</option>
                             <option value="Inactive">Inactive</option>
-                        </select><br>
+                        </select>
+                    </div>
 
-                        <button type="submit">Add User</button>
-                    </form>
-                </div>
+                    <!-- Submit Button -->
+                    <div>
+                        <button type="submit" class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-600">Add User</button>
+                    </div>
+                </form>
             </section>
         </div>
     </div>
