@@ -1,6 +1,16 @@
 <?php
 include 'db.php';
 
+// Start the session
+session_start();
+
+// Check if the user is logged in
+if (!isset($_SESSION['user_id'])) {
+    // Redirect to the login page if not logged in
+    header("Location: login.php");
+    exit();
+}
+
 // Fetch categories from the database
 $categories_result = $conn->query("SELECT id, category FROM categories");
 
@@ -64,25 +74,32 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     </style>
 </head>
 
-<body class="bg-gray-100 text-gray-800">
-    <div class="min-h-screen flex flex-col">
+<body class="bg-gray-50 text-gray-800">
+
+    <div class="flex flex-col min-h-screen">
         <!-- Header -->
-        <header class="bg-blue-600 text-white">
-            <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-                <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
-                <a href="logout.php" class="underline">Logout</a>
+        <header class="bg-blue-600 text-white shadow-md">
+            <div class="container mx-auto flex items-center justify-between px-6 py-4">
+                <div class="flex items-center space-x-4">
+                    <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
+                </div>
+                <div class="text-sm">
+                    Welcome, <?php echo $_SESSION['username']; ?>! | 
+                    <a href="#" onclick="confirmLogout(event)" class="text-white underline">Logout</a>
+                </div>
             </div>
         </header>
 
+        <!-- Main Content -->
         <div class="flex flex-1">
             <!-- Sidebar -->
-            <aside class="w-1/4 bg-white shadow-lg p-6 h-screen">
-                <ul class="space-y-4">
-                    <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-gray-100">Dashboard</a></li>
-                    <li><a href="user_management.php" class="block py-2 px-4 rounded hover:bg-gray-100">User Management</a></li>
-                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Principal</a></li>
-                    <li><a href="products.php" class="block py-2 px-4 rounded hover:bg-gray-100">Products</a></li>
-                    <li><a href="sales.php" class="block py-2 px-4 bg-blue-600 text-white rounded">Outgoing Items</a></li>
+            <aside class="w-1/4 bg-gray-100 shadow-md">
+                <ul class="space-y-2 p-4">
+                    <li><a href="dashboard.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Dashboard</a></li>
+                    <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200 rounded">User Management</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Principal</a></li>
+                    <li><a href="products.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Products</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 
