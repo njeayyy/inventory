@@ -122,15 +122,15 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <ul class="space-y-4">
                     <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-gray-100">Dashboard</a></li>
                     <li><a href="user_management.php" class="block py-2 px-4 rounded hover:bg-gray-100">User Management</a></li>
-                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Categories</a></li>
+                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Principal</a></li>
                     <li><a href="products.php" class="block py-2 px-4 rounded hover:bg-gray-100">Products</a></li>
-                    <li><a href="sales.php" class="block py-2 px-4 bg-blue-600 text-white rounded">Sales</a></li>
+                    <li><a href="sales.php" class="block py-2 px-4 bg-blue-600 text-white rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 
             <!-- Content -->
             <main class="flex-1 p-8 bg-gray-50">
-                <h2 class="text-2xl font-semibold mb-6">Add New Sale</h2>
+                <h2 class="text-2xl font-semibold mb-6">Add Outgoing Items</h2>
 
                 <form method="POST" action="add_sale.php" class="space-y-6 bg-white p-6 rounded shadow">
                     <!-- Product Selection -->
@@ -164,7 +164,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <!-- Submit Button -->
                     <div>
                         <button type="submit" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-                            Add Sale
+                            Add Outgoing Items
                         </button>
                     </div>
                 </form>

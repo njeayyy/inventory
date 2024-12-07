@@ -69,9 +69,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <ul class="space-y-4">
                     <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-gray-100">Dashboard</a></li>
                     <li><a href="user_management.php" class="block py-2 px-4 rounded hover:bg-gray-100">User Management</a></li>
-                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Categories</a></li>
+                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Principal</a></li>
                     <li><a href="products.php" class="block py-2 px-4 rounded hover:bg-gray-100">Products</a></li>
-                    <li><a href="sales.php" class="block py-2 px-4 rounded hover:bg-gray-100">Sales</a></li>
+                    <li><a href="sales.php" class="block py-2 px-4 rounded hover:bg-gray-100">Outgoing Items</a></li>
                 </ul>
             </aside>
 

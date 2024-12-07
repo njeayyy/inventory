@@ -97,9 +97,9 @@ $result = $mysqli->query($query);
                 <ul class="space-y-2">
                     <li><a href="dashboard.php" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
                     <li><a href="user_management.php" class="block px-4 py-2 bg-blue-600 text-white rounded">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Categories</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Principal</a></li>
                     <li><a href="products.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Products</a></li>
-                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Sales</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 

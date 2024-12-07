@@ -14,7 +14,7 @@ include 'db.php'; // Database connection
 if (isset($_GET['id'])) {
     $id = $_GET['id'];
 
-    // Fetch product details
+    // Fetch product details including supplier and expiration date
     $result = $conn->query("SELECT * FROM products WHERE id = $id");
     $product = $result->fetch_assoc();
 
@@ -32,9 +32,13 @@ if (isset($_GET['id'])) {
         $category = $_POST['category'];
         $in_stock = $_POST['in_stock'];
         $price = $_POST['price'];
+        $supplier_name = $_POST['supplier_name']; // Added for supplier (brand)
+        $expiration_date = $_POST['expiration_date']; // Added for expiration date
 
         // Update the product in the database
-        $conn->query("UPDATE products SET product_name = '$product_name', category = '$category', in_stock = $in_stock, price = $price WHERE id = $id");
+        $conn->query("UPDATE products SET product_name = '$product_name', category_id = '$category', 
+                      in_stock = $in_stock, price = $price, supplier_name = '$supplier_name', 
+                      expiration_date = '$expiration_date' WHERE id = $id");
 
         // Redirect back to the products page
         header("Location: products.php");
@@ -81,9 +85,9 @@ if (isset($_GET['id'])) {
                 <ul class="space-y-2">
                     <li><a href="dashboard.php" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
                     <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200">Categories</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200">Principal</a></li>
                     <li><a href="products.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Products</a></li>
-                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200">Sales</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200">Outgoing Items</a></li>
                 </ul>
             </aside>
 
@@ -102,16 +106,35 @@ if (isset($_GET['id'])) {
 
                     <!-- Category -->
                     <div>
-                        <label for="category" class="block font-medium mb-2">Category</label>
+                        <label for="category" class="block font-medium mb-2">Principal</label>
                         <select name="category" required
                             class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
-                            <?php foreach ($categories as $category) { ?>
-                            <option value="<?= $category['id'] ?>"
-                                <?= $category['category'] == $product['category'] ? 'selected' : '' ?>>
-                                <?= $category['category'] ?>
-                            </option>
-                            <?php } ?>
+                            <option value="">Select Principal</option>
+                            <?php
+                            // Check if categories are loaded and display them
+                            if (!empty($categories)) {
+                                foreach ($categories as $category) {
+                                    echo "<option value='{$category['id']}' " . ($category['id'] == $product['category_id'] ? 'selected' : '') . ">{$category['category']}</option>";
+                                }
+                            } else {
+                                echo "<option disabled>No categories available</option>";
+                            }
+                            ?>
                         </select>
+                    </div>
+
+                    <!-- Supplier (Brand) -->
+                    <div>
+                        <label for="supplier_name" class="block font-medium mb-2">Location</label>
+                        <input type="text" name="supplier_name" value="<?= $product['supplier_name'] ?>" required
+                            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
+
+                    <!-- Expiration Date -->
+                    <div>
+                        <label for="expiration_date" class="block font-medium mb-2">Expiration Date</label>
+                        <input type="date" name="expiration_date" value="<?= $product['expiration_date'] ?>" required
+                            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
                     </div>
 
                     <!-- In Stock -->

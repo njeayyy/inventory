@@ -18,12 +18,24 @@ if (isset($_GET['search'])) {
 }
 
 // Fetch sales from the database, applying the search filter if set
-$query = "SELECT sales.id, products.product_name, sales.quantity, sales.sale_price, sales.total_amount, sales.sale_date
+$query = "SELECT 
+            sales.id, 
+            products.product_name, 
+            products.supplier_name, 
+            products.category, 
+            products.expiration_date, 
+            sales.quantity, 
+            sales.sale_price, 
+            sales.total_amount, 
+            sales.sale_date
           FROM sales
           JOIN products ON sales.product_id = products.id";
 
 if ($search) {
-    $query .= " WHERE products.product_name LIKE '%$search%' OR sales.id LIKE '%$search%'";
+    $query .= " WHERE products.product_name LIKE '%$search%' 
+                OR products.supplier_name LIKE '%$search%' 
+                OR products.category LIKE '%$search%' 
+                OR sales.id LIKE '%$search%'";
 }
 
 $result = $conn->query($query);
@@ -76,19 +88,19 @@ $result = $conn->query($query);
                 <ul class="space-y-2">
                     <li><a href="dashboard.php" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
                     <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200">Categories</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200">Principal</a></li>
                     <li><a href="products.php" class="block px-4 py-2 hover:bg-gray-200">Products</a></li>
-                    <li><a href="sales.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Sales</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 
             <!-- Content Section -->
             <main class="flex-1 p-6 bg-white">
-                <h2 class="text-2xl font-semibold mb-6">Sales</h2>
+                <h2 class="text-2xl font-semibold mb-6">Outgoing Items</h2>
 
-                <!-- Add New Sale -->
+                <!-- Add New Outgoing Items -->
                 <div class="flex justify-end mb-6">
-                    <a href="add_sale.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add New Sale</a>
+                    <a href="add_sale.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Outgoing Items</a>
                 </div>
 
                 <!-- Search Bar -->
@@ -121,6 +133,9 @@ $result = $conn->query($query);
                             <tr>
                                 <th class="border border-gray-200 px-4 py-2">#</th>
                                 <th class="border border-gray-200 px-4 py-2">Product Name</th>
+                                <th class="border border-gray-200 px-4 py-2">Brand</th>
+                                <th class="border border-gray-200 px-4 py-2">Location</th>
+                                <th class="border border-gray-200 px-4 py-2">Expiry Date</th>
                                 <th class="border border-gray-200 px-4 py-2">Quantity Sold</th>
                                 <th class="border border-gray-200 px-4 py-2">Sale Price</th>
                                 <th class="border border-gray-200 px-4 py-2">Total Amount</th>
@@ -133,6 +148,9 @@ $result = $conn->query($query);
                             <tr>
                                 <td class="border border-gray-200 px-4 py-2"><?= $row['id'] ?></td>
                                 <td class="border border-gray-200 px-4 py-2"><?= $row['product_name'] ?></td>
+                                <td class="border border-gray-200 px-4 py-2"><?= $row['supplier_name'] ?></td>
+                                <td class="border border-gray-200 px-4 py-2"><?= $row['category'] ?></td>
+                                <td class="border border-gray-200 px-4 py-2"><?= $row['expiration_date'] ?></td>
                                 <td class="border border-gray-200 px-4 py-2"><?= $row['quantity'] ?></td>
                                 <td class="border border-gray-200 px-4 py-2"><?= $row['sale_price'] ?></td>
                                 <td class="border border-gray-200 px-4 py-2"><?= $row['total_amount'] ?></td>

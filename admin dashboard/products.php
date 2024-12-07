@@ -28,7 +28,11 @@ $search = "";
 $search_query = "";
 if (isset($_GET['search'])) {
     $search = $_GET['search'];
-    $search_query = "WHERE product_name LIKE '%$search%' OR category LIKE '%$search%' OR supplier_name LIKE '%$search%'";
+    $search_query = "
+        WHERE products.product_name LIKE '%$search%' 
+        OR categories.category LIKE '%$search%' 
+        OR products.supplier_name LIKE '%$search%'
+    ";
 }
 
 // Fetch products from the database, including category information
@@ -99,9 +103,9 @@ if (isset($_GET['delete_id'])) {
                 <ul class="space-y-2">
                     <li><a href="dashboard.php" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
                     <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200">Categories</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200">Principal</a></li>
                     <li><a href="products.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Products</a></li>
-                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200">Sales</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200">Outgoing Items</a></li>
                 </ul>
             </aside>
 
@@ -138,6 +142,7 @@ if (isset($_GET['delete_id'])) {
                 </form>
 
                 <!-- Sort Options -->
+                
                 <div class="flex gap-4 mb-4">
                     <a href="products.php?sort_by=id&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>"
                         class="text-blue-600 hover:underline">Sort by ID</a>
@@ -147,6 +152,10 @@ if (isset($_GET['delete_id'])) {
                         class="text-blue-600 hover:underline">Sort by Price</a>
                     <a href="products.php?sort_by=in_stock&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>"
                         class="text-blue-600 hover:underline">Sort by Stock</a>
+                    <a href="products.php?sort_by=supplier_name&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>"
+                        class="text-blue-600 hover:underline">Sort by Location </a>
+                    <a href="products.php?sort_by=category&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>"
+                        class="text-blue-600 hover:underline">Sort by Brand </a>
                 </div>
 
                 <!-- Products Table -->
@@ -156,8 +165,8 @@ if (isset($_GET['delete_id'])) {
                         <tr>
                             <th class="border border-gray-200 px-4 py-2">#</th>
                             <th class="border border-gray-200 px-4 py-2">Product Name</th>
+                            <th class="border border-gray-200 px-4 py-2">Location</th>
                             <th class="border border-gray-200 px-4 py-2">Brand</th>
-                            <th class="border border-gray-200 px-4 py-2">Category</th>
                             <th class="border border-gray-200 px-4 py-2">In Stock</th>
                             <th class="border border-gray-200 px-4 py-2">Price</th>
                             <th class="border border-gray-200 px-4 py-2">Expiration Date</th>

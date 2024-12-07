@@ -11,14 +11,18 @@ if (isset($_GET['edit_id'])) {
 // Handle form submission for updating a category
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['update_category'])) {
     $category_id = $_POST['category_id'];
-    $category_name = $_POST['category_name'];
+    $category = $_POST['category']; // Capture the new category name
 
-    $conn->query("UPDATE categories SET category_name = '$category_name' WHERE id = $category_id");
-    header("Location: categories.php");
-    exit;
+    // Update query with correct column name
+    if ($conn->query("UPDATE categories SET category = '$category' WHERE id = $category_id") === TRUE) {
+        header("Location: categories.php"); // Redirect to categories.php
+        exit;
+    } else {
+        echo "Error updating category: " . $conn->error; // Show error if query fails
+    }
 }
 
-// Fetch all categories
+// Fetch all categories (not used on this page but can be helpful for debugging)
 $categories_result = $conn->query("SELECT * FROM categories");
 ?>
 
@@ -32,7 +36,7 @@ $categories_result = $conn->query("SELECT * FROM categories");
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
-    
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
@@ -58,9 +62,9 @@ $categories_result = $conn->query("SELECT * FROM categories");
                 <ul class="space-y-2">
                     <li><a href="dashboard.php" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
                     <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Categories</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Principal</a></li>
                     <li><a href="products.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Products</a></li>
-                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Sales</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 
@@ -75,8 +79,8 @@ $categories_result = $conn->query("SELECT * FROM categories");
                         <input type="hidden" name="category_id" value="<?= $category['id'] ?>">
 
                         <div>
-                            <label for="category_name" class="block text-gray-700 font-medium">Category Name</label>
-                            <input type="text" name="category_name" id="category_name" value="<?= $category['category'] ?>"
+                            <label for="category" class="block text-gray-700 font-medium">Category Name</label>
+                            <input type="text" name="category" id="category" value="<?= $category['category'] ?>"
                                 required class="mt-2 w-full px-4 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
 

@@ -80,9 +80,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                 <ul class="space-y-4">
                     <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-gray-100">Dashboard</a></li>
                     <li><a href="user_management.php" class="block py-2 px-4 rounded hover:bg-gray-100">User Management</a></li>
-                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Categories</a></li>
+                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Principal</a></li>
                     <li><a href="products.php" class="block py-2 px-4 rounded hover:bg-gray-100">Products</a></li>
-                    <li><a href="sales.php" class="block py-2 px-4 bg-blue-600 text-white rounded">Sales</a></li>
+                    <li><a href="sales.php" class="block py-2 px-4 bg-blue-600 text-white rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 
@@ -145,7 +145,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                     </div>
                     <!-- Supplier -->
                     <div>
-                            <label class="block font-medium mb-2">Brand Name</label>
+                            <label class="block font-medium mb-2">Location</label>
                             <input type="text" name="supplier_name" required
                                 class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
                     </div>

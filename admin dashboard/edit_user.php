@@ -81,11 +81,11 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         <div class="main-content">
             <aside class="sidebar">
                 <ul>
-                    <li><button class="active"><a href="dashboard.php">DASHBOARD</a></button></li>
-                    <li><button><a href="user_management.php">USER MANAGEMENT</a></button></li>
-                    <li><button><a href="categories.php">CATEGORIES</a></button></li>
-                    <li><button><a href="products.php">PRODUCTS</a></button></li>
-                    <li><button><a href="sales.php">SALES</a></button></li>
+                    <li><button class="active"><a href="dashboard.php">Dashboard</a></button></li>
+                    <li><button><a href="user_management.php">User Management</a></button></li>
+                    <li><button><a href="categories.php">Principal</a></button></li>
+                    <li><button><a href="products.php">Products</a></button></li>
+                    <li><button><a href="sales.php">Outgoing Items</a></button></li>
                 </ul>
             </aside>
 

@@ -39,16 +39,23 @@ if (isset($_GET['id'])) {
 // Handle adding a new category
 if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category'])) {
     $category = $mysqli->real_escape_string($_POST['category']);
-    $mysqli->query("INSERT INTO categories (category) VALUES ('$category')");
-    header("Location: categories.php"); // Refresh the page to display the new category
-    exit();
+    
+    // Insert new category into the database
+    $result = $mysqli->query("INSERT INTO categories (category) VALUES ('$category')");
+
+    // Check if insertion was successful
+    if ($result) {
+        header("Location: categories.php"); // Refresh the page to display the new category
+        exit();
+    } else {
+        // Display the error message if the query fails
+        echo "Error: " . $mysqli->error;
+    }
 }
 
 // Fetch all categories
 $categories = $mysqli->query("SELECT * FROM categories");
 ?>
-
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -88,9 +95,7 @@ $categories = $mysqli->query("SELECT * FROM categories");
         <header class="bg-blue-600 text-white shadow-md">
             <div class="container mx-auto flex items-center justify-between px-6 py-4">
                 <div class="flex items-center space-x-4">
-                    
                     <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
-                    
                 </div>
                 <div>
                     <p>
@@ -108,34 +113,34 @@ $categories = $mysqli->query("SELECT * FROM categories");
                 <ul class="space-y-2">
                     <li><a href="dashboard.php" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
                     <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Categories</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Principal</a></li>
                     <li><a href="products.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Products</a></li>
-                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Sales</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 
             <!-- Content Section -->
             <main class="flex-1 p-6 bg-white">
-                <h2 class="text-2xl font-semibold mb-6">Categories</h2>
+                <h2 class="text-2xl font-semibold mb-6">Principal</h2>
 
                 <!-- Add New Category -->
                 <div class="bg-gray-100 p-6 rounded shadow-md mb-6">
-                    <h3 class="text-lg font-semibold mb-4">Add New Category</h3>
+                    <h3 class="text-lg font-semibold mb-4">Add New Principal</h3>
                     <form method="POST" action="" class="space-y-4">
-                        <input type="text" name="category" placeholder="Category Name" required
+                        <input type="text" name="category" placeholder="Principal Name" required
                             class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Category</button>
+                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Principal</button>
                     </form>
                 </div>
 
                 <!-- List All Categories -->
                 <div class="bg-gray-100 p-6 rounded shadow-md">
-                    <h3 class="text-lg font-semibold mb-4">All Categories</h3>
+                    <h3 class="text-lg font-semibold mb-4">All Principal</h3>
                     <table class="w-full border-collapse border border-gray-200 text-left">
                         <thead>
                             <tr>
                                 <th class="border border-gray-200 px-4 py-2">#</th>
-                                <th class="border border-gray-200 px-4 py-2">Category</th>
+                                <th class="border border-gray-200 px-4 py-2">Principal</th>
                                 <th class="border border-gray-200 px-4 py-2">Actions</th>
                             </tr>
                         </thead>
