@@ -22,9 +22,19 @@ if (isset($_GET['search'])) {
 $sort_by = isset($_GET['sort_by']) ? $_GET['sort_by'] : 'id';
 $order = isset($_GET['order']) && $_GET['order'] == 'asc' ? 'asc' : 'desc';
 
+
+// Handle search functionality
+$search = "";
+$search_query = "";
+if (isset($_GET['search'])) {
+    $search = $_GET['search'];
+    $search_query = "WHERE product_name LIKE '%$search%' OR category LIKE '%$search%' OR supplier_name LIKE '%$search%'";
+}
+
 // Fetch products from the database, including category information
 $query = "
-    SELECT products.id, products.product_name, categories.category, products.in_stock, products.price, products.product_added , products.category_id
+    SELECT products.id, products.product_name, categories.category, products.in_stock, products.price, products.product_added, 
+           products.expiration_date, products.supplier_name, products.category_id
     FROM products
     LEFT JOIN categories ON products.category_id = categories.id
     $search_query
@@ -37,7 +47,7 @@ $result = $conn->query($query);
 if (isset($_GET['delete_id'])) {
     $delete_id = $_GET['delete_id'];
     $conn->query("DELETE FROM products WHERE id = $delete_id");
-    header("Location: products.php"); // Redirect back to the product list page
+    header("Location: products.php");
     exit();
 }
 ?>
@@ -142,34 +152,39 @@ if (isset($_GET['delete_id'])) {
                 <!-- Products Table -->
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-gray-200 text-left">
-                        <thead>
-                            <tr>
-                                <th class="border border-gray-200 px-4 py-2">#</th>
-                                <th class="border border-gray-200 px-4 py-2">Product Name</th>
-                                <th class="border border-gray-200 px-4 py-2">Category</th>
-                                <th class="border border-gray-200 px-4 py-2">In Stock</th>
-                                <th class="border border-gray-200 px-4 py-2">Price</th>
-                                <th class="border border-gray-200 px-4 py-2">Product Added</th>
-                                <th class="border border-gray-200 px-4 py-2">Actions</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php while ($row = $result->fetch_assoc()): ?>
-                            <tr>
-                                <td class="border border-gray-200 px-4 py-2"><?= $row['id'] ?></td>
-                                <td class="border border-gray-200 px-4 py-2"><?= $row['product_name'] ?></td>
-                                <td class="border border-gray-200 px-4 py-2"><?= $row['category'] ?: 'No Category' ?></td>
-                                <td class="border border-gray-200 px-4 py-2"><?= $row['in_stock'] ?></td>
-                                <td class="border border-gray-200 px-4 py-2"><?= $row['price'] ?></td>
-                                <td class="border border-gray-200 px-4 py-2"><?= $row['product_added'] ?></td>
-                                <td class="border border-gray-200 px-4 py-2">
-                                    <a href="edit_product.php?id=<?= $row['id'] ?>" class="text-blue-500 hover:underline">Edit</a> |
-                                    <a href="products.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')"
-                                        class="text-red-500 hover:underline">Delete</a>
-                                </td>
-                            </tr>
-                            <?php endwhile; ?>
-                        </tbody>
+                    <thead>
+                        <tr>
+                            <th class="border border-gray-200 px-4 py-2">#</th>
+                            <th class="border border-gray-200 px-4 py-2">Product Name</th>
+                            <th class="border border-gray-200 px-4 py-2">Brand</th>
+                            <th class="border border-gray-200 px-4 py-2">Category</th>
+                            <th class="border border-gray-200 px-4 py-2">In Stock</th>
+                            <th class="border border-gray-200 px-4 py-2">Price</th>
+                            <th class="border border-gray-200 px-4 py-2">Expiration Date</th>
+                            <th class="border border-gray-200 px-4 py-2">Product Added</th>
+                            <th class="border border-gray-200 px-4 py-2">Actions</th>
+                        </tr>
+                    </thead>
+                    
+                    <tbody>
+                        <?php while ($row = $result->fetch_assoc()): ?>
+                        <tr>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['id'] ?></td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['product_name'] ?></td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['supplier_name'] ?: 'N/A' ?></td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['category'] ?: 'No Category' ?></td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['in_stock'] ?></td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['price'] ?></td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['expiration_date'] ?: 'N/A' ?></td>
+                            <td class="border border-gray-200 px-4 py-2"><?= $row['product_added'] ?></td>
+                            <td class="border border-gray-200 px-4 py-2">
+                                <a href="edit_product.php?id=<?= $row['id'] ?>" class="text-blue-500 hover:underline">Edit</a> |
+                                <a href="products.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')"
+                                    class="text-red-500 hover:underline">Delete</a>
+                            </td>
+                        </tr>
+                        <?php endwhile; ?>
+                    </tbody>
                     </table>
                 </div>
             </main>

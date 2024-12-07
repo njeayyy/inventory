@@ -137,6 +137,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
                             class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
                     </div>
 
+                    <!-- Expiry Date -->
+                    <div>
+                        <label class="block font-medium mb-2">Expiration Date</label>
+                        <input type="date" name="expiration_date" required
+                             class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
+                    <!-- Supplier -->
+                    <div>
+                            <label class="block font-medium mb-2">Brand Name</label>
+                            <input type="text" name="supplier_name" required
+                                class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                    </div>
+
                     <!-- Submit Button -->
                     <div>
                         <button type="submit"
