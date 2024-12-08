@@ -128,13 +128,13 @@ $result = $conn->query($query);
         <!-- Main Content -->
         <div class="flex flex-1">
             <!-- Sidebar -->
-            <aside class="w-1/4 bg-gray-100 shadow-md p-4">
-                <ul class="space-y-2">
-                    <li><a href="dashboard.php" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
-                    <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200">Principal</a></li>
-                    <li><a href="products.php" class="block px-4 py-2 hover:bg-gray-200">Products</a></li>
-                    <li><a href="sales.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Outgoing Items</a></li>
+            <aside class="w-1/4 bg-emerald-100 shadow-md">
+                <ul class="space-y-2 p-4">
+                    <li><a href="dashboard.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Dashboard</a></li>
+                    <li><a href="user_management.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">User Management</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Principal</a></li>
+                    <li><a href="products.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Products</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 bg-emerald-700 text-white rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 
@@ -144,7 +144,7 @@ $result = $conn->query($query);
 
                 <!-- Add New Outgoing Items -->
                 <div class="flex justify-end mb-6">
-                    <a href="add_sale.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Outgoing Items</a>
+                    <a href="add_sale.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Outgoing Items</a>
                 </div>
 
                 <!-- Search Bar -->

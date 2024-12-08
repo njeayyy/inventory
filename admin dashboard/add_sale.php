@@ -109,7 +109,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="bg-gray-100 text-gray-800">
     <div class="min-h-screen flex flex-col">
         <!-- Header -->
-        <header class="bg-blue-600 text-white">
+        <header class="bg-emerald-950 text-white shadow-md">
             <div class="container mx-auto px-4 py-4 flex justify-between items-center">
                 <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
                 <a href="logout.php" class="underline">Logout</a>
@@ -118,13 +118,13 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="flex flex-1">
             <!-- Sidebar -->
-            <aside class="w-1/4 bg-white shadow-lg p-6">
-                <ul class="space-y-4">
-                    <li><a href="dashboard.php" class="block py-2 px-4 rounded hover:bg-gray-100">Dashboard</a></li>
-                    <li><a href="user_management.php" class="block py-2 px-4 rounded hover:bg-gray-100">User Management</a></li>
-                    <li><a href="categories.php" class="block py-2 px-4 rounded hover:bg-gray-100">Principal</a></li>
-                    <li><a href="products.php" class="block py-2 px-4 rounded hover:bg-gray-100">Products</a></li>
-                    <li><a href="sales.php" class="block py-2 px-4 bg-blue-600 text-white rounded">Outgoing Items</a></li>
+            <aside class="w-1/4 bg-emerald-100 shadow-md">
+                <ul class="space-y-2 p-4">
+                    <li><a href="dashboard.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Dashboard</a></li>
+                    <li><a href="user_management.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">User Management</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Principal</a></li>
+                    <li><a href="products.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Products</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 bg-emerald-700 text-white rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 
