@@ -21,20 +21,21 @@ if (isset($_GET['search'])) {
 $query = "SELECT 
             sales.id, 
             products.product_name, 
-            products.supplier_name, 
-            products.category, 
+            categories.category AS category_name, 
+            products.location, 
             products.expiration_date, 
             sales.quantity, 
             sales.sale_price, 
             sales.total_amount, 
             sales.sale_date
           FROM sales
-          JOIN products ON sales.product_id = products.id";
+          JOIN products ON sales.product_id = products.id
+          JOIN categories ON products.category_id = categories.id";
 
 if ($search) {
     $query .= " WHERE products.product_name LIKE '%$search%' 
-                OR products.supplier_name LIKE '%$search%' 
-                OR products.category LIKE '%$search%' 
+                OR products.location LIKE '%$search%' 
+                OR categories.category LIKE '%$search%' 
                 OR sales.id LIKE '%$search%'";
 }
 
@@ -148,8 +149,8 @@ $result = $conn->query($query);
                             <tr>
                                 <td class="border border-gray-200 px-4 py-2"><?= $row['id'] ?></td>
                                 <td class="border border-gray-200 px-4 py-2"><?= $row['product_name'] ?></td>
-                                <td class="border border-gray-200 px-4 py-2"><?= $row['supplier_name'] ?></td>
-                                <td class="border border-gray-200 px-4 py-2"><?= $row['category'] ?></td>
+                                <td class="border border-gray-200 px-4 py-2"><?= $row['category_name'] ?></td>
+                                <td class="border border-gray-200 px-4 py-2"><?= $row['location'] ?></td>
                                 <td class="border border-gray-200 px-4 py-2"><?= $row['expiration_date'] ?></td>
                                 <td class="border border-gray-200 px-4 py-2"><?= $row['quantity'] ?></td>
                                 <td class="border border-gray-200 px-4 py-2"><?= $row['sale_price'] ?></td>
