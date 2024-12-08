@@ -32,13 +32,14 @@ if (isset($_GET['id'])) {
         $category = $_POST['category'];
         $in_stock = $_POST['in_stock'];
         $price = $_POST['price'];
-        $supplier_name = $_POST['supplier_name']; // Added for supplier (brand)
+        $location = $_POST['location']; // Changed to radio buttons for location
+        $rack = $_POST['rack']; // Changed to radio buttons for rack
         $expiration_date = $_POST['expiration_date']; // Added for expiration date
 
         // Update the product in the database
         $conn->query("UPDATE products SET product_name = '$product_name', category_id = '$category', 
-                      in_stock = $in_stock, price = $price, supplier_name = '$supplier_name', 
-                      expiration_date = '$expiration_date' WHERE id = $id");
+                      in_stock = $in_stock, price = $price, location = '$location', 
+                      rack = '$rack', expiration_date = '$expiration_date' WHERE id = $id");
 
         // Redirect back to the products page
         header("Location: products.php");
@@ -96,69 +97,111 @@ if (isset($_GET['id'])) {
                 <h2 class="text-2xl font-semibold mb-6">Edit Product</h2>
 
                 <!-- Edit Product Form -->
-                <form method="POST" action="edit_product.php?id=<?= $product['id'] ?>" class="space-y-6">
-                    <!-- Product Name -->
-                    <div>
-                        <label for="product_name" class="block font-medium mb-2">Product Name</label>
-                        <input type="text" name="product_name" value="<?= $product['product_name'] ?>" required
-                            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
-                    </div>
+                <div class="bg-gray-100 p-6 rounded shadow-md mb-6">   
+                    <form method="POST" action="edit_product.php?id=<?= $product['id'] ?>" class="space-y-6">
+    <!-- Row 1: Product Name, Location, Rack -->
+    <div class="grid grid-cols-3 gap-8">
 
-                    <!-- Category -->
-                    <div>
-                        <label for="category" class="block font-medium mb-2">Principal</label>
-                        <select name="category" required
-                            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
-                            <option value="">Select Principal</option>
-                            <?php
-                            // Check if categories are loaded and display them
-                            if (!empty($categories)) {
-                                foreach ($categories as $category) {
-                                    echo "<option value='{$category['id']}' " . ($category['id'] == $product['category_id'] ? 'selected' : '') . ">{$category['category']}</option>";
-                                }
-                            } else {
-                                echo "<option disabled>No categories available</option>";
-                            }
-                            ?>
-                        </select>
-                    </div>
+    <!-- Product Name -->
+    <div>
+        <label for="product_name" class="block font-medium mb-2">Product Name</label>
+        <input type="text" name="product_name" value="<?= $product['product_name'] ?>" required
+            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
+    </div>
 
-                    <!-- Supplier (Brand) -->
-                    <div>
-                        <label for="supplier_name" class="block font-medium mb-2">Location</label>
-                        <input type="text" name="supplier_name" value="<?= $product['supplier_name'] ?>" required
-                            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
-                    </div>
+    <!-- Location (Radio Buttons) -->
+    <div>
+        <label for="location" class="block font-medium mb-2">Location</label>
+        <div class="grid grid-cols-2 gap-4">
+            <label class="inline-flex items-center">
+                <input type="radio" name="location" value="W1" <?= ($product['location'] == 'W1' ? 'checked' : '') ?> required
+                    class="form-radio text-blue-600">
+                <span class="ml-2">1</span>
+            </label>
+            <label class="inline-flex items-center">
+                <input type="radio" name="location" value="W2" <?= ($product['location'] == 'W2' ? 'checked' : '') ?>
+                    class="form-radio text-blue-600">
+                <span class="ml-2">2</span>
+            </label>
+        </div>
+    </div>
 
-                    <!-- Expiration Date -->
-                    <div>
-                        <label for="expiration_date" class="block font-medium mb-2">Expiration Date</label>
-                        <input type="date" name="expiration_date" value="<?= $product['expiration_date'] ?>" required
-                            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
-                    </div>
+    <!-- Rack (Radio Buttons) -->
+    <div>
+        <label for="rack" class="block font-medium mb-2">Rack</label>
+        <div class="grid grid-cols-3 gap-4">
+            <label class="inline-flex items-center">
+                <input type="radio" name="rack" value="R1" <?= ($product['rack'] == 'R1' ? 'checked' : '') ?> required
+                    class="form-radio text-blue-600">
+                <span class="ml-2">1</span>
+            </label>
+            <label class="inline-flex items-center">
+                <input type="radio" name="rack" value="R2" <?= ($product['rack'] == 'R2' ? 'checked' : '') ?>
+                    class="form-radio text-blue-600">
+                <span class="ml-2">2</span>
+            </label>
+            <label class="inline-flex items-center">
+                <input type="radio" name="rack" value="R3" <?= ($product['rack'] == 'R3' ? 'checked' : '') ?>
+                    class="form-radio text-blue-600">
+                <span class="ml-2">3</span>
+            </label>
+        </div>
+    </div>
+    </div>
 
-                    <!-- In Stock -->
-                    <div>
-                        <label for="in_stock" class="block font-medium mb-2">In Stock</label>
-                        <input type="text" name="in_stock" value="<?= $product['in_stock'] ?>" required
-                            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
-                    </div>
 
-                    <!-- Price -->
-                    <div>
-                        <label for="price" class="block font-medium mb-2">Price</label>
-                        <input type="text" name="price" value="<?= $product['price'] ?>" required
-                            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
-                    </div>
+    <!-- Row 2: Brand, Quantity, Price -->
+    <div class="grid grid-cols-3 gap-8">
+    <!-- Brand -->
+    <div>
+        <label for="category" class="block font-medium mb-2">Brand</label>
+        <select name="category" required
+            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
+            <option value="">Select Brand</option>
+            <?php
+            // Check if categories are loaded and display them
+            if (!empty($categories)) {
+                foreach ($categories as $category) {
+                    echo "<option value='{$category['id']}' " . ($category['id'] == $product['category_id'] ? 'selected' : '') . ">{$category['category']}</option>";
+                }
+            } else {
+                echo "<option disabled>No categories available</option>";
+            }
+            ?>
+        </select>
+    </div>
 
-                    <!-- Submit Button -->
-                    <div>
-                        <button type="submit"
-                            class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-600">
-                            Update Product
-                        </button>
-                    </div>
-                </form>
+    <!-- In Stock -->
+    <div>
+        <label for="in_stock" class="block font-medium mb-2">In Stock</label>
+        <input type="number" name="in_stock" value="<?= $product['in_stock'] ?>" required
+            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
+    </div>
+
+    <!-- Price -->
+    <div>
+        <label for="price" class="block font-medium mb-2">Price</label>
+        <input type="number" name="price" value="<?= $product['price'] ?>" step="0.01" required
+            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
+    </div>
+    </div>
+
+    <!-- Row 3: Expiration Date -->
+    <div class="grid grid-cols-1 gap-4">
+        <label for="expiration_date" class="block font-medium mb-2">Expiration Date</label>
+        <input type="date" name="expiration_date" value="<?= $product['expiration_date'] ?>" required
+            class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
+    </div>
+
+    <!-- Submit Button -->
+    <div class="grid grid-cols-1 gap-4">
+        <button type="submit"
+            class="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 focus:ring-2 focus:ring-blue-600">
+            Update Product
+        </button>
+    </div>
+</form>
+                </div>
             </main>
         </div>
     </div>

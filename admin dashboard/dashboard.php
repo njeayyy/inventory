@@ -139,10 +139,10 @@ $query_recent_products = "
             <aside class="w-1/4 bg-emerald-100 shadow-md">
                 <ul class="space-y-2 p-4">
                     <li><a href="dashboard.php" class="block px-4 py-2 bg-emerald-700 text-white rounded">Dashboard</a></li>
-                    <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200 rounded">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Principal</a></li>
-                    <li><a href="products.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Products</a></li>
-                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200 rounded">Outgoing Items</a></li>
+                    <li><a href="user_management.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">User Management</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Principal</a></li>
+                    <li><a href="products.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Products</a></li>
+                    <li><a href="sales.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 
