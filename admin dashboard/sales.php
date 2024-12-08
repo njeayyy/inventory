@@ -39,6 +39,49 @@ if ($search) {
                 OR sales.id LIKE '%$search%'";
 }
 
+if (isset($_GET['delete_id'])) {
+    $delete_id = intval($_GET['delete_id']); // Sanitize the input
+
+    // Fetch the quantity of the product sold
+    $fetch_sale_query = "SELECT product_id, quantity FROM sales WHERE id = ?";
+    $stmt = $conn->prepare($fetch_sale_query);
+    $stmt->bind_param("i", $delete_id);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    
+    if ($result->num_rows > 0) {
+        $sale = $result->fetch_assoc();
+        $product_id = $sale['product_id'];
+        $quantity_sold = $sale['quantity'];
+        
+        // Update the product's in_stock by adding back the quantity sold
+        $update_query = "UPDATE products SET in_stock = in_stock + ? WHERE id = ?";
+        $update_stmt = $conn->prepare($update_query);
+        $update_stmt->bind_param("ii", $quantity_sold, $product_id);
+
+        // Execute the update and then delete the sale record
+        if ($update_stmt->execute()) {
+            // Prepare the delete query
+            $delete_query = "DELETE FROM sales WHERE id = ?";
+            $stmt_delete = $conn->prepare($delete_query);
+            $stmt_delete->bind_param("i", $delete_id);
+            if ($stmt_delete->execute()) {
+                // Redirect to avoid repeated deletion on refresh
+                header("Location: sales.php");
+                exit();
+            } else {
+                echo "<p style='color:red;'>Failed to delete the sale record. Please try again.</p>";
+            }
+        } else {
+            echo "<p style='color:red;'>Failed to update the product quantity. Please try again.</p>";
+        }
+    } else {
+        echo "<p style='color:red;'>Sale not found. Please try again.</p>";
+    }
+}
+
+
+
 $result = $conn->query($query);
 ?>
 
@@ -111,19 +154,6 @@ $result = $conn->query($query);
                             value="<?= htmlspecialchars($search) ?>"
                             class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Search</button>
-                    </div>
-                </form>
-
-                <!-- Export Options -->
-                <form method="GET" action="sales.php" class="mb-6">
-                    <div class="flex items-center gap-4">
-                        <label for="export" class="text-gray-700 font-medium">Export Report as:</label>
-                        <select name="export" class="border rounded px-4 py-2">
-                            <option value="">Select Format</option>
-                            <option value="excel">Excel</option>
-                            <option value="pdf">PDF</option>
-                        </select>
-                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Generate Report</button>
                     </div>
                 </form>
 
