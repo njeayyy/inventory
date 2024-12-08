@@ -100,7 +100,7 @@ $result = $mysqli->query($query);
         <!-- Main Content -->
         <div class="flex flex-1">
             <!-- Sidebar -->
-            <<aside class="w-1/4 bg-emerald-100 shadow-md">
+            <aside class="w-1/4 bg-emerald-100 shadow-md">
                 <ul class="space-y-2 p-4">
                     <li><a href="dashboard.php" class="block px-4 py-2 hover:bg-emerald-200 text-black rounded">Dashboard</a></li>
                     <li><a href="user_management.php" class="block px-4 py-2 bg-emerald-700 text-white rounded">User Management</a></li>
@@ -113,35 +113,36 @@ $result = $mysqli->query($query);
             <!-- Content Section -->
             <main class="flex-1 p-6 bg-white">
                 <h2 class="text-2xl font-semibold mb-4">User Management</h2>
-                <a href="add_user.php" class="inline-block bg-green-500 text-white px-4 py-2 rounded mb-4">Add New User</a>
+                <div class="bg-emerald-100 p-6 rounded shadow-md mb-6">
+                <a href="add_user.php" class="inline-block bg-emerald-600 text-white px-4 py-2 rounded mb-4 hover:bg-emerald-700">Add New User</a>
 
-                <table class="w-full border-collapse border border-gray-200 text-left">
+                <table class="w-full border-collapse border border-neutral-950 text-left">
                     <thead>
                         <tr>
-                            <th class="border border-gray-200 px-4 py-2">#</th>
-                            <th class="border border-gray-200 px-4 py-2">Email</th>
-                            <th class="border border-gray-200 px-4 py-2">Username</th>
-                            <th class="border border-gray-200 px-4 py-2">User Role</th>
-                            <th class="border border-gray-200 px-4 py-2">Status</th>
-                            <th class="border border-gray-200 px-4 py-2">Last Login</th>
-                            <th class="border border-gray-200 px-4 py-2">Actions</th>
+                            <th class="border border-neutral-950 px-4 py-2">#</th>
+                            <th class="border border-neutral-950 px-4 py-2">Email</th>
+                            <th class="border border-neutral-950 px-4 py-2">Username</th>
+                            <th class="border border-neutral-950 px-4 py-2">User Role</th>
+                            <th class="border border-neutral-950 px-4 py-2">Status</th>
+                            <th class="border border-neutral-950 px-4 py-2">Last Login</th>
+                            <th class="border border-neutral-950 px-4 py-2">Actions</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php while ($row = $result->fetch_assoc()) { ?>
                         <tr>
-                            <td class="border border-gray-200 px-4 py-2"><?= $row['id'] ?></td>
-                            <td class="border border-gray-200 px-4 py-2"><?= $row['email'] ?></td>
-                            <td class="border border-gray-200 px-4 py-2"><?= $row['username'] ?></td>
-                            <td class="border border-gray-200 px-4 py-2"><?= $row['role'] ?></td>
-                            <td class="border border-gray-200 px-4 py-2">
+                            <td class="border border-neutral-950 px-4 py-2"><?= $row['id'] ?></td>
+                            <td class="border border-neutral-950 px-4 py-2"><?= $row['email'] ?></td>
+                            <td class="border border-neutral-950 px-4 py-2"><?= $row['username'] ?></td>
+                            <td class="border border-neutral-950 px-4 py-2"><?= $row['role'] ?></td>
+                            <td class="border border-neutral-950 px-4 py-2">
                                 <span class="px-2 py-1 rounded text-xs 
-                                <?= strtolower($row['status']) === 'active' ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' ?>">
+                                <?= strtolower($row['status']) === 'active' ? 'bg-green-600 text-green-100' : 'bg-red-700 text-red-100' ?>">
                                     <?= $row['status'] ?>
                                 </span>
                             </td>
-                            <td class="border border-gray-200 px-4 py-2"><?= $row['last_login'] ? $row['last_login'] : 'Never logged in' ?></td>
-                            <td class="border border-gray-200 px-4 py-2">
+                            <td class="border border-neutral-950 px-4 py-2"><?= $row['last_login'] ? $row['last_login'] : 'Never logged in' ?></td>
+                            <td class="border border-neutral-950 px-4 py-2">
                                 <a href="edit_user.php?id=<?= $row['id'] ?>" class="text-blue-500 hover:underline">Edit</a> |
                                 <a href="user_management.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')" class="text-red-500 hover:underline">Delete</a>
                             </td>
@@ -149,6 +150,7 @@ $result = $mysqli->query($query);
                         <?php } ?>
                     </tbody>
                 </table>
+                </div>
             </main>
         </div>
     </div>

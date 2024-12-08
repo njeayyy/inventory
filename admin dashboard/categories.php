@@ -124,17 +124,17 @@ $categories = $mysqli->query("SELECT * FROM categories");
                 <h2 class="text-2xl font-semibold mb-6">Principal</h2>
 
                 <!-- Add New Category -->
-                <div class="bg-gray-100 p-6 rounded shadow-md mb-6">
+                <div class="bg-emerald-100 p-6 rounded shadow-md mb-6">
                     <h3 class="text-lg font-semibold mb-4">Add New Principal</h3>
                     <form method="POST" action="" class="space-y-4">
                         <input type="text" name="category" placeholder="Principal Name" required
                             class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-                        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Principal</button>
+                        <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">Add Principal</button>
                     </form>
                 </div>
 
                 <!-- List All Categories -->
-                <div class="bg-gray-100 p-6 rounded shadow-md">
+                <div class="bg-emerald-100 p-6 rounded shadow-md">
                     <h3 class="text-lg font-semibold mb-4">All Principal</h3>
                     <table class="w-full border-collapse border border-gray-200 text-left">
                         <thead>

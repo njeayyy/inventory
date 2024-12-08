@@ -147,7 +147,7 @@ $query_recent_products = "
             </aside>
 
             <!-- Dashboard Content -->
-            <main class="flex-1 bg-emerald-200 p-6">
+            <main class="flex-1 bg-white p-6">
                 <!-- Overview Section -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
                     <div class="bg-emerald-600 text-white p-4 rounded shadow">
@@ -162,8 +162,10 @@ $query_recent_products = "
                         <h2 class="text-2xl font-bold"><?= $total_products ?></h2>
                         <p>Products</p>
                     </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
                     <div>
-                        <div class="max-w-sm w-full bg-white rounded-lg shadow dark:bg-emerald-950 p-4 md:p-6">
+                        <div class="w-full bg-white rounded-lg shadow dark:bg-emerald-950 p-4 md:p-5">
                             <div class="flex justify-between">
                                 <div>
                                     <h5 class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2">32.4k</h5>
@@ -195,25 +197,25 @@ $query_recent_products = "
                                         <div id="lastDaysdropdown" class="z-10 hidden bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700">
                                             <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="dropdownDefaultButton">
                                                 <li>
-                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Yesterday</a>
+                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-emerald-300">Yesterday</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Today</a>
+                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-emerald-300">Today</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 7 days</a>
+                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-emerald-300">Last 7 days</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 30 days</a>
+                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-emerald-300">Last 30 days</a>
                                                 </li>
                                                 <li>
-                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Last 90 days</a>
+                                                    <a href="#" class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-emerald-300">Last 90 days</a>
                                                 </li>
                                             </ul>
                                         </div>
                                         <a
                                         href="#"
-                                        class="uppercase text-sm font-semibold inline-flex items-center rounded-lg text-emerald-400 hover:text-blue-700 dark:hover:text-blue-500  hover:bg-gray-100 dark:hover:bg-gray-700 dark:focus:ring-gray-700 dark:border-gray-700 px-3 py-2">
+                                        class="uppercase text-sm font-semibold inline-flex items-center rounded-lg text-emerald-400 hover:text-blue-700 dark:hover:text-emerald-300  hover:bg-gray-100 dark:hover:bg-emerald-700 dark:focus:ring-gray-700 dark:border-gray-700 px-3 py-2">
                                         Users Report
                                             <svg class="w-2.5 h-2.5 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
@@ -223,7 +225,7 @@ $query_recent_products = "
                                 </div>
                             </div>
                         </div>
-                    <div>
+                    <div class="bg-emerald-900 text-white p-4 rounded shadow">
                         <!-- Low Stock Alerts -->
                         <h3 class="text-lg font-semibold mb-2">Low Stock Alerts</h3>
                         <div class="space-y-2">
@@ -237,13 +239,7 @@ $query_recent_products = "
                                 <p class="text-neutral-950">No products are currently low on stock.</p>
                             <?php } ?>
                        </div>
-                    </div>
-
-                    
-
-
-
-                    
+                    </div>  
                 </div>
 
                 
@@ -252,23 +248,23 @@ $query_recent_products = "
                     <!-- Highest Selling Items -->
                     <div>
                         <h3 class="text-lg font-semibold text-neutral-950 mb-2">Fast Moving Items</h3>
-                        <table class="table-auto w-full border-collapse border border-gray-200">
+                        <table class="table-auto w-full border-collapse border">
                             <thead>
                                 <tr>
-                                    <th class="border border-neutral-950 px-4 py-2">Product</th>
-                                    <th class="border border-neutral-950 px-4 py-2">Sold Quantity</th>
+                                    <th class="border border-emerald-400 px-4 py-2">Product</th>
+                                    <th class="border border-emerald-400 px-4 py-2">Sold Quantity</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if ($highest_selling_products && $highest_selling_products->num_rows > 0) { ?>
                                     <?php while ($row = $highest_selling_products->fetch_assoc()) { ?>
                                         <tr>
-                                            <td class="border border-neutral-950 px-4 py-2"><?= $row['product_name'] ?></td>
-                                            <td class="border border-neutral-950 px-4 py-2"><?= $row['total_quantity_sold'] ?></td>
+                                            <td class="border border-emerald-400 px-4 py-2"><?= $row['product_name'] ?></td>
+                                            <td class="border border-emerald-400 px-4 py-2"><?= $row['total_quantity_sold'] ?></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } else { ?>
-                                    <tr><td colspan="2" class="border border-neutral-950 px-4 py-2 text-center">No data available.</td></tr>
+                                    <tr><td colspan="2" class="border border-emerald-400 px-4 py-2 text-center">No data available.</td></tr>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -280,24 +276,24 @@ $query_recent_products = "
                         <table class="table-auto w-full border-collapse border border-gray-200">
                             <thead>
                                 <tr>
-                                    <th class="border border-neutral-950 px-4 py-2">Sale ID</th>
-                                    <th class="border border-neutral-950 px-4 py-2">Product</th>
-                                    <th class="border border-neutral-950 px-4 py-2">Amount</th>
-                                    <th class="border border-neutral-950 px-4 py-2">Date</th>
+                                    <th class="border border-emerald-400 px-4 py-2">Sale ID</th>
+                                    <th class="border border-emerald-400 px-4 py-2">Product</th>
+                                    <th class="border border-emerald-400 px-4 py-2">Amount</th>
+                                    <th class="border border-emerald-400 px-4 py-2">Date</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if ($latest_sales && $latest_sales->num_rows > 0) { ?>
                                     <?php while ($row = $latest_sales->fetch_assoc()) { ?>
                                         <tr>
-                                            <td class="border border-neutral-950 px-4 py-2">#<?= $row['sale_id'] ?></td>
-                                            <td class="border border-neutral-950 px-4 py-2"><?= $row['product_name'] ?></td>
-                                            <td class="border border-neutral-950 px-4 py-2">₱<?= number_format($row['total_amount'], 2) ?></td>
-                                            <td class="border border-neutral-950 px-4 py-2"><?= $row['sale_date'] ?></td>
+                                            <td class="border border-emerald-400 px-4 py-2">#<?= $row['sale_id'] ?></td>
+                                            <td class="border border-emerald-400 px-4 py-2"><?= $row['product_name'] ?></td>
+                                            <td class="border border-emerald-400 px-4 py-2">₱<?= number_format($row['total_amount'], 2) ?></td>
+                                            <td class="border border-emerald-400 px-4 py-2"><?= $row['sale_date'] ?></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } else { ?>
-                                    <tr><td colspan="4" class="border border-neutral-950 px-4 py-2 text-center">No sales data available.</td></tr>
+                                    <tr><td colspan="4" class="border border-emerald-400 px-4 py-2 text-center">No sales data available.</td></tr>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -309,15 +305,15 @@ $query_recent_products = "
                         <table class="table-auto w-full border-collapse border border-neutral-950">
                             <thead>
                                 <tr>
-                                    <th class="border border-neutral-950 px-4 py-2">Product</th>
-                                    <th class="border border-neutral-950 px-4 py-2">Price</th>
-                                    <th class="border border-neutral-950 px-4 py-2">Category</th>
+                                    <th class="border border-emerald-400 px-4 py-2">Product</th>
+                                    <th class="border border-emerald-400 px-4 py-2">Price</th>
+                                    <th class="border border-emerald-400 px-4 py-2">Category</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 
                                          
-                                    <tr><td colspan="3" class="border border-neutral-950 px-4 py-2 text-center">No recent products added.</td></tr>
+                                    <tr><td colspan="3" class="border border-emerald-400 px-4 py-2 text-center">No recent products added.</td></tr>
                             </tbody>
                         </table>
                     </div>
