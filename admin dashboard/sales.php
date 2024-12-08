@@ -141,7 +141,7 @@ $result = $conn->query($query);
             <!-- Content Section -->
             <main class="flex-1 p-6 bg-white">
                 <h2 class="text-2xl font-semibold mb-6">Outgoing Items</h2>
-
+            <div class="bg-gray-100 p-6 rounded shadow-md mb-6">
                 <!-- Add New Outgoing Items -->
                 <div class="flex justify-end mb-6">
                     <a href="add_sale.php" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Add Outgoing Items</a>
@@ -156,7 +156,9 @@ $result = $conn->query($query);
                         <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Search</button>
                     </div>
                 </form>
+            </div>
 
+            <div class="bg-gray-100 p-6 rounded shadow-md mb-6">
                 <!-- Sales Table -->
                 <div class="overflow-x-auto">
                     <table class="w-full border-collapse border border-gray-200 text-left">
@@ -196,6 +198,7 @@ $result = $conn->query($query);
                         </tbody>
                     </table>
                 </div>
+            </div>
             </main>
         </div>
     </div>
