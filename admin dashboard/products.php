@@ -138,7 +138,7 @@ if (isset($_GET['delete_id'])) {
 <body class="bg-gray-50 text-gray-800">
     <div class="flex flex-col min-h-screen">
         <!-- Header -->
-        <header class="bg-blue-600 text-white shadow-md">
+        <header class="bg-emerald-950 text-white shadow-md">
             <div class="container mx-auto flex items-center justify-between px-6 py-4">
                 <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
                 <div>

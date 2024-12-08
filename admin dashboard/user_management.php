@@ -58,6 +58,13 @@ $result = $mysqli->query($query);
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdn.jsdelivr.net/npm/remixicon@3.6.0/fonts/remixicon.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- flowbite -->
+    <link href="https://cdn.jsdelivr.net/npm/flowbite@2.5.2/dist/flowbite.min.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
     <script>
         function confirmLogout(event) {
             event.preventDefault();
@@ -76,7 +83,7 @@ $result = $mysqli->query($query);
 <body class="bg-gray-50 text-gray-800">
     <div class="flex flex-col min-h-screen">
         <!-- Header -->
-        <header class="bg-blue-600 text-white shadow-md">
+        <header class="bg-emerald-950 text-white shadow-md">
             <div class="container mx-auto flex items-center justify-between px-6 py-4">
                 <div class="flex items-center space-x-4">
                     <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
