@@ -39,6 +39,24 @@ if ($search) {
                 OR sales.id LIKE '%$search%'";
 }
 
+if (isset($_GET['delete_id'])) {
+    $delete_id = intval($_GET['delete_id']); // Sanitize the input
+
+    // Prepare the delete query
+    $delete_query = "DELETE FROM sales WHERE id = ?";
+    $stmt = $conn->prepare($delete_query);
+    $stmt->bind_param("i", $delete_id);
+
+    if ($stmt->execute()) {
+        // Redirect to avoid repeated deletion on refresh
+        header("Location: sales.php");
+        exit();
+    } else {
+        echo "<p style='color:red;'>Failed to delete the record. Please try again.</p>";
+    }
+}
+
+
 $result = $conn->query($query);
 ?>
 
