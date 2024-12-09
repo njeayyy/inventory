@@ -1,7 +1,98 @@
 <?php
 include 'db.php'; // Include your DB connection
+require '../vendor/autoload.php';
 
 session_start();
+
+if (isset($_GET['export'])) {
+    $exportFormat = $_GET['export'];
+    $tableData = [];
+
+    // Fetch the data for the table
+    $query = "SELECT products.*, categories.category FROM products LEFT JOIN categories ON products.category_id = categories.id";
+
+    $result = $conn->query($query);
+
+    while ($row = $result->fetch_assoc()) {
+        $tableData[] = [
+            'id' => $row['id'],
+            'product_name' => $row['product_name'],
+            'location' => $row['location'] ?: 'N/A',
+            'category' => $row['category'] ?: 'No Category',
+            'in_stock' => $row['in_stock'],
+            'price' => $row['price'],
+            'expiration_date' => $row['expiration_date'] ?: 'N/A',
+            'product_added' => $row['product_added']
+        ];
+    }
+
+    // Generate the report based on the selected format
+    if ($exportFormat === 'excel') {
+        generateExcelReport($tableData);
+    } elseif ($exportFormat === 'pdf') {
+        generatePDFReport($tableData);
+    }
+}
+
+function generateExcelReport($data) {
+    $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    
+    // Set table headers
+    $headers = ['#', 'Product Name', 'Location', 'Rack', 'Category', 'In Stock', 'Price', 'Expiration Date', 'Product Added'];
+    foreach ($headers as $colIndex => $header) {
+        $sheet->setCellValueByColumnAndRow($colIndex + 1, 1, $header);
+    }
+
+    // Populate the sheet with data
+    foreach ($data as $rowIndex => $row) {
+        foreach ($row as $colIndex => $value) {
+            $sheet->setCellValueByColumnAndRow($colIndex + 1, $rowIndex + 2, $value);
+        }
+    }
+
+    // Save as Excel file
+    header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+    header('Content-Disposition: attachment;filename="products_report.xlsx"');
+    header('Cache-Control: max-age=0');
+    $writer = PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
+    $writer->save('php://output');
+}
+
+function generatePDFReport($data) {
+    $pdf = new TCPDF();
+    $pdf->AddPage();
+    $pdf->SetFont('helvetica', '', 12);
+
+    // Set table header
+    $pdf->Cell(10, 10, '#', 1);
+    $pdf->Cell(40, 10, 'Product Name', 1);
+    $pdf->Cell(10, 10, 'Loc', 1);
+    $pdf->Cell(12, 10, 'Rack', 1);
+    $pdf->Cell(20, 10, 'Category', 1);
+    $pdf->Cell(10, 10, 'Qty', 1);
+    $pdf->Cell(20, 10, 'Price', 1);
+    $pdf->Cell(31, 10, 'Expiration Date', 1);
+    $pdf->Cell(42, 10, 'Product Added', 1);
+    $pdf->Ln();
+
+    // Populate the table with data
+    foreach ($data as $row) {
+        $pdf->Cell(10, 10, $row['id'], 1);
+        $pdf->Cell(40, 10, $row['product_name'], 1);
+        $pdf->Cell(10, 10, $row['location'], 1);
+        $pdf->Cell(12, 10, $row['rack'], 1);
+        $pdf->Cell(20, 10, $row['category'], 1);
+        $pdf->Cell(10, 10, $row['in_stock'], 1);
+        $pdf->Cell(20, 10, $row['price'], 1);
+        $pdf->Cell(31, 10, $row['expiration_date'], 1);
+        $pdf->Cell(42, 10, $row['product_added'], 1);
+        $pdf->Ln();
+    }
+
+    // Output the PDF
+    $pdf->Output('products_report.pdf', 'D');
+}
 
 if (!isset($_SESSION['user_id'])) {
     // Redirect to the login page if not logged in

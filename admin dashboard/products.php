@@ -67,28 +67,28 @@ function generatePDFReport($data) {
     $pdf->SetFont('helvetica', '', 12);
 
     // Set table header
-    $pdf->Cell(20, 10, '#', 1);
+    $pdf->Cell(10, 10, '#', 1);
     $pdf->Cell(40, 10, 'Product Name', 1);
-    $pdf->Cell(30, 10, 'Location', 1);
-    $pdf->Cell(30, 10, 'Rack', 1);
-    $pdf->Cell(30, 10, 'Category', 1);
-    $pdf->Cell(20, 10, 'In Stock', 1);
-    $pdf->Cell(30, 10, 'Price', 1);
-    $pdf->Cell(40, 10, 'Expiration Date', 1);
-    $pdf->Cell(30, 10, 'Product Added', 1);
+    $pdf->Cell(10, 10, 'Loc', 1);
+    $pdf->Cell(12, 10, 'Rack', 1);
+    $pdf->Cell(20, 10, 'Category', 1);
+    $pdf->Cell(10, 10, 'Qty', 1);
+    $pdf->Cell(20, 10, 'Price', 1);
+    $pdf->Cell(31, 10, 'Expiration Date', 1);
+    $pdf->Cell(42, 10, 'Product Added', 1);
     $pdf->Ln();
 
     // Populate the table with data
     foreach ($data as $row) {
-        $pdf->Cell(20, 10, $row['id'], 1);
+        $pdf->Cell(10, 10, $row['id'], 1);
         $pdf->Cell(40, 10, $row['product_name'], 1);
-        $pdf->Cell(30, 10, $row['location'], 1);
-        $pdf->Cell(30, 10, $row['rack'], 1);
-        $pdf->Cell(30, 10, $row['category'], 1);
-        $pdf->Cell(20, 10, $row['in_stock'], 1);
-        $pdf->Cell(30, 10, $row['price'], 1);
-        $pdf->Cell(40, 10, $row['expiration_date'], 1);
-        $pdf->Cell(30, 10, $row['product_added'], 1);
+        $pdf->Cell(10, 10, $row['location'], 1);
+        $pdf->Cell(12, 10, $row['rack'], 1);
+        $pdf->Cell(20, 10, $row['category'], 1);
+        $pdf->Cell(10, 10, $row['in_stock'], 1);
+        $pdf->Cell(20, 10, $row['price'], 1);
+        $pdf->Cell(31, 10, $row['expiration_date'], 1);
+        $pdf->Cell(42, 10, $row['product_added'], 1);
         $pdf->Ln();
     }
 
