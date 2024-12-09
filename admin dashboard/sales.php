@@ -35,25 +35,23 @@ function exportToExcel($conn) {
     $sheet = $spreadsheet->getActiveSheet();
     $sheet->setCellValue('A1', 'ID')
           ->setCellValue('B1', 'Product Name')
-          ->setCellValue('C1', 'Category')
-          ->setCellValue('D1', 'Location')
-          ->setCellValue('E1', 'Expiration Date')
-          ->setCellValue('F1', 'Quantity Sold')
-          ->setCellValue('G1', 'Sale Price')
-          ->setCellValue('H1', 'Total Amount')
-          ->setCellValue('I1', 'Sale Date');
+          ->setCellValue('C1', 'Brand')
+          ->setCellValue('D1', 'Expiration Date')
+          ->setCellValue('E1', 'Qty')
+          ->setCellValue('F1', 'Sale Price')
+          ->setCellValue('G1', 'Total Amount')
+          ->setCellValue('H1', 'Sale Date');
 
     $row = 2;
     while ($data = $result->fetch_assoc()) {
         $sheet->setCellValue('A' . $row, $data['id'])
               ->setCellValue('B' . $row, $data['product_name'])
               ->setCellValue('C' . $row, $data['category_name'])
-              ->setCellValue('D' . $row, $data['location'])
-              ->setCellValue('E' . $row, $data['expiration_date'])
-              ->setCellValue('F' . $row, $data['quantity'])
-              ->setCellValue('G' . $row, $data['sale_price'])
-              ->setCellValue('H' . $row, $data['total_amount'])
-              ->setCellValue('I' . $row, $data['sale_date']);
+              ->setCellValue('D' . $row, $data['expiration_date'])
+              ->setCellValue('E' . $row, $data['quantity'])
+              ->setCellValue('F' . $row, $data['sale_price'])
+              ->setCellValue('G' . $row, $data['total_amount'])
+              ->setCellValue('H' . $row, $data['sale_date']);
         $row++;
     }
 
@@ -92,18 +90,24 @@ function exportToPDF($conn) {
     $pdf->Ln(10);
     
     $pdf->SetFillColor(255, 255, 255);
-    $pdf->Cell(30, 10, 'ID', 1, 0, 'C', 1);
-    $pdf->Cell(50, 10, 'Product Name', 1, 0, 'C', 1);
-    $pdf->Cell(30, 10, 'Category', 1, 0, 'C', 1);
-    $pdf->Cell(30, 10, 'Location', 1, 0, 'C', 1);
-    $pdf->Cell(40, 10, 'Sale Date', 1, 1, 'C', 1);
+    $pdf->Cell(10, 10, 'ID', 1, 0, 'C', 1);
+    $pdf->Cell(32, 10, 'Product Name', 1, 0, 'C', 1);
+    $pdf->Cell(22, 10, 'Brand', 1, 0, 'C', 1);
+    $pdf->Cell(30, 10, 'Expiration Date', 1, 0, 'C', 1);
+    $pdf->Cell(11, 10, 'Qty', 1, 0, 'C', 1);
+    $pdf->Cell(23, 10, 'Sale Price', 1, 0, 'C', 1);
+    $pdf->Cell(28, 10, 'Total Amount', 1, 0, 'C', 1);
+    $pdf->Cell(41, 10, 'Sale Date', 1, 1, 'C', 1);
     
     while ($data = $result->fetch_assoc()) {
-        $pdf->Cell(30, 10, $data['id'], 1, 0, 'C');
-        $pdf->Cell(50, 10, $data['product_name'], 1, 0, 'C');
-        $pdf->Cell(30, 10, $data['category_name'], 1, 0, 'C');
-        $pdf->Cell(30, 10, $data['location'], 1, 0, 'C');
-        $pdf->Cell(40, 10, $data['sale_date'], 1, 1, 'C');
+        $pdf->Cell(10, 10, $data['id'], 1, 0, 'C');
+        $pdf->Cell(32, 10, $data['product_name'], 1, 0, 'C');
+        $pdf->Cell(22, 10, $data['category_name'], 1, 0, 'C');
+        $pdf->Cell(30, 10, $data['expiration_date'], 1, 0, 'C');
+        $pdf->Cell(11, 10, $data['quantity'], 1, 0, 'C');
+        $pdf->Cell(23, 10, $data['sale_price'], 1, 0, 'C');
+        $pdf->Cell(28, 10, $data['total_amount'], 1, 0, 'C');
+        $pdf->Cell(41, 10, $data['sale_date'], 1, 1, 'C');
     }
     
     $filename = "sales_report_" . date("Y-m-d") . ".pdf";
@@ -266,10 +270,18 @@ $result = $conn->query($query);
                     </div>
                 </form>
             </div>
-        <div class="bg-white-100 p-6 rounded shadow-md mb-6">
-            <a href="sales.php?export=excel" class="ml-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Export to Excel</a>
-            <a href="sales.php?export=pdf" class="ml-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Export to PDF</a>
-        </div>
+        <!-- Export Options -->
+        <form method="GET" action="sales.php" class="mb-6">
+                        <div class="flex items-center gap-4">
+                            <label for="export" class="text-gray-700 font-medium">Export Report as:</label>
+                            <select name="export" class="border rounded px-4 py-2">
+                                <option value="">Select Format</option>
+                                <option value="excel">Excel</option>
+                                <option value="pdf">PDF</option>
+                            </select>
+                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Generate Report</button>
+                        </div>
+                    </form>
             <div class="bg-gray-100 p-6 rounded shadow-md mb-6">
                 <!-- Sales Table -->
                 <div class="overflow-x-auto">
