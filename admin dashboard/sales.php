@@ -5,94 +5,112 @@ require '../vendor/autoload.php';
 session_start();
 
 if (isset($_GET['export'])) {
-    $exportFormat = $_GET['export'];
-    $tableData = [];
+    $exportType = $_GET['export'];
 
-    // Fetch the data for the table
-    $query = "SELECT products.*, categories.category FROM products LEFT JOIN categories ON products.category_id = categories.id";
-
-    $result = $conn->query($query);
-
-    while ($row = $result->fetch_assoc()) {
-        $tableData[] = [
-            'id' => $row['id'],
-            'product_name' => $row['product_name'],
-            'location' => $row['location'] ?: 'N/A',
-            'category' => $row['category'] ?: 'No Category',
-            'in_stock' => $row['in_stock'],
-            'price' => $row['price'],
-            'expiration_date' => $row['expiration_date'] ?: 'N/A',
-            'product_added' => $row['product_added']
-        ];
-    }
-
-    // Generate the report based on the selected format
-    if ($exportFormat === 'excel') {
-        generateExcelReport($tableData);
-    } elseif ($exportFormat === 'pdf') {
-        generatePDFReport($tableData);
+    if ($exportType === 'excel') {
+        exportToExcel($conn);
+    } elseif ($exportType === 'pdf') {
+        exportToPDF($conn);
     }
 }
 
-function generateExcelReport($data) {
-    $spreadsheet = new PhpOffice\PhpSpreadsheet\Spreadsheet();
-    $sheet = $spreadsheet->getActiveSheet();
+function exportToExcel($conn) {
+    $query = "SELECT 
+                sales.id, 
+                products.product_name, 
+                categories.category AS category_name, 
+                products.location, 
+                products.expiration_date, 
+                sales.quantity, 
+                sales.sale_price, 
+                sales.total_amount, 
+                sales.sale_date
+              FROM sales
+              JOIN products ON sales.product_id = products.id
+              JOIN categories ON products.category_id = categories.id";
     
-    // Set table headers
-    $headers = ['#', 'Product Name', 'Location', 'Rack', 'Category', 'In Stock', 'Price', 'Expiration Date', 'Product Added'];
-    foreach ($headers as $colIndex => $header) {
-        $sheet->setCellValueByColumnAndRow($colIndex + 1, 1, $header);
+    $result = $conn->query($query);
+    
+    $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
+    $sheet = $spreadsheet->getActiveSheet();
+    $sheet->setCellValue('A1', 'ID')
+          ->setCellValue('B1', 'Product Name')
+          ->setCellValue('C1', 'Category')
+          ->setCellValue('D1', 'Location')
+          ->setCellValue('E1', 'Expiration Date')
+          ->setCellValue('F1', 'Quantity Sold')
+          ->setCellValue('G1', 'Sale Price')
+          ->setCellValue('H1', 'Total Amount')
+          ->setCellValue('I1', 'Sale Date');
+
+    $row = 2;
+    while ($data = $result->fetch_assoc()) {
+        $sheet->setCellValue('A' . $row, $data['id'])
+              ->setCellValue('B' . $row, $data['product_name'])
+              ->setCellValue('C' . $row, $data['category_name'])
+              ->setCellValue('D' . $row, $data['location'])
+              ->setCellValue('E' . $row, $data['expiration_date'])
+              ->setCellValue('F' . $row, $data['quantity'])
+              ->setCellValue('G' . $row, $data['sale_price'])
+              ->setCellValue('H' . $row, $data['total_amount'])
+              ->setCellValue('I' . $row, $data['sale_date']);
+        $row++;
     }
 
-    // Populate the sheet with data
-    foreach ($data as $rowIndex => $row) {
-        foreach ($row as $colIndex => $value) {
-            $sheet->setCellValueByColumnAndRow($colIndex + 1, $rowIndex + 2, $value);
-        }
-    }
-
-    // Save as Excel file
+    $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
+    $filename = "sales_report_" . date("Y-m-d") . ".xlsx";
+    
+    // Save the file to the output buffer
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-    header('Content-Disposition: attachment;filename="products_report.xlsx"');
+    header('Content-Disposition: attachment;filename="' . $filename . '"');
     header('Cache-Control: max-age=0');
-    $writer = PhpOffice\PhpSpreadsheet\IOFactory::createWriter($spreadsheet, 'Xlsx');
     $writer->save('php://output');
+    exit();
 }
 
-function generatePDFReport($data) {
-    $pdf = new TCPDF();
+function exportToPDF($conn) {
+    $query = "SELECT 
+                sales.id, 
+                products.product_name, 
+                categories.category AS category_name, 
+                products.location, 
+                products.expiration_date, 
+                sales.quantity, 
+                sales.sale_price, 
+                sales.total_amount, 
+                sales.sale_date
+              FROM sales
+              JOIN products ON sales.product_id = products.id
+              JOIN categories ON products.category_id = categories.id";
+    
+    $result = $conn->query($query);
+    
+    $pdf = new \TCPDF();
     $pdf->AddPage();
     $pdf->SetFont('helvetica', '', 12);
-
-    // Set table header
-    $pdf->Cell(10, 10, '#', 1);
-    $pdf->Cell(40, 10, 'Product Name', 1);
-    $pdf->Cell(10, 10, 'Loc', 1);
-    $pdf->Cell(12, 10, 'Rack', 1);
-    $pdf->Cell(20, 10, 'Category', 1);
-    $pdf->Cell(10, 10, 'Qty', 1);
-    $pdf->Cell(20, 10, 'Price', 1);
-    $pdf->Cell(31, 10, 'Expiration Date', 1);
-    $pdf->Cell(42, 10, 'Product Added', 1);
-    $pdf->Ln();
-
-    // Populate the table with data
-    foreach ($data as $row) {
-        $pdf->Cell(10, 10, $row['id'], 1);
-        $pdf->Cell(40, 10, $row['product_name'], 1);
-        $pdf->Cell(10, 10, $row['location'], 1);
-        $pdf->Cell(12, 10, $row['rack'], 1);
-        $pdf->Cell(20, 10, $row['category'], 1);
-        $pdf->Cell(10, 10, $row['in_stock'], 1);
-        $pdf->Cell(20, 10, $row['price'], 1);
-        $pdf->Cell(31, 10, $row['expiration_date'], 1);
-        $pdf->Cell(42, 10, $row['product_added'], 1);
-        $pdf->Ln();
+    $pdf->Cell(0, 10, 'Sales Report', 0, 1, 'C');
+    $pdf->Ln(10);
+    
+    $pdf->SetFillColor(255, 255, 255);
+    $pdf->Cell(30, 10, 'ID', 1, 0, 'C', 1);
+    $pdf->Cell(50, 10, 'Product Name', 1, 0, 'C', 1);
+    $pdf->Cell(30, 10, 'Category', 1, 0, 'C', 1);
+    $pdf->Cell(30, 10, 'Location', 1, 0, 'C', 1);
+    $pdf->Cell(40, 10, 'Sale Date', 1, 1, 'C', 1);
+    
+    while ($data = $result->fetch_assoc()) {
+        $pdf->Cell(30, 10, $data['id'], 1, 0, 'C');
+        $pdf->Cell(50, 10, $data['product_name'], 1, 0, 'C');
+        $pdf->Cell(30, 10, $data['category_name'], 1, 0, 'C');
+        $pdf->Cell(30, 10, $data['location'], 1, 0, 'C');
+        $pdf->Cell(40, 10, $data['sale_date'], 1, 1, 'C');
     }
-
-    // Output the PDF
-    $pdf->Output('products_report.pdf', 'D');
+    
+    $filename = "sales_report_" . date("Y-m-d") . ".pdf";
+    $pdf->Output($filename, 'D');
+    exit();
 }
+
 
 if (!isset($_SESSION['user_id'])) {
     // Redirect to the login page if not logged in
@@ -248,7 +266,10 @@ $result = $conn->query($query);
                     </div>
                 </form>
             </div>
-
+        <div class="bg-white-100 p-6 rounded shadow-md mb-6">
+            <a href="sales.php?export=excel" class="ml-4 bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">Export to Excel</a>
+            <a href="sales.php?export=pdf" class="ml-4 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Export to PDF</a>
+        </div>
             <div class="bg-gray-100 p-6 rounded shadow-md mb-6">
                 <!-- Sales Table -->
                 <div class="overflow-x-auto">
@@ -282,7 +303,7 @@ $result = $conn->query($query);
                                 <td class="border border-gray-200 px-4 py-2">
                                     <a href="edit_sale.php?id=<?= $row['id'] ?>" class="text-blue-500 hover:underline">Edit</a> |
                                     <a href="sales.php?delete_id=<?= $row['id'] ?>" onclick="return confirm('Are you sure?')"
-                                        class="text-red-500 hover:underline">Delete</a>
+                                    class="text-red-500 hover:underline">Delete</a>
                                 </td>
                             </tr>
                             <?php endwhile; ?>
