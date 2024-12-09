@@ -124,9 +124,11 @@ $query_recent_products = "
                     <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
                 </div>
                 
-                <div class="text-sm">
+                <div>
+                    <p>
                     Welcome, <?php echo $_SESSION['username']; ?>! | 
                     <a href="#" onclick="confirmLogout(event)" class="text-white underline">Logout</a>
+                    </p>
                 </div>
             </div>
         </header>
@@ -251,20 +253,20 @@ $query_recent_products = "
                         <table class="table-auto w-full border-collapse border">
                             <thead>
                                 <tr>
-                                    <th class="border border-emerald-400 px-4 py-2">Product</th>
-                                    <th class="border border-emerald-400 px-4 py-2">Sold Quantity</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Product</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Sold Quantity</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if ($highest_selling_products && $highest_selling_products->num_rows > 0) { ?>
                                     <?php while ($row = $highest_selling_products->fetch_assoc()) { ?>
                                         <tr>
-                                            <td class="border border-emerald-400 px-4 py-2"><?= $row['product_name'] ?></td>
-                                            <td class="border border-emerald-400 px-4 py-2"><?= $row['total_quantity_sold'] ?></td>
+                                            <td class="border border-emerald-600 hover:bg-emerald-100 px-4 py-2"><?= $row['product_name'] ?></td>
+                                            <td class="border border-emerald-600 hover:bg-emerald-100 px-4 py-2"><?= $row['total_quantity_sold'] ?></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } else { ?>
-                                    <tr><td colspan="2" class="border border-emerald-400 px-4 py-2 text-center">No data available.</td></tr>
+                                    <tr><td colspan="2" class="border border-emerald-600 px-4 py-2 text-center">No data available.</td></tr>
                                 <?php } ?>
                             </tbody>
                         </table>
@@ -276,20 +278,20 @@ $query_recent_products = "
                         <table class="table-auto w-full border-collapse border border-gray-200">
                             <thead>
                                 <tr>
-                                    <th class="border border-emerald-400 px-4 py-2">Sale ID</th>
-                                    <th class="border border-emerald-400 px-4 py-2">Product</th>
-                                    <th class="border border-emerald-400 px-4 py-2">Amount</th>
-                                    <th class="border border-emerald-400 px-4 py-2">Date</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Sale ID</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Product</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Amount</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Date</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php if ($latest_sales && $latest_sales->num_rows > 0) { ?>
                                     <?php while ($row = $latest_sales->fetch_assoc()) { ?>
                                         <tr>
-                                            <td class="border border-emerald-400 px-4 py-2">#<?= $row['sale_id'] ?></td>
-                                            <td class="border border-emerald-400 px-4 py-2"><?= $row['product_name'] ?></td>
-                                            <td class="border border-emerald-400 px-4 py-2">₱<?= number_format($row['total_amount'], 2) ?></td>
-                                            <td class="border border-emerald-400 px-4 py-2"><?= $row['sale_date'] ?></td>
+                                            <td class="border border-emerald-600 hover:bg-emerald-100 px-4 py-2">#<?= $row['sale_id'] ?></td>
+                                            <td class="border border-emerald-600 hover:bg-emerald-100 px-4 py-2"><?= $row['product_name'] ?></td>
+                                            <td class="border border-emerald-600 hover:bg-emerald-100 px-4 py-2">₱<?= number_format($row['total_amount'], 2) ?></td>
+                                            <td class="border border-emerald-600 hover:bg-emerald-100 px-4 py-2"><?= $row['sale_date'] ?></td>
                                         </tr>
                                     <?php } ?>
                                 <?php } else { ?>
@@ -313,7 +315,7 @@ $query_recent_products = "
                             <tbody>
                                 
                                          
-                                    <tr><td colspan="3" class="border border-emerald-400 px-4 py-2 text-center">No recent products added.</td></tr>
+                                    <tr><td colspan="3" class="border border-emerald-400 hover:bg-emerald-100 px-4 py-2 text-center">No recent products added.</td></tr>
                             </tbody>
                         </table>
                     </div>

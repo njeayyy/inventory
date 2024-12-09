@@ -278,13 +278,13 @@ if (isset($_GET['delete_id'])) {
             <main class="flex-1 p-6 bg-white">
                 <h2 class="text-2xl font-semibold mb-6">Products</h2>
 
-                <div class="bg-gray-100 p-6 rounded shadow-md mb-6">
+                <div class="bg-emerald-100 p-6 rounded shadow-md mb-6">
                     <!-- Add New Product Button -->
                     <div class="mb-6">
                         
 
 <!-- Add New Product Button -->
-<button onclick="openAddProductForm()" class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Add New Product</button>
+<button onclick="openAddProductForm()" class="text-white bg-emerald-600 hover:bg-emerald-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Add New Product</button>
 
 <!-- Modal for Add Product -->
 <div id="add-product-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
@@ -403,12 +403,12 @@ if (isset($_GET['delete_id'])) {
                             <input type="text" name="search" required placeholder="Search products..."
                                 value="<?= htmlspecialchars($search) ?>" 
                                 class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Search</button>
+                            <button type="submit" class=" text-white px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-700">Search</button>
                         </div>
                     </form>
                 </div>  
                 
-                <div class="bg-gray-100 p-6 rounded shadow-md mb-6">
+                
                     <!-- Export Options -->
                     <form method="GET" action="products.php" class="mb-6">
                         <div class="flex items-center gap-4">
@@ -418,56 +418,65 @@ if (isset($_GET['delete_id'])) {
                                 <option value="excel">Excel</option>
                                 <option value="pdf">PDF</option>
                             </select>
-                            <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">Generate Report</button>
+                            <button type="submit" class=" text-white px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-700">Generate Report</button>
                         </div>
                     </form>
+                    
+                    
+                    <!-- Sorting Options -->
+<form method="GET" action="products.php" class="mb-6">
+    <div class="flex items-center gap-4">
+        <label for="sort_by" class="text-gray-700 font-medium">Sort by:</label>
+        <select name="sort_by" class="border rounded px-4 py-2">
+            <option value="id" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'id' ? 'selected' : '' ?>>ID</option>
+            <option value="product_name" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'product_name' ? 'selected' : '' ?>>Name</option>
+            <option value="location" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'location' ? 'selected' : '' ?>>Location</option>
+            <option value="category" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'category' ? 'selected' : '' ?>>Brand</option>
+            <option value="in_stock" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'in_stock' ? 'selected' : '' ?>>Stock</option>
+            <option value="price" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'price' ? 'selected' : '' ?>>Price</option>
+        </select>
+        
+        <select name="order" class="border rounded px-4 py-2">
+            <option value="asc" <?= isset($_GET['order']) && $_GET['order'] == 'asc' ? 'selected' : '' ?>>Ascending</option>
+            <option value="desc" <?= isset($_GET['order']) && $_GET['order'] == 'desc' ? 'selected' : '' ?>>Descending</option>
+        </select>
 
-                    <!-- Sort Options -->
-                    <div class="flex gap-4 mb-4">
-                        <a href="products.php?sort_by=id&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>"
-                            class="text-blue-600 hover:underline">Sort by ID</a>
-                        <a href="products.php?sort_by=product_name&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>"
-                            class="text-blue-600 hover:underline">Sort by Name</a>
-                        <a href="products.php?sort_by=location&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>"
-                            class="text-blue-600 hover:underline">Sort by Location </a>
-                        <a href="products.php?sort_by=category&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>"
-                            class="text-blue-600 hover:underline">Sort by Brand </a>
-                        <a href="products.php?sort_by=in_stock&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>"
-                            class="text-blue-600 hover:underline">Sort by Stock</a>
-                        <a href="products.php?sort_by=price&order=<?= $order == 'asc' ? 'desc' : 'asc' ?>"
-                            class="text-blue-600 hover:underline">Sort by Price</a>
-                    </div>
+        <button type="submit" class="text-white px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-700">Sort</button>
+    </div>
+</form>
 
+
+                    <div class="bg-emerald-100 p-6 rounded shadow-md">
                     <!-- Products Table -->
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse border border-gray-200 text-left">
                             <thead>
                                 <tr>
-                                    <th class="border border-gray-200 px-4 py-2">#</th>
-                                    <th class="border border-gray-200 px-4 py-2">Product Name</th>
-                                    <th class="border border-gray-200 px-4 py-2">Location</th>
-                                    <th class="border border-gray-200 px-4 py-2">Rack</th>
-                                    <th class="border border-gray-200 px-4 py-2">Brand</th>
-                                    <th class="border border-gray-200 px-4 py-2">In Stock</th>
-                                    <th class="border border-gray-200 px-4 py-2">Price</th>
-                                    <th class="border border-gray-200 px-4 py-2">Expiration Date</th>
-                                    <th class="border border-gray-200 px-4 py-2">Product Added</th>
-                                    <th class="border border-gray-200 px-4 py-2">Actions</th>
+                                    <th class="border border-emerald-600 px-4 py-2">#</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Product Name</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Location</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Rack</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Brand</th>
+                                    <th class="border border-emerald-600 px-4 py-2">In Stock</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Price</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Expiration Date</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Product Added</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 <?php while ($row = $result->fetch_assoc()): ?>
                                 <tr>
-                                    <td class="border border-gray-200 px-4 py-2"><?= $row['id'] ?></td>
-                                    <td class="border border-gray-200 px-4 py-2"><?= $row['product_name'] ?></td>
-                                    <td class="border border-gray-200 px-4 py-2"><?= $row['location'] ?: 'N/A' ?></td>
-                                    <td class="border border-gray-200 px-4 py-2"><?= $row['rack'] ?: 'N/A' ?></td>
-                                    <td class="border border-gray-200 px-4 py-2"><?= $row['category'] ?: 'No Category' ?></td>
-                                    <td class="border border-gray-200 px-4 py-2"><?= $row['in_stock'] ?></td>
-                                    <td class="border border-gray-200 px-4 py-2"><?= $row['price'] ?></td>
-                                    <td class="border border-gray-200 px-4 py-2"><?= $row['expiration_date'] ?: 'N/A' ?></td>
-                                    <td class="border border-gray-200 px-4 py-2"><?= $row['product_added'] ?></td>
-                                    <td class="border border-gray-200 px-4 py-2">
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['id'] ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['product_name'] ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['location'] ?: 'N/A' ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['rack'] ?: 'N/A' ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['category'] ?: 'No Category' ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['in_stock'] ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['price'] ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['expiration_date'] ?: 'N/A' ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['product_added'] ?></td>
+                                    <td class="border border-emerald-600 px-4 py-2">
 
                                     
                                         <a href="edit_product.php?id=<?= $row['id'] ?>" class="text-blue-500 hover:underline">Edit</a> |

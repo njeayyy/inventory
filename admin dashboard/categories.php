@@ -126,7 +126,7 @@ $categories = $mysqli->query("SELECT * FROM categories");
                 <!-- Add New Category -->
                 <div class="bg-emerald-100 p-6 rounded shadow-md mb-6">
                     <h3 class="text-lg font-semibold mb-4">Add New Principal</h3>
-                    <form method="POST" action="" class="space-y-4">
+                    <form method="POST" action="" class="space-y-4 ">
                         <input type="text" name="category" placeholder="Principal Name" required
                             class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
                         <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">Add Principal</button>
@@ -139,18 +139,18 @@ $categories = $mysqli->query("SELECT * FROM categories");
                     <table class="w-full border-collapse border border-gray-200 text-left">
                         <thead>
                             <tr>
-                                <th class="border border-gray-200 px-4 py-2">#</th>
-                                <th class="border border-gray-200 px-4 py-2">Principal</th>
-                                <th class="border border-gray-200 px-4 py-2">Actions</th>
+                                <th class="border border-emerald-600 px-4 py-2">#</th>
+                                <th class="border border-emerald-600 px-4 py-2">Principal</th>
+                                <th class="border border-emerald-600 px-4 py-2">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php if ($categories->num_rows > 0): ?>
                             <?php while ($row = $categories->fetch_assoc()): ?>
                             <tr>
-                                <td class="border border-gray-200 px-4 py-2"><?= $row['id'] ?></td>
-                                <td class="border border-gray-200 px-4 py-2"><?= $row['category'] ?></td>
-                                <td class="border border-gray-200 px-4 py-2">
+                                <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['id'] ?></td>
+                                <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['category'] ?></td>
+                                <td class="border border-emerald-600 px-4 py-2">
                                     <a href="edit_category.php?edit_id=<?= $row['id'] ?>" class="text-blue-500 hover:underline">Edit</a> |
                                     <a href="#" onclick="confirmDelete(event, <?= $row['id'] ?>)" class="text-red-500 hover:underline">Delete</a>
                                 </td>
