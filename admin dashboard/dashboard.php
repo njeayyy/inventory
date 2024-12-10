@@ -215,11 +215,11 @@ $query_recent_products = "
                         <div class="w-full bg-white rounded-lg shadow dark:bg-emerald-950 p-4 md:p-5">
                             <div class="flex justify-between">
                                 <div>
-                                    <h5 class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2">32.4k</h5>
-                                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Users this week</p>
+                                    <h5 class="leading-none text-3xl font-bold text-gray-900 dark:text-white pb-2"><!--32.4k--></h5>
+                                    <p class="text-base font-normal text-gray-500 dark:text-gray-400">Sales this week</p>
                                 </div>
                                 <div class="flex items-center px-2.5 py-0.5 text-base font-semibold text-emerald-600 dark:text-emerald-400 text-center">
-                                    12%
+                                    <!--12%-->
                                     <svg class="w-3 h-3 ms-1" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 14">
                                         <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13V1m0 0L1 5m4-4 4 4"/>
                                     </svg>
@@ -263,7 +263,7 @@ $query_recent_products = "
                                         <a
                                         href="#"
                                         class="uppercase text-sm font-semibold inline-flex items-center rounded-lg text-emerald-400 hover:text-blue-700 dark:hover:text-emerald-300  hover:bg-gray-100 dark:hover:bg-emerald-700 dark:focus:ring-gray-700 dark:border-gray-700 px-3 py-2">
-                                        Users Report
+                                        Sales Report
                                             <svg class="w-2.5 h-2.5 ms-1.5 rtl:rotate-180" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 6 10">
                                                 <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 9 4-4-4-4"/>
                                             </svg>
