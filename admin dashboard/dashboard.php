@@ -278,15 +278,21 @@ $query_recent_products = "
                         <h3 class="text-lg font-semibold mb-2">Low Stock Alerts</h3>
                         <div class="space-y-2">
                             <?php if ($low_stock_products->num_rows > 0) { ?>
-                            <?php while ($row = $low_stock_products->fetch_assoc()) { ?>
-                                 <div class="bg-emerald-100 border-l-4 border-emerald-500 text-neutral-950 p-4">
-                                    Low Stock: <?= $row['product_name'] ?> - Only <?= $row['in_stock'] ?> left!
-                                </div>
-                            <?php } ?>
+                                <?php while ($row = $low_stock_products->fetch_assoc()) { ?>
+                                    <?php if ($row['in_stock'] == 0) { ?>
+                                        <div class="bg-red-100 border-l-4 border-red-500 text-neutral-950 p-4">
+                                            No Stock: <?= $row['product_name'] ?> is out of stock!
+                                        </div>
+                                    <?php } else { ?>
+                                        <div class="bg-emerald-100 border-l-4 border-emerald-500 text-neutral-950 p-4">
+                                            Low Stock: <?= $row['product_name'] ?> - Only <?= $row['in_stock'] ?> left!
+                                        </div>
+                                    <?php } ?>
+                                <?php } ?>
                             <?php } else { ?>
                                 <p class="text-neutral-950">No products are currently low on stock.</p>
                             <?php } ?>
-                       </div>
+                        </div>
                     </div>  
                 </div>
 
