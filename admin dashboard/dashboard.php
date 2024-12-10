@@ -9,6 +9,51 @@ if (!isset($_SESSION['user_id'])) {
     exit();
 }
 
+// Database connection
+$conn = new mysqli("localhost", "root", "", "inventory_db");
+
+// Check connection
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+// Query to get the total profits grouped by day of the week
+$query = "SELECT DAYOFWEEK(sale_date) AS weekday, SUM(total_amount) AS total_sales
+          FROM sales
+          GROUP BY DAYOFWEEK(sale_date)";
+
+$result = $conn->query($query);
+
+// Initialize an array with all days of the week (Sunday to Saturday)
+$days_of_week = [
+    1 => "Sunday",
+    2 => "Monday",
+    3 => "Tuesday",
+    4 => "Wednesday",
+    5 => "Thursday",
+    6 => "Friday",
+    7 => "Saturday",
+];
+
+// Initialize an array to store profits, defaulting to 0 for all days
+$profits_by_day = array_fill_keys(array_keys($days_of_week), 0);
+
+// Populate the profits array with data from the database
+while ($row = $result->fetch_assoc()) {
+    $profits_by_day[$row['weekday']] = (float)$row['total_sales'];
+}
+
+// Prepare the data for JavaScript
+$profits_data = [
+    'categories' => array_values($days_of_week), // Sunday to Saturday
+    'profits' => array_values($profits_by_day), // Corresponding profits
+];
+
+// Encode the data as JSON
+$profits_data_json = json_encode($profits_data);
+
+// Close the connection
+$conn->close();
 
 // 1. Establish the database connection
 $mysqli = new mysqli("localhost", "root", "", "inventory_db");
@@ -326,77 +371,100 @@ $query_recent_products = "
 
     
 <script>
-    
-const options = {
-  chart: {
-    height: "100%",
-    maxWidth: "100%",
-    type: "area",
-    fontFamily: "Inter, sans-serif",
-    dropShadow: {
-      enabled: false,
-    },
-    toolbar: {
-      show: false,
-    },
-  },
-  tooltip: {
-    enabled: true,
-    x: {
-      show: false,
-    },
-  },
-  fill: {
-    type: "gradient",
-    gradient: {
-      opacityFrom: 0.55,
-      opacityTo: 0,
-      shade: "#1cf2ab",
-      gradientToColors: ["#1cf2ab"],
-    },
-  },
-  dataLabels: {
-    enabled: false,
-  },
-  stroke: {
-    width: 6,
-  },
-  grid: {
-    show: false,
-    strokeDashArray: 4,
-    padding: {
-      left: 2,
-      right: 2,
-      top: 0
-    },
-  },
-  series: [
-    {
-      name: "New users",
-      data: [6500, 6418, 6456, 6526, 6356, 6456],
-      color: "#1cf2ab",
-    },
-  ],
-  xaxis: {
-    categories: ['01 February', '02 February', '03 February', '04 February', '05 February', '06 February', '07 February'],
-    labels: {
-      show: false,
-    },
-    axisBorder: {
-      show: false,
-    },
-    axisTicks: {
-      show: false,
-    },
-  },
-  yaxis: {
-    show: false,
-  },
-}
+// Parse the PHP JSON-encoded data
+const profitsData = <?= $profits_data_json ?>;
 
+// Extract categories (days) and profits
+const categories = profitsData.categories; // Days of the week
+const seriesData = profitsData.profits;    // Profits for each day
+
+// Define the chart options
+const options = {
+    chart: {
+        height: "100%",
+        maxWidth: "100%",
+        type: "area",
+        fontFamily: "Inter, sans-serif",
+        dropShadow: {
+            enabled: false,
+        },
+        toolbar: {
+            show: false,
+        },
+    },
+    tooltip: {
+        enabled: true,
+        x: {
+            show: true,
+        },
+    },
+    fill: {
+        type: "gradient",
+        gradient: {
+            opacityFrom: 0.55,
+            opacityTo: 0,
+            shade: "#1cf2ab",
+            gradientToColors: ["#1cf2ab"],
+        },
+    },
+    dataLabels: {
+        enabled: false,
+    },
+    stroke: {
+        width: 6,
+    },
+    grid: {
+        show: false,
+        strokeDashArray: 4,
+        padding: {
+            left: 2,
+            right: 2,
+            top: 0,
+        },
+    },
+    series: [
+        {
+            name: "Total Sales",
+            data: seriesData, // Profits for Sunday to Saturday
+            color: "#1cf2ab",
+        },
+    ],
+    xaxis: {
+        categories: categories, // Days of the week
+        labels: {
+            show: true,
+            style: {
+                colors: "#059669", // Set the text color for the weeks
+                fontSize: "12px",  // Adjust the font size
+                fontWeight: "500", // Make the text slightly bold
+            },
+        },
+        axisBorder: {
+            show: false,
+        },
+        axisTicks: {
+            show: false,
+        },
+    },
+    yaxis: {
+        show: true,
+        labels: {
+            formatter: function (value) {
+                return value.toFixed(2); // Format to two decimal places
+            },
+            style: {
+                colors: "#d1fae5", // Set the text color for the y-axis values
+                fontSize: "12px",  // Adjust the font size
+                fontWeight: "500", // Make the text slightly bold
+            },
+        },
+    },
+};
+
+// Render the chart
 if (document.getElementById("area-chart") && typeof ApexCharts !== 'undefined') {
-  const chart = new ApexCharts(document.getElementById("area-chart"), options);
-  chart.render();
+    const chart = new ApexCharts(document.getElementById("area-chart"), options);
+    chart.render();
 }
 
 </script>
