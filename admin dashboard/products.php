@@ -268,8 +268,9 @@ if (isset($_GET['delete_id'])) {
                 <ul class="space-y-2 p-4">
                     <li><a href="dashboard.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Dashboard</a></li>
                     <li><a href="user_management.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Principal</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Supplier</a></li>
                     <li><a href="products.php" class="block px-4 py-2 bg-emerald-700 text-white rounded">Products</a></li>
+                    <li><a href="order_management.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Order Management</a></li>
                     <li><a href="sales.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
@@ -348,7 +349,7 @@ if (isset($_GET['delete_id'])) {
             <!-- Category, Quantity, Price -->
             <div class="grid grid-cols-3 gap-8">
                 <div>
-                    <label class="block font-medium mb-2">Brand</label>
+                    <label class="block font-medium mb-2">Supplier Name</label>
                     <select name="category" required
                         class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
                         <option value="" disabled selected>-- Select Brand --</option>
@@ -456,7 +457,7 @@ if (isset($_GET['delete_id'])) {
                                     <th class="border border-emerald-600 px-4 py-2">Product Name</th>
                                     <th class="border border-emerald-600 px-4 py-2">Location</th>
                                     <th class="border border-emerald-600 px-4 py-2">Rack</th>
-                                    <th class="border border-emerald-600 px-4 py-2">Brand</th>
+                                    <th class="border border-emerald-600 px-4 py-2">Supplier</th>
                                     <th class="border border-emerald-600 px-4 py-2">In Stock</th>
                                     <th class="border border-emerald-600 px-4 py-2">Price</th>
                                     <th class="border border-emerald-600 px-4 py-2">Expiration Date</th>

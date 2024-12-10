@@ -86,8 +86,9 @@ if (isset($_GET['id'])) {
                 <ul class="space-y-2">
                     <li><a href="dashboard.php" class="block px-4 py-2 rounded hover:bg-gray-200">Dashboard</a></li>
                     <li><a href="user_management.php" class="block px-4 py-2 hover:bg-gray-200">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-gray-200">Principal</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Supplier</a></li>
                     <li><a href="products.php" class="block px-4 py-2 bg-blue-600 text-white rounded">Products</a></li>
+                    <li><a href="order_management.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Order Management</a></li>
                     <li><a href="sales.php" class="block px-4 py-2 hover:bg-gray-200">Outgoing Items</a></li>
                 </ul>
             </aside>

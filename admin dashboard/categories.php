@@ -3,15 +3,12 @@
 session_start();
 
 if (!isset($_SESSION['user_id'])) {
-    // Redirect to the login page if not logged in
     header("Location: login.php");
     exit();
 }
 
-// Database connection
 $mysqli = new mysqli("localhost", "root", "", "inventory_db");
 
-// Check for connection errors
 if ($mysqli->connect_error) {
     die("Connection failed: " . $mysqli->connect_error);
 }
@@ -19,16 +16,10 @@ if ($mysqli->connect_error) {
 // Handle category deletion
 if (isset($_GET['id'])) {
     $category_id = intval($_GET['id']);
-
-    // Check if the category exists
     $checkCategory = $mysqli->query("SELECT * FROM categories WHERE id = $category_id");
     if ($checkCategory->num_rows > 0) {
-        // Reassign products with the deleted category to "No Category"
         $mysqli->query("UPDATE products SET category_id = NULL WHERE category_id = $category_id");
-
-        // Delete the category
         $mysqli->query("DELETE FROM categories WHERE id = $category_id");
-
         header("Location: categories.php");
         exit();
     } else {
@@ -36,24 +27,27 @@ if (isset($_GET['id'])) {
     }
 }
 
-// Handle adding a new category
-if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['category'])) {
-    $category = $mysqli->real_escape_string($_POST['category']);
-    
-    // Insert new category into the database
-    $result = $mysqli->query("INSERT INTO categories (category) VALUES ('$category')");
+// Handle adding or editing a category (supplier)
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['category'], $_POST['address'], $_POST['contact'])) {
+        $category = $mysqli->real_escape_string($_POST['category']);
+        $address = $mysqli->real_escape_string($_POST['address']);
+        $contact = $mysqli->real_escape_string($_POST['contact']);
 
-    // Check if insertion was successful
-    if ($result) {
-        header("Location: categories.php"); // Refresh the page to display the new category
+        // Check if we're updating or adding
+        if (isset($_POST['id'])) { // Editing existing supplier
+            $id = intval($_POST['id']);
+            $mysqli->query("UPDATE categories SET category = '$category', address = '$address', contact = '$contact' WHERE id = $id");
+        } else { // Adding new supplier
+            $mysqli->query("INSERT INTO categories (category, address, contact) VALUES ('$category', '$address', '$contact')");
+        }
+
+        header("Location: categories.php");
         exit();
-    } else {
-        // Display the error message if the query fails
-        echo "Error: " . $mysqli->error;
     }
 }
 
-// Fetch all categories
+// Fetch categories
 $categories = $mysqli->query("SELECT * FROM categories");
 ?>
 
@@ -81,6 +75,18 @@ $categories = $mysqli->query("SELECT * FROM categories");
                 window.location.href = `categories.php?id=${id}`;
             }
         }
+
+        function openEditModal(id, category, address, contact) {
+            document.getElementById("editModal").classList.remove("hidden");
+            document.getElementById("editCategory").value = category;
+            document.getElementById("editAddress").value = address;
+            document.getElementById("editContact").value = contact;
+            document.getElementById("editId").value = id;
+        }
+
+        function closeEditModal() {
+            document.getElementById("editModal").classList.add("hidden");
+        }
     </script>
     <style>
         body {
@@ -94,9 +100,7 @@ $categories = $mysqli->query("SELECT * FROM categories");
         <!-- Header -->
         <header class="bg-emerald-950 text-white shadow-md">
             <div class="container mx-auto flex items-center justify-between px-6 py-4">
-                <div class="flex items-center space-x-4">
-                    <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
-                </div>
+                <h1 class="text-xl font-semibold uppercase">Inventory Management System</h1>
                 <div>
                     <p>
                         Welcome, <?php echo $_SESSION['username']; ?>! |
@@ -106,59 +110,112 @@ $categories = $mysqli->query("SELECT * FROM categories");
             </div>
         </header>
 
-        <!-- Main Content -->
         <div class="flex flex-1">
             <!-- Sidebar -->
             <aside class="w-1/4 bg-emerald-100 shadow-md">
                 <ul class="space-y-2 p-4">
                     <li><a href="dashboard.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Dashboard</a></li>
                     <li><a href="user_management.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">User Management</a></li>
-                    <li><a href="categories.php" class="block px-4 py-2 bg-emerald-700 text-white rounded">Principal</a></li>
+                    <li><a href="categories.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Supplier</a></li>
                     <li><a href="products.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Products</a></li>
+                    <li><a href="order_management.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Order Management</a></li>
                     <li><a href="sales.php" class="block px-4 py-2 hover:bg-emerald-200 rounded">Outgoing Items</a></li>
                 </ul>
             </aside>
 
             <!-- Content Section -->
             <main class="flex-1 p-6 bg-white">
-                <h2 class="text-2xl font-semibold mb-6">Principal</h2>
+                <h2 class="text-2xl font-semibold mb-6">Supplier</h2>
 
-                <!-- Add New Category -->
-                <div class="bg-emerald-100 p-6 rounded shadow-md mb-6">
-                    <h3 class="text-lg font-semibold mb-4">Add New Principal</h3>
-                    <form method="POST" action="" class="space-y-4 ">
-                        <input type="text" name="category" placeholder="Principal Name" required
-                            class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
-                        <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">Add Principal</button>
-                    </form>
+                <!-- Add New Supplier Button -->
+                <div class="flex justify-end mb-4">
+                    <button onclick="toggleModal()" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">
+                        Add New Supplier
+                    </button>
                 </div>
+
+                <!-- Supplier Modal (Add New Supplier) -->
+                <div id="supplierModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white p-6 rounded shadow-lg w-3/4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold">Add New Supplier</h3>
+                            <button onclick="toggleModal()" class="text-red-500 font-bold text-lg">&times;</button>
+                        </div>
+
+                        <form method="POST" action="categories.php" class="space-y-4">
+                            <input type="text" name="category" placeholder="Supplier Name" required
+                                class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="text" name="address" placeholder="Address" required
+                                class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="text" name="contact" placeholder="Contact Number" required
+                                class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+
+                            <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">Add Supplier</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- Edit Supplier Modal -->
+                <div id="editModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+                    <div class="bg-white p-6 rounded shadow-lg w-3/4">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="text-xl font-semibold">Edit Supplier</h3>
+                            <button onclick="closeEditModal()" class="text-red-500 font-bold text-lg">&times;</button>
+                        </div>
+
+                        <form method="POST" action="categories.php" class="space-y-4">
+                            <input type="hidden" id="editId" name="id">
+                            <input type="text" id="editCategory" name="category" placeholder="Supplier Name" required
+                                class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="text" id="editAddress" name="address" placeholder="Address" required
+                                class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+                            <input type="text" id="editContact" name="contact" placeholder="Contact Number" required
+                                class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500 outline-none">
+
+                            <button type="submit" class="bg-emerald-600 text-white px-4 py-2 rounded hover:bg-emerald-700">Update Supplier</button>
+                        </form>
+                    </div>
+                </div>
+
+                <script>
+                    function toggleModal() {
+                        const modal = document.getElementById('supplierModal');
+                        modal.classList.toggle('hidden');
+                    }
+                </script>
 
                 <!-- List All Categories -->
                 <div class="bg-emerald-100 p-6 rounded shadow-md">
-                    <h3 class="text-lg font-semibold mb-4">All Principal</h3>
+                    <h3 class="text-lg font-semibold mb-4">All Suppliers</h3>
                     <table class="w-full border-collapse border border-gray-200 text-left">
                         <thead>
                             <tr>
                                 <th class="border border-emerald-600 px-4 py-2">#</th>
-                                <th class="border border-emerald-600 px-4 py-2">Principal</th>
+                                <th class="border border-emerald-600 px-4 py-2">Supplier Name</th>
+                                <th class="border border-emerald-600 px-4 py-2">Address</th>
+                                <th class="border border-emerald-600 px-4 py-2">Contact</th>
                                 <th class="border border-emerald-600 px-4 py-2">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <?php if ($categories->num_rows > 0): ?>
-                            <?php while ($row = $categories->fetch_assoc()): ?>
-                            <tr>
-                                <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['id'] ?></td>
-                                <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['category'] ?></td>
-                                <td class="border border-emerald-600 px-4 py-2">
-                                    <a href="edit_category.php?edit_id=<?= $row['id'] ?>" class="text-blue-500 hover:underline">Edit</a> |
-                                    <a href="#" onclick="confirmDelete(event, <?= $row['id'] ?>)" class="text-red-500 hover:underline">Delete</a>
-                                </td>
-                            </tr>
+                            <?php
+                            if ($categories->num_rows > 0):
+                                while ($row = $categories->fetch_assoc()):
+                            ?>
+                                <tr>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['id'] ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['category'] ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['address'] ?></td>
+                                    <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['contact'] ?></td>
+                                    <td class="border border-emerald-600 px-4 py-2">
+                                        <button onclick="openEditModal(<?= $row['id'] ?>, '<?= $row['category'] ?>', '<?= $row['address'] ?>', '<?= $row['contact'] ?>')" class="text-blue-500 hover:underline">Edit</button> |
+                                        <a href="#" onclick="confirmDelete(event, <?= $row['id'] ?>)" class="text-red-500 hover:underline">Delete</a>
+                                    </td>
+                                </tr>
                             <?php endwhile; ?>
                             <?php else: ?>
                             <tr>
-                                <td colspan="3" class="border border-gray-200 px-4 py-2 text-center">No categories found.</td>
+                                <td colspan="5" class="border border-gray-200 px-4 py-2 text-center">No suppliers found.</td>
                             </tr>
                             <?php endif; ?>
                         </tbody>
