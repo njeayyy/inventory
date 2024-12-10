@@ -4,6 +4,29 @@ require '../vendor/autoload.php';
 
 session_start();
 
+
+function fetchSalesHistory($conn) {
+    $query = "SELECT 
+                sales.id, 
+                products.product_name, 
+                categories.category AS category_name, 
+                products.location, 
+                products.expiration_date, 
+                sales.quantity, 
+                sales.sale_price, 
+                sales.total_amount, 
+                sales.sale_date 
+              FROM sales
+              JOIN products ON sales.product_id = products.id
+              JOIN categories ON products.category_id = categories.id
+              ORDER BY sales.sale_date DESC";
+    
+    return $conn->query($query);
+}
+
+// Fetch sales history data
+$salesHistory = fetchSalesHistory($conn);
+
 if (isset($_GET['export'])) {
     $exportType = $_GET['export'];
 
@@ -216,12 +239,16 @@ $result = $conn->query($query);
             }
         }
     </script>
+
+
     <style>
         body {
             font-family: 'Poppins', sans-serif;
         }
     </style>
 </head>
+
+
 
 <body class="bg-gray-50 text-gray-800">
     <div class="flex flex-col min-h-screen">
@@ -281,7 +308,71 @@ $result = $conn->query($query);
                             </select>
                             <button type="submit" class=" text-white px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-700">Generate Report</button>
                         </div>
+                        
                     </form>
+                        <!-- Button to open modal -->
+                    <div class="flex justify-end mb-6">
+                        <button onclick="toggleModal()" class="text-white px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-700">
+                            View Sales History
+                        </button>
+                    </div>
+
+                    <!-- Sales History Modal -->
+                    <div id="salesHistoryModal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+                        <div class="bg-white p-6 rounded shadow-lg w-3/4">
+                            <!-- Modal Header -->
+                            <div class="flex justify-between items-center mb-4">
+                                <h3 class="text-xl font-semibold">Sales History</h3>
+                                <button onclick="toggleModal()" class="text-red-500 font-bold text-lg">&times;</button>
+                            </div>
+                            
+                            <!-- Table of Sales History -->
+                            <div class="overflow-x-auto">
+                                <table class="w-full border-collapse border border-gray-300">
+                                    <thead>
+                                        <tr>
+                                            <th class="border border-gray-300 px-4 py-2">#</th>
+                                            <th class="border border-gray-300 px-4 py-2">Product Name</th>
+                                            <th class="border border-gray-300 px-4 py-2">Brand</th>
+                                            <th class="border border-gray-300 px-4 py-2">Quantity</th>
+                                            <th class="border border-gray-300 px-4 py-2">Sale Price</th>
+                                            <th class="border border-gray-300 px-4 py-2">Total</th>
+                                            <th class="border border-gray-300 px-4 py-2">Date</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <!-- Check if $salesHistory has data and display it -->
+                                        <?php if ($salesHistory && $salesHistory->num_rows > 0): ?>
+                                            <?php while ($history = $salesHistory->fetch_assoc()): ?>
+                                                <tr>
+                                                    <td class="border border-gray-300 px-4 py-2"><?= $history['id'] ?></td>
+                                                    <td class="border border-gray-300 px-4 py-2"><?= $history['product_name'] ?></td>
+                                                    <td class="border border-gray-300 px-4 py-2"><?= $history['category_name'] ?></td>
+                                                    <td class="border border-gray-300 px-4 py-2"><?= $history['quantity'] ?></td>
+                                                    <td class="border border-gray-300 px-4 py-2"><?= $history['sale_price'] ?></td>
+                                                    <td class="border border-gray-300 px-4 py-2"><?= $history['total_amount'] ?></td>
+                                                    <td class="border border-gray-300 px-4 py-2"><?= $history['sale_date'] ?></td>
+                                                </tr>
+                                            <?php endwhile; ?>
+                                        <?php else: ?>
+                                            <tr>
+                                                <td colspan="9" class="text-center px-4 py-2">No sales history available.</td>
+                                            </tr>
+                                        <?php endif; ?>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script>
+                        function toggleModal() {
+                            const modal = document.getElementById('salesHistoryModal');
+                            modal.classList.toggle('hidden');
+                        }
+                    </script>
+
+
             <div class="bg-emerald-100 p-6 rounded shadow-md mb-6">
                 <!-- Sales Table -->
                 <div class="overflow-x-auto">
@@ -301,6 +392,7 @@ $result = $conn->query($query);
                             </tr>
                         </thead>
                         <tbody>
+
                             <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
                                 <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['id'] ?></td>
@@ -320,6 +412,10 @@ $result = $conn->query($query);
                             </tr>
                             <?php endwhile; ?>
                         </tbody>
+
+
+
+                        </main>
                     </table>
                 </div>
             </div>
@@ -327,5 +423,7 @@ $result = $conn->query($query);
         </div>
     </div>
 </body>
-
 </html>
+
+
+
