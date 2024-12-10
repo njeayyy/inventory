@@ -64,7 +64,7 @@ if ($mysqli->connect_error) {
 }
 
 // 2. Query to fetch low stock products
-$query_low_stock = "SELECT product_name, in_stock FROM products WHERE in_stock <= 10";
+$query_low_stock = "SELECT product_name, in_stock FROM products WHERE in_stock <= 50";
 $low_stock_products = $mysqli->query($query_low_stock);
 
 // Check for query errors
@@ -203,7 +203,7 @@ $query_recent_products = "
                     </div>
                     <div class="bg-emerald-700 text-white p-4 rounded shadow">
                         <h2 class="text-2xl font-bold"><?= $total_categories ?></h2>
-                        <p>Categories</p>
+                        <p>Brand</p>
                     </div>
                     <div class="bg-emerald-800 text-white p-4 rounded shadow">
                         <h2 class="text-2xl font-bold"><?= $total_products ?></h2>
