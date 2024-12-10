@@ -22,6 +22,7 @@ function fetchSalesHistory($conn) {
               ORDER BY sales.sale_date DESC";
     
     return $conn->query($query);
+
 }
 
 // Fetch sales history data
@@ -310,7 +311,8 @@ $result = $conn->query($query);
                         </div>
                         
                     </form>
-                        <!-- Button to open modal -->
+
+                    <!-- Button to open modal -->
                     <div class="flex justify-end mb-6">
                         <button onclick="toggleModal()" class="text-white px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-700">
                             View Sales History
