@@ -155,10 +155,10 @@ if (isset($_GET['id'])) {
     <div class="grid grid-cols-3 gap-8">
     <!-- Brand -->
     <div>
-        <label for="category" class="block font-medium mb-2">Brand</label>
+        <label for="category" class="block font-medium mb-2">Supplier</label>
         <select name="category" required
             class="w-full px-4 py-2 border rounded focus:outline-none focus:ring-2 focus:ring-blue-600">
-            <option value="">Select Brand</option>
+            <option value="">Select Supplier</option>
             <?php
             // Check if categories are loaded and display them
             if (!empty($categories)) {

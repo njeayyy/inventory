@@ -352,7 +352,7 @@ if (isset($_GET['delete_id'])) {
                     <label class="block font-medium mb-2">Supplier Name</label>
                     <select name="category" required
                         class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
-                        <option value="" disabled selected>-- Select Brand --</option>
+                        <option value="" disabled selected>-- Select Supplier --</option>
                         <?php
                         // Fetch categories from database
                         $categories_result = $conn->query("SELECT id, category FROM categories");
@@ -432,7 +432,7 @@ if (isset($_GET['delete_id'])) {
             <option value="id" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'id' ? 'selected' : '' ?>>ID</option>
             <option value="product_name" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'product_name' ? 'selected' : '' ?>>Name</option>
             <option value="location" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'location' ? 'selected' : '' ?>>Location</option>
-            <option value="category" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'category' ? 'selected' : '' ?>>Brand</option>
+            <option value="category" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'category' ? 'selected' : '' ?>>Supplier</option>
             <option value="in_stock" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'in_stock' ? 'selected' : '' ?>>Stock</option>
             <option value="price" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'price' ? 'selected' : '' ?>>Price</option>
         </select>

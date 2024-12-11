@@ -336,7 +336,7 @@ $result = $conn->query($query);
                                         <tr>
                                             <th class="border border-gray-300 px-4 py-2">#</th>
                                             <th class="border border-gray-300 px-4 py-2">Product Name</th>
-                                            <th class="border border-gray-300 px-4 py-2">Brand</th>
+                                            <th class="border border-gray-300 px-4 py-2">Supplier</th>
                                             <th class="border border-gray-300 px-4 py-2">Quantity</th>
                                             <th class="border border-gray-300 px-4 py-2">Sale Price</th>
                                             <th class="border border-gray-300 px-4 py-2">Total</th>
@@ -384,7 +384,7 @@ $result = $conn->query($query);
                             <tr>
                                 <th class="border border-emerald-600 px-4 py-2">#</th>
                                 <th class="border border-emerald-600 px-4 py-2">Product Name</th>
-                                <th class="border border-emerald-600 px-4 py-2">Brand</th>
+                                <th class="border border-emerald-600 px-4 py-2">Supplier</th>
                                 <th class="border border-emerald-600 px-4 py-2">Location</th>
                                 <th class="border border-emerald-600 px-4 py-2">Expiry Date</th>
                                 <th class="border border-emerald-600 px-4 py-2">Quantity Sold</th>
@@ -394,8 +394,10 @@ $result = $conn->query($query);
                                 <th class="border border-emerald-600 px-4 py-2">Actions</th>
                             </tr>
                         </thead>
+                        
+                        
                         <tbody>
-
+                        
                             <?php while ($row = $result->fetch_assoc()): ?>
                             <tr>
                                 <td class="border border-emerald-600 hover:bg-white px-4 py-2"><?= $row['id'] ?></td>
@@ -415,7 +417,6 @@ $result = $conn->query($query);
                             </tr>
                             <?php endwhile; ?>
                         </tbody>
-
 
 
                         </main>
