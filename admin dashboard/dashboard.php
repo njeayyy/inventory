@@ -290,7 +290,7 @@ $query_recent_products = "
                                     <?php } ?>
                                 <?php } ?>
                             <?php } else { ?>
-                                <p class="text-neutral-950">No products are currently low on stock.</p>
+                                <p class="text-neutral-100">No products are currently low on stock.</p>
                             <?php } ?>
                         </div>
                     </div>  
