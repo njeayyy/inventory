@@ -39,6 +39,13 @@ if (isset($_GET['export'])) {
 }
 
 function exportToExcel($conn) {
+    if (!isset($_SESSION['username'])) {
+        echo "User not logged in!";
+        exit();
+    }
+    $username = $_SESSION['username'];
+    $timestamp = date("Y-m-d H:i:s");
+
     $query = "SELECT 
                 sales.id, 
                 products.product_name, 
@@ -52,19 +59,35 @@ function exportToExcel($conn) {
               FROM sales
               JOIN products ON sales.product_id = products.id
               JOIN categories ON products.category_id = categories.id";
-    
+
     $result = $conn->query($query);
-    
+
     $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
-    $sheet->setCellValue('A1', 'ID')
+    // Add user and date information at the top
+    $username = $_SESSION['username'];
+    $downloadDate = date("Y-m-d");
+    $sheet->setCellValue('A1',   $username);
+    $sheet->setCellValue('A2', 'Date: ' . $downloadDate);
+
+    $sheet->setCellValue('A4', 'ID')
           ->setCellValue('B1', 'Product Name')
-          ->setCellValue('C1', 'Brand')
+          ->setCellValue('C1', 'Supplier')
           ->setCellValue('D1', 'Expiration Date')
           ->setCellValue('E1', 'Qty')
           ->setCellValue('F1', 'Sale Price')
           ->setCellValue('G1', 'Total Amount')
           ->setCellValue('H1', 'Sale Date');
+
+          $sheet->getColumnDimension('A')->setAutoSize(true);
+          $sheet->getColumnDimension('B')->setAutoSize(true);
+          $sheet->getColumnDimension('C')->setAutoSize(true);
+          $sheet->getColumnDimension('D')->setAutoSize(true);
+          $sheet->getColumnDimension('E')->setAutoSize(true);
+          $sheet->getColumnDimension('F')->setAutoSize(true);
+          $sheet->getColumnDimension('G')->setAutoSize(true);
+          $sheet->getColumnDimension('H')->setAutoSize(true);
+          $sheet->getColumnDimension('I')->setAutoSize(true);
 
     $row = 2;
     while ($data = $result->fetch_assoc()) {
@@ -79,18 +102,31 @@ function exportToExcel($conn) {
         $row++;
     }
 
+    // Log the download event
+    $log_query = "INSERT INTO audit_trail (username, action, action_time) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($log_query);
+
+    $action = 'Downloaded Excel Report'; // Declare this variable explicitly
+    $stmt->bind_param("sss", $username, $action, $timestamp);
+    $stmt->execute();
+
     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
     $filename = "sales_report_" . date("Y-m-d") . ".xlsx";
-    
-    // Save the file to the output buffer
+
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
     header('Content-Disposition: attachment;filename="' . $filename . '"');
     header('Cache-Control: max-age=0');
     $writer->save('php://output');
     exit();
 }
-
 function exportToPDF($conn) {
+    if (!isset($_SESSION['username'])) {
+        echo "User not logged in!";
+        exit();
+    }
+    $username = $_SESSION['username'];
+    $timestamp = date("Y-m-d H:i:s");
+
     $query = "SELECT 
                 sales.id, 
                 products.product_name, 
@@ -104,39 +140,55 @@ function exportToPDF($conn) {
               FROM sales
               JOIN products ON sales.product_id = products.id
               JOIN categories ON products.category_id = categories.id";
-    
+
     $result = $conn->query($query);
-    
+
     $pdf = new \TCPDF();
     $pdf->AddPage();
     $pdf->SetFont('helvetica', '', 12);
     $pdf->Cell(0, 10, 'Sales Report', 0, 1, 'C');
     $pdf->Ln(10);
-    
+
+    $username = $_SESSION['username'];
+    $downloadDate = date("Y-m-d");
+    $pdf->Cell(0, 10,   $username, 0, 1, 'R');
+    $pdf->Cell(0, 10, ' Date: ' . $downloadDate, 0, 1, 'R');
+    $pdf->Ln(10);
+
     $pdf->SetFillColor(255, 255, 255);
     $pdf->Cell(10, 10, 'ID', 1, 0, 'C', 1);
     $pdf->Cell(32, 10, 'Product Name', 1, 0, 'C', 1);
-    $pdf->Cell(22, 10, 'Brand', 1, 0, 'C', 1);
+    $pdf->Cell(51, 10, 'Supplier', 1, 0, 'C', 1);
     $pdf->Cell(30, 10, 'Expiration Date', 1, 0, 'C', 1);
     $pdf->Cell(11, 10, 'Qty', 1, 0, 'C', 1);
     $pdf->Cell(23, 10, 'Sale Price', 1, 0, 'C', 1);
     $pdf->Cell(28, 10, 'Total Amount', 1, 0, 'C', 1);
     $pdf->Cell(41, 10, 'Sale Date', 1, 1, 'C', 1);
-    
+
     while ($data = $result->fetch_assoc()) {
         $pdf->Cell(10, 10, $data['id'], 1, 0, 'C');
         $pdf->Cell(32, 10, $data['product_name'], 1, 0, 'C');
-        $pdf->Cell(22, 10, $data['category_name'], 1, 0, 'C');
+        $pdf->Cell(51, 10, $data['category_name'], 1, 0, 'C');
         $pdf->Cell(30, 10, $data['expiration_date'], 1, 0, 'C');
         $pdf->Cell(11, 10, $data['quantity'], 1, 0, 'C');
         $pdf->Cell(23, 10, $data['sale_price'], 1, 0, 'C');
         $pdf->Cell(28, 10, $data['total_amount'], 1, 0, 'C');
         $pdf->Cell(41, 10, $data['sale_date'], 1, 1, 'C');
     }
-    
+
+    // Log the download event
+    $log_query = "INSERT INTO audit_trail (username, action, action_time) VALUES (?, ?, ?)";
+    $stmt = $conn->prepare($log_query);
+
+    $action = 'Downloaded PDF Report';
+    $stmt->bind_param("sss", $username, $action, $timestamp);
+    $stmt->execute();
+
     $filename = "sales_report_" . date("Y-m-d") . ".pdf";
     $pdf->Output($filename, 'D');
     exit();
+
+    
 }
 
 

@@ -5,6 +5,7 @@ require '../vendor/autoload.php';
 
 session_start();
 
+
 if (isset($_GET['export'])) {
     $exportType = $_GET['export'];
 
@@ -14,6 +15,8 @@ if (isset($_GET['export'])) {
         exportToPDF($conn);
     }
 }
+
+
 
 function exportToExcel($conn) {
     $query = "SELECT 
@@ -33,17 +36,36 @@ function exportToExcel($conn) {
     
     $spreadsheet = new \PhpOffice\PhpSpreadsheet\Spreadsheet();
     $sheet = $spreadsheet->getActiveSheet();
-    $sheet->setCellValue('A1', 'ID')
-          ->setCellValue('B1', 'Product Name')
-          ->setCellValue('C1', 'Location')
-          ->setCellValue('D1', 'Rack')
-          ->setCellValue('E1', 'Brand')
-          ->setCellValue('F1', 'Quantity')
-          ->setCellValue('G1', 'Price')
-          ->setCellValue('H1', 'Expiration Daee')
-          ->setCellValue('I1', 'Product Added');
 
-    $row = 2;
+    // Add user and date information at the top
+    $username = $_SESSION['username'];
+    $downloadDate = date("Y-m-d");
+    $sheet->setCellValue('A1',   $username);
+    $sheet->setCellValue('A2', 'Date: ' . $downloadDate);
+
+    // Column Headers
+    $sheet->setCellValue('A4', 'ID')
+          ->setCellValue('B4', 'Product Name')
+          ->setCellValue('C4', 'Location')
+          ->setCellValue('D4', 'Rack')
+          ->setCellValue('E4', 'Brand')
+          ->setCellValue('F4', 'Quantity')
+          ->setCellValue('G4', 'Price')
+          ->setCellValue('H4', 'Expiration Date')
+          ->setCellValue('I4', 'Product Added');
+
+    // Auto-adjust columns for content
+    $sheet->getColumnDimension('A')->setAutoSize(true);
+    $sheet->getColumnDimension('B')->setAutoSize(true);
+    $sheet->getColumnDimension('C')->setAutoSize(true);
+    $sheet->getColumnDimension('D')->setAutoSize(true);
+    $sheet->getColumnDimension('E')->setAutoSize(true);
+    $sheet->getColumnDimension('F')->setAutoSize(true);
+    $sheet->getColumnDimension('G')->setAutoSize(true);
+    $sheet->getColumnDimension('H')->setAutoSize(true);
+    $sheet->getColumnDimension('I')->setAutoSize(true);
+
+    $row = 5;
     while ($data = $result->fetch_assoc()) {
         $sheet->setCellValue('A' . $row, $data['id'])
               ->setCellValue('B' . $row, $data['product_name'])
@@ -58,7 +80,7 @@ function exportToExcel($conn) {
     }
 
     $writer = new \PhpOffice\PhpSpreadsheet\Writer\Xlsx($spreadsheet);
-    $filename = "products_lists_" . date("Y-m-d") . ".xlsx";
+    $filename = "products_list_" . date("Y-m-d") . ".xlsx";
     
     // Save the file to the output buffer
     header('Content-Type: application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
@@ -67,6 +89,7 @@ function exportToExcel($conn) {
     $writer->save('php://output');
     exit();
 }
+
 
 function exportToPDF($conn) {
     $query = "SELECT 
@@ -90,29 +113,37 @@ function exportToPDF($conn) {
     $pdf->Cell(0, 10, 'Products Report', 0, 1, 'C');
     $pdf->Ln(10);
     
+    // Add user and date
+    $username = $_SESSION['username'];
+    $downloadDate = date("Y-m-d");
+    $pdf->Cell(0, 10,   $username, 0, 1, 'R');
+    $pdf->Cell(0, 10, ' Date: ' . $downloadDate, 0, 1, 'R');
+    $pdf->Ln(10);
+    
     $pdf->SetFillColor(255, 255, 255);
     $pdf->Cell(10, 10, 'ID', 1, 0, 'C', 1);
     $pdf->Cell(32, 10, 'Product Name', 1, 0, 'C', 1);
     $pdf->Cell(11, 10, 'Loc', 1, 0, 'C', 1);
     $pdf->Cell(12, 10, 'Rack', 1, 0, 'C', 1);
-    $pdf->Cell(22, 10, 'Brand', 1, 0, 'C', 1);
+    $pdf->Cell(50, 10, 'Supplier', 1, 0, 'C', 1);
     $pdf->Cell(11, 10, 'Qty', 1, 0, 'C', 1);
     $pdf->Cell(20, 10, 'Price', 1, 0, 'C', 1);
     $pdf->Cell(32, 10, 'Expiration Date', 1, 0, 'C', 1);
-    $pdf->Cell(41, 10, 'Product Added', 1, 1, 'C', 1);  // Keep consistent ln=0 for all header cells
+    $pdf->Cell(41, 10, 'Product Added', 1, 1, 'C', 1);
 
     while ($data = $result->fetch_assoc()) {
         $pdf->Cell(10, 10, $data['id'], 1, 0, 'C');
         $pdf->Cell(32, 10, $data['product_name'], 1, 0, 'C');
         $pdf->Cell(11, 10, $data['location'], 1, 0, 'C');
         $pdf->Cell(12, 10, $data['rack'], 1, 0, 'C');
-        $pdf->Cell(22, 10, $data['category_name'], 1, 0, 'C');  // Consistent ln=0
+        $pdf->Cell(50, 10, $data['category_name'], 1, 0, 'C');
         $pdf->Cell(11, 10, $data['in_stock'], 1, 0, 'C');
         $pdf->Cell(20, 10, $data['price'], 1, 0, 'C');
         $pdf->Cell(32, 10, $data['expiration_date'], 1, 0, 'C');
-        $pdf->Cell(41, 10, $data['product_added'], 1, 1, 'C');  // Consistent ln=0
+        $pdf->Cell(41, 10, $data['product_added'], 1, 1, 'C');
     }
-    
+
+
     $filename = "products_list_" . date("Y-m-d") . ".pdf";
     $pdf->Output($filename, 'D');
     exit();
@@ -380,7 +411,7 @@ if (isset($_GET['delete_id'])) {
             <div>
                 <label class="block font-medium mb-2">Expiration Date</label>
                 <input type="date" name="expiration_date" required
-                    class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
+                class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600">
             </div>
 
             <!-- Submit Button -->
@@ -394,9 +425,7 @@ if (isset($_GET['delete_id'])) {
         <!-- End of Form inside Modal -->
     </div>
 </div>
-
-
-                    </div>
+</div>
 
                     <!-- Search Bar -->
                     <form method="GET" action="products.php" class="mb-1">
@@ -425,27 +454,26 @@ if (isset($_GET['delete_id'])) {
                     
                     
                     <!-- Sorting Options -->
-<form method="GET" action="products.php" class="mb-6">
-    <div class="flex items-center gap-4">
-        <label for="sort_by" class="text-gray-700 font-medium">Sort by:</label>
-        <select name="sort_by" class="border rounded px-4 py-2">
-            <option value="id" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'id' ? 'selected' : '' ?>>ID</option>
-            <option value="product_name" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'product_name' ? 'selected' : '' ?>>Name</option>
-            <option value="location" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'location' ? 'selected' : '' ?>>Location</option>
-            <option value="category" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'category' ? 'selected' : '' ?>>Supplier</option>
-            <option value="in_stock" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'in_stock' ? 'selected' : '' ?>>Stock</option>
-            <option value="price" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'price' ? 'selected' : '' ?>>Price</option>
-        </select>
-        
-        <select name="order" class="border rounded px-4 py-2">
-            <option value="asc" <?= isset($_GET['order']) && $_GET['order'] == 'asc' ? 'selected' : '' ?>>Ascending</option>
-            <option value="desc" <?= isset($_GET['order']) && $_GET['order'] == 'desc' ? 'selected' : '' ?>>Descending</option>
-        </select>
+                <form method="GET" action="products.php" class="mb-6">
+                    <div class="flex items-center gap-4">
+                        <label for="sort_by" class="text-gray-700 font-medium">Sort by:</label>
+                        <select name="sort_by" class="border rounded px-4 py-2">
+                            <option value="id" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'id' ? 'selected' : '' ?>>ID</option>
+                            <option value="product_name" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'product_name' ? 'selected' : '' ?>>Name</option>
+                            <option value="location" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'location' ? 'selected' : '' ?>>Location</option>
+                            <option value="category" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'category' ? 'selected' : '' ?>>Supplier</option>
+                            <option value="in_stock" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'in_stock' ? 'selected' : '' ?>>Stock</option>
+                            <option value="price" <?= isset($_GET['sort_by']) && $_GET['sort_by'] == 'price' ? 'selected' : '' ?>>Price</option>
+                        </select>
+                        
+                        <select name="order" class="border rounded px-4 py-2">
+                            <option value="asc" <?= isset($_GET['order']) && $_GET['order'] == 'asc' ? 'selected' : '' ?>>Ascending</option>
+                            <option value="desc" <?= isset($_GET['order']) && $_GET['order'] == 'desc' ? 'selected' : '' ?>>Descending</option>
+                        </select>
 
-        <button type="submit" class="text-white px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-700">Sort</button>
-    </div>
-</form>
-
+                        <button type="submit" class="text-white px-4 py-2 rounded bg-emerald-600 hover:bg-emerald-700">Sort</button>
+                    </div>
+                </form>
 
                     <div class="bg-emerald-100 p-6 rounded shadow-md">
                     <!-- Products Table -->
