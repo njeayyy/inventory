@@ -5,7 +5,7 @@ require '../vendor/autoload.php';
 
 session_start();
 
-
+//export to softcopy
 if (isset($_GET['export'])) {
     $exportType = $_GET['export'];
 
@@ -15,9 +15,7 @@ if (isset($_GET['export'])) {
         exportToPDF($conn);
     }
 }
-
-
-
+//export to excel
 function exportToExcel($conn) {
     $query = "SELECT 
                 products.id, 
@@ -89,8 +87,7 @@ function exportToExcel($conn) {
     $writer->save('php://output');
     exit();
 }
-
-
+//export to pdf
 function exportToPDF($conn) {
     $query = "SELECT 
                 products.id, 
@@ -160,7 +157,8 @@ if (!isset($_SESSION['user_id'])) {
 $categories_result = $conn->query("SELECT id, category FROM categories");
 
 // Handle form submission for adding product
-if ($_SERVER["REQUEST_METHOD"] == "POST") {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['form_type']) && $_POST['form_type'] == 'product') {
+    // Product form handling logic
     $product_name = $_POST['product_name'];
     $category_id = $_POST['category'];
     $in_stock = $_POST['in_stock'];
@@ -204,6 +202,52 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     exit;
 }
 
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Get form data
+    $product_id = $_POST['product_id'];  // Product ID from the form
+    $quantity = $_POST['quantity'];      // Quantity from the form
+
+    // Fetch the current stock for the selected product
+    $product_query = "SELECT * FROM products WHERE id = ?";
+    $stmt_product = $conn->prepare($product_query);
+    $stmt_product->bind_param("i", $product_id);
+    $stmt_product->execute();
+    $result_product = $stmt_product->get_result();
+    $product = $result_product->fetch_assoc();
+
+    if ($product) {
+        // Increase the stock by the quantity added in the order form
+        $new_stock = $product['in_stock'] + $quantity;
+
+        // Update the stock in the products table
+        $update_stock_query = "UPDATE products SET in_stock = ? WHERE id = ?";
+        $stmt_update_stock = $conn->prepare($update_stock_query);
+        $stmt_update_stock->bind_param("ii", $new_stock, $product_id);
+
+        if ($stmt_update_stock->execute()) {
+            echo "Stock updated successfully.";
+        } else {
+            echo "Error updating stock: " . $stmt_update_stock->error;
+        }
+
+        // Insert the order into the orders table
+        $order_query = "INSERT INTO orders (product_id, quantity) VALUES (?, ?)";
+        $stmt_order = $conn->prepare($order_query);
+        $stmt_order->bind_param("ii", $product_id, $quantity);
+
+        if ($stmt_order->execute()) {
+            echo "Order placed successfully.";
+        } else {
+            echo "Error placing order: " . $stmt_order->error;
+        }
+
+        // Redirect after successful operation
+        header("Location: products.php");
+        exit;
+    } else {
+        echo "Product not found!";
+    }
+}
 
 
 
@@ -238,6 +282,34 @@ if (isset($_GET['delete_id'])) {
     header("Location: products.php");
     exit();
 }
+
+
+// Fetch products for dropdown
+$products = $conn->query("SELECT id, product_name FROM products");
+
+// Fetch order history
+$order_history = $conn->query("
+    SELECT orders.order_id, products.product_name, orders.quantity, orders.order_date 
+    FROM orders 
+    JOIN products ON orders.product_id = products.id
+    ORDER BY orders.order_date DESC
+");
+
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['add_order'])) {
+    $product_id = $_POST['product_id'];   // Get the selected product ID
+    $quantity = $_POST['quantity'];       // Get the ordered quantity
+
+    // Insert into the orders table
+    $stmt = $conn->prepare("INSERT INTO orders (product_id, quantity) VALUES (?, ?)");
+    $stmt->bind_param("ii", $product_id, $quantity);
+    $stmt->execute();
+    $stmt->close();
+
+    // Optionally, you can close the modal after form submission by redirecting
+    header("Location: products.php"); // Redirect back to products page after the order is placed
+    exit(); // Ensure the script stops here
+}
+
 ?>
 
 <!DOCTYPE html>
@@ -268,9 +340,7 @@ if (isset($_GET['delete_id'])) {
             // Clear the form fields
             document.getElementById("add-product-form").reset();
         }
-        function openaddOrderModal() {
-            document.getElementById("add-product-modal").classList.remove("hidden");
-        }
+
     </script>
     <style>
         body {
@@ -326,6 +396,7 @@ if (isset($_GET['delete_id'])) {
         
         <!-- Start of Form inside Modal -->
         <form action="products.php" method="POST" class="space-y-6" id="add-product-form">
+        <input type="hidden" name="form_type" value="product">
             <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
                 <h3 class="text-xl font-semibold text-gray-900 dark:text-grey-900">
                     Add New Product
@@ -477,7 +548,7 @@ if (isset($_GET['delete_id'])) {
                     </div>
                 </form>
 
-                    <div class="bg-emerald-100 p-6 rounded shadow-md">
+                <div class="bg-emerald-100 p-6 rounded shadow-md">
                     <!-- Products Table -->
                     <div class="overflow-x-auto">
                         <table class="w-full border-collapse border border-gray-200 text-left">
@@ -520,127 +591,112 @@ if (isset($_GET['delete_id'])) {
                         </table>
                     </div>
                 </div>
+                
+                
+                   
+                    
+                    <script>
+                    function openAddOrderModal() {
+                        document.getElementById("add-order-modal").classList.remove("hidden");
+                    }
 
-    <div class="container mx-auto">
-    <h1 class="text-xl font-bold">Order Management</h1>
+                    function closeAddOrderModal() {
+                        document.getElementById("add-order-modal").classList.add("hidden");
 
-    <!-- Add Order Button -->
-    <button class="bg-blue-500 text-white px-4 py-2 rounded mt-4" data-modal-target="addOrderModal" data-modal-toggle="addOrderModal">
-        Add Order Request
-    </button>
+                        // Clear the form fields
+                        document.getElementById("add-order-modal").reset();
+                    }
+                    </script>
 
-    <!-- Order History Button -->
-    <button class="bg-green-500 text-white px-4 py-2 rounded mt-4 ml-2" data-modal-target="orderHistoryModal" data-modal-toggle="orderHistoryModal">
-        View Order History
-    </button>
+                    <?php
+                    // Fetch order history from the database
+                    $order_history_query = "SELECT orders.order_id, products.product_name, orders.quantity, orders.order_date
+                                            FROM orders
+                                            JOIN products ON orders.product_id = products.id
+                                            ORDER BY orders.order_date DESC";
 
+                    $order_history = $conn->query($order_history_query);
+                    ?>
+                    
+                     <!-- Add Order Button -->
+                     <div onclick="openAddOrderModal()" class="text-left mb-6">
+                        <button class="text-white bg-emerald-600 hover:bg-emerald-700 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center">
+                            Add Order
+                        </button>
+                    </div>
+                    
+                    <!-- Order History Table -->
+                    <div class="overflow-x-auto bg-white rounded shadow-md p-6">
+                        <h2 class="text-lg font-semibold mb-4">Order History</h2>
+                        <table class="table-auto w-full text-left text-gray-700">
+                            <thead>
+                                <tr>
+                                    <th class="px-4 py-2">Order ID</th>
+                                    <th class="px-4 py-2">Product Name</th>
+                                    <th class="px-4 py-2">Quantity</th>
+                                    <th class="px-4 py-2">Order Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <?php while ($row = $order_history->fetch_assoc()): ?>
+                                    <tr class="border-t">
+                                        <td class="px-4 py-2"><?= $row['order_id'] ?></td>
+                                        <td class="px-4 py-2"><?= $row['product_name'] ?></td>
+                                        <td class="px-4 py-2"><?= $row['quantity'] ?></td>
+                                        <td class="px-4 py-2"><?= $row['order_date'] ?></td>
+                                    </tr>
+                                <?php endwhile; ?>
+                            </tbody>
+                        </table>
+                    </div>
+
+    
+
+    
     <!-- Add Order Modal -->
-    <div id="addOrderModal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
-        <div class="relative p-4 w-full max-w-md h-full md:h-auto">
-            <div class="relative bg-white rounded-lg shadow">
-                <div class="flex justify-between items-center p-5 rounded-t border-b">
-                    <h3 class="text-xl font-medium text-gray-900">
-                        Add Order Request
-                    </h3>
-                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="addOrderModal">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
+    <div id="add-order-modal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center z-50">
+    <input type="hidden" name="form_type" value="order">
+        
+            <!-- Modal Content -->
+            <div class="bg-white rounded-lg shadow">
+                <!-- Modal Header -->
+                <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                    <h3 class="text-xl font-semibold text-gray-900 dark:text-grey-900">
+                    Add Order
+                </h3>
+                <button onclick="closeAddOrderModal()" type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center dark:hover:bg-gray-600 dark:hover:text-white" data-modal-hide="static-modal">
+                    <svg class="w-3 h-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 14 14">
+                        <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"/>
+                    </svg>
+                    <span class="sr-only">Close modal</span>
+                </button>
                 </div>
-                <form action="" method="POST">
-                    <div class="p-6 space-y-6">
-                        <label for="product" class="block mb-2 text-sm font-medium text-gray-900">Select Product</label>
-                        <select id="product" name="product_id" class="block w-full p-2 border border-gray-300 rounded">
-                            <?php
-                            $products = $conn->query("SELECT id, product_name FROM products");
-                            while ($product = $products->fetch_assoc()) {
-                                echo "<option value=\"{$product['id']}\">{$product['product_name']}</option>";
-                            }
-                            ?>
-                        </select>
 
-                        <label for="quantity" class="block mb-2 text-sm font-medium text-gray-900">Quantity</label>
-                        <input type="number" id="quantity" name="quantity" min="1" required class="block w-full p-2 border border-gray-300 rounded">
+                <!-- Modal Body -->
+                <form method="POST" action="products.php" class="space-y-6" id="add-order-modal">
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                        <label for="product_id" class="block font-medium mb-2">Select Product:</label>
+                        <select name="product_id" id="product_id" class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" required>
+                            <?php while ($row = $products->fetch_assoc()): ?>
+                                <option value="<?= $row['id'] ?>"><?= $row['product_name'] ?></option>
+                            <?php endwhile; ?>
+                        </select>
                     </div>
-                    <div class="flex items-center p-6 space-x-2 rounded-b border-t">
-                        <button type="submit" name="add_order" class="bg-blue-500 text-white px-4 py-2 rounded">Submit</button>
-                        <button type="button" class="text-gray-500 bg-white hover:bg-gray-100 rounded px-4 py-2" data-modal-toggle="addOrderModal">Cancel</button>
+                    <div class="flex items-center justify-between p-4 md:p-5 border-b rounded-t dark:border-gray-600">
+                        <label for="quantity" class="block font-medium mb-2">Quantity:</label>
+                        <input type="number" name="quantity" id="quantity" min="1" 
+                        class="w-full border rounded px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-600" required>
                     </div>
+                    <button type="submit" name="add_order" class="w-full bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">
+                        Add Order
+                    </button>
                 </form>
             </div>
-        </div>
-    </div>
-
-    <!-- Order History Modal -->
-    <div id="orderHistoryModal" tabindex="-1" class="hidden overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal md:h-full">
-        <div class="relative p-4 w-full max-w-4xl h-full md:h-auto">
-            <div class="relative bg-white rounded-lg shadow">
-                <div class="flex justify-between items-center p-5 rounded-t border-b">
-                    <h3 class="text-xl font-medium text-gray-900">
-                        Order History
-                    </h3>
-                    <button type="button" class="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center" data-modal-toggle="orderHistoryModal">
-                        <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd"></path>
-                        </svg>
-                    </button>
-                </div>
-                <div class="p-6 space-y-6">
-                    <table class="min-w-full bg-white">
-                        <thead>
-                            <tr>
-                                <th class="py-2">Order ID</th>
-                                <th class="py-2">Product Name</th>
-                                <th class="py-2">Quantity</th>
-                                <th class="py-2">Order Date</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php
-                            $orders = $conn->query("SELECT o.id, p.product_name, o.quantity, o.updated_at FROM product_activities o JOIN products p ON o.product_id = p.id WHERE o.action = 'Add Order'");
-                            while ($order = $orders->fetch_assoc()) {
-                                echo "<tr><td>{$order['id']}</td><td>{$order['product_name']}</td><td>{$order['quantity']}</td><td>{$order['updated_at']}</td></tr>";
-                            }
-                            ?>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="flex items-center p-6 space-x-2 rounded-b border-t">
-                    <button type="button" class="text-gray-500 bg-white hover:bg-gray-100 rounded px-4 py-2" data-modal-toggle="orderHistoryModal">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<?php
-// Handle Add Order Request
-if (isset($_POST['add_order'])) {
-    $productId = $_POST['product_id'];
-    $quantity = $_POST['quantity'];
-
-    // Update product stock
-    $conn->query("UPDATE products SET in_stock = in_stock + $quantity WHERE id = $productId");
-
-    // Log activity
-    $conn->query("INSERT INTO product_activities (product_id, action, updated_at) VALUES ($productId, 'Add Order', NOW())");
-
-    echo "<script>alert('Order added successfully!');</script>";
-}
-?>
-
-
-
-
-
+    </div>                        
+                
             </main>
         </div>
     </div>
 
-
-
-
-    
 </body>
 </html>
